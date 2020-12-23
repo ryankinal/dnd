@@ -271,19 +271,26 @@
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
-							let creatorResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = creatorResult;
+							text.style.visibility = 'hidden';
+							rerollLink.classList.add('fa-spin');
+
+							setTimeout(function() {
+								let creatorResult = rollOnTable(table)[table][0].result;
+								text.innerHTML = creatorResult;
+								text.style.visibility = 'visible';
+								rerollLink.classList.remove('fa-spin');
+							}, 500);
 						});
 
 						let label = document.createElement('b');
 						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' Make/Intended User: '));
+						label.appendChild(document.createTextNode(' Make/Intended User'));
 
-						let textSpan = document.createElement('span');
-						textSpan.innerText = creatorResult;
+						let text = document.createElement('div');
+						text.innerText = creatorResult;
 
 						creatorDiv.appendChild(label);
-						creatorDiv.appendChild(textSpan);
+						creatorDiv.appendChild(text);
 
 						resultCell.appendChild(creatorDiv);
 
@@ -292,7 +299,7 @@
 
 					historyLink.addEventListener('click', function() {
 						let table = 'what is a detail from its history?';
-						let historyResult = rollOnTable(table)[table][0].result;
+						let tableResult = rollOnTable(table)[table][0].result;
 						
 						let historyDiv = document.createElement('div');
 						historyDiv.className = 'detail';
@@ -300,19 +307,26 @@
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
-							let historyResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = historyResult;
+							text.style.visibility = 'hidden';
+							rerollLink.classList.add('fa-spin');
+
+							setTimeout(function() {
+								let tableResult = rollOnTable(table)[table][0].result;
+								text.innerHTML = tableResult;
+								text.style.visibility = 'visible';
+								rerollLink.classList.remove('fa-spin');
+							}, 500);
 						});
 
 						let label = document.createElement('b');
 						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' History: '));
+						label.appendChild(document.createTextNode(' History'));
 
-						let textSpan = document.createElement('span');
-						textSpan.innerText = historyResult;
+						let text = document.createElement('div');
+						text.innerText = tableResult;
 
 						historyDiv.appendChild(label);
-						historyDiv.appendChild(textSpan);
+						historyDiv.appendChild(text);
 
 						resultCell.appendChild(historyDiv);
 
@@ -321,7 +335,7 @@
 
 					propertyLink.addEventListener('click', function() {
 						let table = 'what minor property does it have?';
-						let propertyResult = rollOnTable(table)[table][0].result;
+						let tableResult = rollOnTable(table)[table][0].result;
 						
 						let propertyDiv = document.createElement('div');
 						propertyDiv.className = 'detail';
@@ -329,19 +343,26 @@
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
-							let propertyResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = propertyResult;
+							text.style.visibility = 'hidden';
+							rerollLink.classList.add('fa-spin');
+
+							setTimeout(function() {
+								let tableResult = rollOnTable(table)[table][0].result;
+								text.innerHTML = tableResult;
+								text.style.visibility = 'visible';
+								rerollLink.classList.remove('fa-spin');
+							}, 500);
 						});
 
 						let label = document.createElement('b');
 						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' Minor Property: '));
+						label.appendChild(document.createTextNode(' Minor Property'));
 
-						let textSpan = document.createElement('span');
-						textSpan.innerText = propertyResult;
+						let text = document.createElement('div');
+						text.innerText = tableResult;
 
 						propertyDiv.appendChild(label);
-						propertyDiv.appendChild(textSpan);
+						propertyDiv.appendChild(text);
 
 						resultCell.appendChild(propertyDiv);
 
@@ -350,7 +371,7 @@
 
 					quirkLink.addEventListener('click', function() {
 						let table = 'what quirk does it have?';
-						let quirkResult = rollOnTable(table)[table][0].result;
+						let tableResult = rollOnTable(table)[table][0].result;
 
 						let quirkDiv = document.createElement('div');
 						quirkDiv.className = 'detail';
@@ -358,19 +379,26 @@
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
-							let quirkResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = quirkResult;
+							text.style.visibility = 'hidden';
+							rerollLink.classList.add('fa-spin');
+
+							setTimeout(function() {
+								let tableResult = rollOnTable(table)[table][0].result;
+								text.innerHTML = tableResult;
+								text.style.visibility = 'visible';
+								rerollLink.classList.remove('fa-spin');
+							}, 500);
 						});
 
 						let label = document.createElement('b');
 						label.appendChild(rerollLink);
 						label.appendChild(document.createTextNode(' Quirk: '));
 
-						let textSpan = document.createElement('span');
-						textSpan.innerText = quirkResult;
+						let text = document.createElement('div');
+						text.innerText = tableResult;
 
 						quirkDiv.appendChild(label);
-						quirkDiv.appendChild(textSpan);
+						quirkDiv.appendChild(text);
 
 						resultCell.appendChild(quirkDiv);
 
