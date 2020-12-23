@@ -312,6 +312,10 @@
 
 			let title = getTableTitle(table);
 
+			if (title.toLowerCase().indexOf('challenge') < 0) {
+				title += ' (' + rows.length + ')';
+			}
+
 			let header = document.createElement('h2');
 			header.appendChild(document.createTextNode(title));
 			header.className = treasureClasses[table];
