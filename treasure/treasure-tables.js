@@ -411,8 +411,7 @@
 
 					setTimeout(function() {
 						tableSlider.style.transitionDuration = '0';
-						tableSelect.style.maxHeight = 'max-content';
-						tableSlider.style.transitionDuration = '0.5s';
+						tableSlider.style.maxHeight = 'max-content';
 					}, 300);
 				} else {
 					let tableHeight = tableSlider.querySelector('table').getBoundingClientRect().height + 'px';
