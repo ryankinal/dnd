@@ -335,7 +335,7 @@
 			header.appendChild(viewButton);
 
 			viewButton.addEventListener('click', function() {
-				if (tableSlider.style.maxHeight === '0px') {
+				if (tableSlider.style.maxHeight === '2px') {
 					tableSlider.style.maxHeight = tableSlider.dataset.prevMaxHeight;
 					viewButton.classList.remove('fa-chevron-up');
 					viewButton.classList.add('fa-chevron-down');
@@ -355,7 +355,7 @@
 
 					setTimeout(function() {
 						tableSlider.style.transitionDuration = '.5s';
-						tableSlider.style.maxHeight = '0px';
+						tableSlider.style.maxHeight = '2px';
 						tableSlider.classList.add('closed');	
 					}, 15);
 
