@@ -41,6 +41,7 @@ button {
 table {
 	border-collapse: collapse;
 	min-width: 100%;
+	margin-bottom: 20px;
 }
 
 td, th {
@@ -90,10 +91,10 @@ tr:nth-child(2n) {
 
 .slider {
 	overflow-y: hidden;
-	transition-property: all;
+	transition-property: max-height;
 	transition-duration: 0.5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-	margin-bottom: 40px;
+	transition-timing-function: ease-in-out;
+	/*margin-bottom: 40px;*/
 }
 
 .slider.closed {

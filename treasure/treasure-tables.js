@@ -32,6 +32,8 @@
 	{
 		return treasureTableNames.filter(function(n) {
 			return n.toLowerCase() === table;
+		}).map(function(n) {
+			return n.replace(/ gp/, 'gp');
 		}).join('');
 	}
 
@@ -338,14 +340,15 @@
 					viewButton.classList.remove('fa-chevron-up');
 					viewButton.classList.add('fa-chevron-down');
 					header.classList.remove('closed');
-					tableSlider.classList.remove('closed');
+					
 
 					setTimeout(function() {
 						tableSlider.style.transitionDuration = '0';
 						tableSlider.style.maxHeight = 'max-content';
+						tableSlider.classList.remove('closed');
 					}, 300);
 				} else {
-					let tableHeight = tableSlider.querySelector('table').getBoundingClientRect().height + 'px';
+					let tableHeight = tableSlider.getBoundingClientRect().height + 'px';
 
 					tableSlider.style.transitionDuration = '0';
 					tableSlider.style.maxHeight = tableHeight;
