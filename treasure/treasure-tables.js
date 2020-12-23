@@ -28,6 +28,13 @@
 		return false;
 	}
 
+	function getTableTitle(table)
+	{
+		return treasureTableNames.filter(function(n) {
+			return n.toLowerCase() === table;
+		}).join('');
+	}
+
 	function rollOnTable(name, render)
 	{
 		render = (typeof render === 'undefined' ? false : render);
@@ -197,14 +204,47 @@
 			let out = document.getElementById('tableOutput');
 			out.innerText = '';
 			out.appendChild(buildResultHTML(name, results));
-
-			/*document.querySelectorAll.forEach(function(table) {
-				let tableHeight = table.getBoundingClientRect().height;
-				table.parentNode.style.maxHeight = tableHeight + 'px';
-			})*/
 		}
 
 		return results;
+	}
+
+	function addDetailHandler(link, table, cell)
+	{
+		link.addEventListener('click', function() {
+			let tableResult = rollOnTable(table)[table][0].result;
+			
+			let detailDiv = document.createElement('div');
+			detailDiv.className = 'detail';
+
+			let rerollLink = document.createElement('a');
+			rerollLink.className = 'fas fa-dice';
+			rerollLink.addEventListener('click', function() {
+				text.style.visibility = 'hidden';
+				rerollLink.classList.add('fa-spin');
+
+				setTimeout(function() {
+					let tableResult = rollOnTable(table)[table][0].result;
+					text.innerHTML = tableResult;
+					text.style.visibility = 'visible';
+					rerollLink.classList.remove('fa-spin');
+				}, 500);
+			});
+
+			let label = document.createElement('b');
+			label.appendChild(rerollLink);
+			label.appendChild(document.createTextNode(' ' + getTableTitle(table)));
+
+			let text = document.createElement('div');
+			text.innerText = tableResult;
+
+			detailDiv.appendChild(label);
+			detailDiv.appendChild(text);
+
+			cell.appendChild(detailDiv);
+
+			link.remove();
+		});
 	}
 
 	function buildResultHTML(table, result)
@@ -261,157 +301,16 @@
 
 					resultCell.appendChild(linksDiv);
 
-					creatorLink.addEventListener('click', function() {
-						let table = 'who created it or was intended to use it?';
-						let creatorResult = rollOnTable(table)[table][0].result;
-						
-						let creatorDiv = document.createElement('div');
-						creatorDiv.className = 'detail';
-
-						let rerollLink = document.createElement('a');
-						rerollLink.className = 'fas fa-dice';
-						rerollLink.addEventListener('click', function() {
-							text.style.visibility = 'hidden';
-							rerollLink.classList.add('fa-spin');
-
-							setTimeout(function() {
-								let creatorResult = rollOnTable(table)[table][0].result;
-								text.innerHTML = creatorResult;
-								text.style.visibility = 'visible';
-								rerollLink.classList.remove('fa-spin');
-							}, 500);
-						});
-
-						let label = document.createElement('b');
-						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' Make/Intended User'));
-
-						let text = document.createElement('div');
-						text.innerText = creatorResult;
-
-						creatorDiv.appendChild(label);
-						creatorDiv.appendChild(text);
-
-						resultCell.appendChild(creatorDiv);
-
-						creatorLink.remove();
-					});
-
-					historyLink.addEventListener('click', function() {
-						let table = 'what is a detail from its history?';
-						let tableResult = rollOnTable(table)[table][0].result;
-						
-						let historyDiv = document.createElement('div');
-						historyDiv.className = 'detail';
-
-						let rerollLink = document.createElement('a');
-						rerollLink.className = 'fas fa-dice';
-						rerollLink.addEventListener('click', function() {
-							text.style.visibility = 'hidden';
-							rerollLink.classList.add('fa-spin');
-
-							setTimeout(function() {
-								let tableResult = rollOnTable(table)[table][0].result;
-								text.innerHTML = tableResult;
-								text.style.visibility = 'visible';
-								rerollLink.classList.remove('fa-spin');
-							}, 500);
-						});
-
-						let label = document.createElement('b');
-						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' History'));
-
-						let text = document.createElement('div');
-						text.innerText = tableResult;
-
-						historyDiv.appendChild(label);
-						historyDiv.appendChild(text);
-
-						resultCell.appendChild(historyDiv);
-
-						historyLink.remove();
-					});
-
-					propertyLink.addEventListener('click', function() {
-						let table = 'what minor property does it have?';
-						let tableResult = rollOnTable(table)[table][0].result;
-						
-						let propertyDiv = document.createElement('div');
-						propertyDiv.className = 'detail';
-
-						let rerollLink = document.createElement('a');
-						rerollLink.className = 'fas fa-dice';
-						rerollLink.addEventListener('click', function() {
-							text.style.visibility = 'hidden';
-							rerollLink.classList.add('fa-spin');
-
-							setTimeout(function() {
-								let tableResult = rollOnTable(table)[table][0].result;
-								text.innerHTML = tableResult;
-								text.style.visibility = 'visible';
-								rerollLink.classList.remove('fa-spin');
-							}, 500);
-						});
-
-						let label = document.createElement('b');
-						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' Minor Property'));
-
-						let text = document.createElement('div');
-						text.innerText = tableResult;
-
-						propertyDiv.appendChild(label);
-						propertyDiv.appendChild(text);
-
-						resultCell.appendChild(propertyDiv);
-
-						propertyLink.remove();
-					});
-
-					quirkLink.addEventListener('click', function() {
-						let table = 'what quirk does it have?';
-						let tableResult = rollOnTable(table)[table][0].result;
-
-						let quirkDiv = document.createElement('div');
-						quirkDiv.className = 'detail';
-
-						let rerollLink = document.createElement('a');
-						rerollLink.className = 'fas fa-dice';
-						rerollLink.addEventListener('click', function() {
-							text.style.visibility = 'hidden';
-							rerollLink.classList.add('fa-spin');
-
-							setTimeout(function() {
-								let tableResult = rollOnTable(table)[table][0].result;
-								text.innerHTML = tableResult;
-								text.style.visibility = 'visible';
-								rerollLink.classList.remove('fa-spin');
-							}, 500);
-						});
-
-						let label = document.createElement('b');
-						label.appendChild(rerollLink);
-						label.appendChild(document.createTextNode(' Quirk: '));
-
-						let text = document.createElement('div');
-						text.innerText = tableResult;
-
-						quirkDiv.appendChild(label);
-						quirkDiv.appendChild(text);
-
-						resultCell.appendChild(quirkDiv);
-
-						quirkLink.remove();
-					});
+					addDetailHandler(creatorLink, 'who created it or was intended to use it?', resultCell);
+					addDetailHandler(historyLink, 'what is a detail from its history?', resultCell);
+					addDetailHandler(propertyLink, 'what minor property does it have?', resultCell);
+					addDetailHandler(quirkLink, 'what quirk does it have?', resultCell);
 				}
 				
 				return rowElement;
 			});
 
-			let title = treasureTableNames.filter(function(n) {
-				return n.toLowerCase() === table;
-			}).join('');
+			let title = getTableTitle(table);
 
 			let header = document.createElement('h2');
 			header.appendChild(document.createTextNode(title));

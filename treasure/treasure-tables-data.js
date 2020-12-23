@@ -1654,7 +1654,7 @@ var treasureTables = {
       ],
       [
         "14",
-        "Temperate. The bearer suffers no harm in temperatures as cold as âˆ’20 degrees Fahrenheit or as warm as 120 degrees Fahrenheit."
+        "Temperate. The bearer suffers no harm in temperatures as cold as -20 degrees Fahrenheit or as warm as 120 degrees Fahrenheit."
       ],
       [
         "15",

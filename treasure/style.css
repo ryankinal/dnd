@@ -162,3 +162,7 @@ a {
 	font-size: 14px;
 	margin: 10px 0;
 }
+
+.detail a {
+	animation-duration: 0.5s;
+}
