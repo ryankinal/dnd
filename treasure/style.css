@@ -51,6 +51,16 @@ th {
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
+th:first-child,
+td:first-child {
+	width: 100px;
+}
+
+th:last-child {
+	text-align: left;
+	padding-left: 0;
+}
+
 tr:nth-child(2n) {
 	background-color: rgba(255, 255, 255, 0.2);
 }
@@ -146,6 +156,19 @@ a {
 
 .result-text {
 	margin-bottom: 15px;
+}
+
+.result-text a {
+	display: block;
+	position: relative;
+	padding-right: 26px;
+}
+
+.fa-external-link-alt {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 18px;
 }
 
 .detail-link {
