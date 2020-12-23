@@ -1,0 +1,159 @@
+* {
+	box-sizing: border-box;;
+}
+
+body {
+	background-color: rgba(222,214,186,1);
+	font-size: 16px;
+	color: #333;
+	font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4 {
+	font-family: 'Lobster Two', cursive;
+	position: relative;
+	margin-top: 0;
+}
+
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding: 9px 10px;
+	font-size: 14px;
+	width: 100%;
+	border: 0;
+	outline: 0;
+	background-image: url(down-triangle.png);
+	background-position: right 8px center;
+	background-repeat: no-repeat;
+	background-size: 10px;
+}
+
+button {
+	border: none;
+	outline: none;
+	padding: 10px 20px;
+	background-color: #006;
+	color: #EEE;
+	font-size: 14px;
+}
+
+table {
+	border-collapse: collapse;
+	min-width: 100%;
+}
+
+td, th {
+	padding: 10px 20px;
+}
+
+th {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+tr:nth-child(2n) {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.controls {
+	display: flex;
+	flex-direction: flex-row;
+	margin-bottom: 20px;
+}
+
+.controls div:first-child {
+	width: calc(100% - 40px);
+	position: relative;
+}
+
+.view-button {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);	
+}
+
+.slider {
+	overflow-y: hidden;
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+	margin-bottom: 40px;
+}
+
+.slider.closed {
+	margin-bottom: 0;
+}
+
+h2.closed {
+	border-bottom: solid 1px;
+}
+
+h2.treasure {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+h2.gemstones {
+	color: rgba(249,80,39,1);
+}
+
+h2.art-objects {
+	color: rgba(231,147,11,1);
+}
+
+h2.magic-items {
+	color: rgba(100,72,130,1);
+}
+
+table.treasure {
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #EEE;
+}
+
+table.gemstones {
+	background-color: rgba(249,80,39,0.2);
+}
+
+table.art-objects {
+	background-color: rgba(231,147,11,0.5);
+}
+
+table.magic-items {
+	background-color: rgba(100,72,130,1);
+	color: #EEE;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.roll {
+	font-size: 32px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.result {
+	font-size: 18px;
+	padding-left: 0;
+}
+
+.result-text {
+	margin-bottom: 15px;
+}
+
+.detail-link {
+	display: inline-block;
+	padding: 5px 10px;
+	margin: 5px 5px 0 0;
+	background-color: #006;
+	color: #EEE;
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.detail {
+	font-size: 14px;
+	margin: 10px 0;
+}

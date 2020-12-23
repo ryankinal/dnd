@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>D&D Rollable Tables</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet"> 
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<h1>D&D 5E Treasure Tables</h1>
+		<div class="controls">
+			<div>
+				<select id="tableToRoll">
+					<option value="">Select a table</option>
+					<optgroup label="Individual Treasure">
+						<option value="individual treasure: challenge 0-4">Challenge 0-4</option>
+						<option value="individual treasure: challenge 5-10">Challenge 5-10</option>
+						<option value="individual treasure: challenge 11-16">Challenge 11-16</option>
+						<option value="individual treasure: challenge 17+">Challenge 17+</option>
+					</optgroup>
+					<optgroup label="Treasure Hoard">
+						<option value="treasure hoard: challenge 0-4">Challenge 0-4</option>
+						<option value="treasure hoard: challenge 5-10">Challenge 5-10</option>
+						<option value="treasure hoard: challenge 11-16">Challenge 11-16</option>
+						<option value="treasure hoard: challenge 17+">Challenge 17+</option>
+					</optgroup>
+					<optgroup label="Magic Items">
+						<option value="magic item table a">Table A</option>
+						<option value="magic item table b">Table B</option>
+						<option value="magic item table c">Table C</option>
+						<option value="magic item table d">Table D</option>
+						<option value="magic item table e">Table E</option>
+						<option value="magic item table f">Table F</option>
+						<option value="magic item table g">Table G</option>
+						<option value="magic item table h">Table H</option>
+						<option value="magic item table i">Table I</option>
+					</optgroup>
+				</select>
+			</div>
+			<div>
+				<button id="rollButton">Roll</button>
+			</div>
+		</div>
+		<div id="tableOutput"></div>
+		<script type="text/javascript" src="treasure-tables-data.js"></script>
+		<script type="text/javascript" src="treasure-tables.js"></script>
+	</body>
+</html>
