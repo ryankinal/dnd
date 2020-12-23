@@ -153,7 +153,7 @@
 								{
 									rowResult.push(new Intl.NumberFormat().format(roll) + unit.toLowerCase());
 								}
-								else if (name.indexOf('magic item') >= 0 || name.indexOf("wondrous power") >= 0)
+								else if (name.indexOf('magic') >= 0 || name.indexOf("wondrous power") >= 0)
 								{
 									let linkText = '<a href="https://www.dndbeyond.com/search?q=' + row[j] + '" target="_blank">';
 									rowResult.push(linkText + row[j] + ' <span class="fas fa-external-link-alt"></span></a>');
@@ -198,10 +198,10 @@
 			out.innerText = '';
 			out.appendChild(buildResultHTML(name, results));
 
-			document.querySelectorAll('table').forEach(function(n) {
-				let height = n.parentNode.getBoundingClientRect().height;
-				n.parentNode.style.maxHeight = height + 'px';
-			});
+			/*document.querySelectorAll.forEach(function(table) {
+				let tableHeight = table.getBoundingClientRect().height;
+				table.parentNode.style.maxHeight = tableHeight + 'px';
+			})*/
 		}
 
 		return results;
@@ -268,18 +268,22 @@
 						let creatorDiv = document.createElement('div');
 						creatorDiv.className = 'detail';
 
-						let textSpan = document.createElement('span');
-						textSpan.innerHTML = '<b>Make/Intended User:</b> ' + creatorResult;
-
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
 							let creatorResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = '<b>Make/Intended User:</b> ' + creatorResult;
+							textSpan.innerHTML = creatorResult;
 						});
 
+						let label = document.createElement('b');
+						label.appendChild(rerollLink);
+						label.appendChild(document.createTextNode(' Make/Intended User: '));
+
+						let textSpan = document.createElement('span');
+						textSpan.innerText = creatorResult;
+
+						creatorDiv.appendChild(label);
 						creatorDiv.appendChild(textSpan);
-						creatorDiv.appendChild(rerollLink);
 
 						resultCell.appendChild(creatorDiv);
 
@@ -293,18 +297,22 @@
 						let historyDiv = document.createElement('div');
 						historyDiv.className = 'detail';
 
-						let textSpan = document.createElement('span');
-						textSpan.innerHTML = '<b>History:</b> ' + historyResult;
-
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
 							let historyResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = '<b>History:</b> ' + historyResult;
+							textSpan.innerHTML = historyResult;
 						});
 
+						let label = document.createElement('b');
+						label.appendChild(rerollLink);
+						label.appendChild(document.createTextNode(' History: '));
+
+						let textSpan = document.createElement('span');
+						textSpan.innerText = historyResult;
+
+						historyDiv.appendChild(label);
 						historyDiv.appendChild(textSpan);
-						historyDiv.appendChild(rerollLink);
 
 						resultCell.appendChild(historyDiv);
 
@@ -318,18 +326,22 @@
 						let propertyDiv = document.createElement('div');
 						propertyDiv.className = 'detail';
 
-						let textSpan = document.createElement('span');
-						textSpan.innerHTML = '<b>Minor Property:</b> ' + propertyResult;
-
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
 							let propertyResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = '<b>Minor Property:</b> ' + propertyResult;
+							textSpan.innerHTML = propertyResult;
 						});
 
+						let label = document.createElement('b');
+						label.appendChild(rerollLink);
+						label.appendChild(document.createTextNode(' Minor Property: '));
+
+						let textSpan = document.createElement('span');
+						textSpan.innerText = propertyResult;
+
+						propertyDiv.appendChild(label);
 						propertyDiv.appendChild(textSpan);
-						propertyDiv.appendChild(rerollLink);
 
 						resultCell.appendChild(propertyDiv);
 
@@ -343,18 +355,22 @@
 						let quirkDiv = document.createElement('div');
 						quirkDiv.className = 'detail';
 
-						let textSpan = document.createElement('span');
-						textSpan.innerHTML = '<b>Quirk:</b> ' + quirkResult;
-
 						let rerollLink = document.createElement('a');
 						rerollLink.className = 'fas fa-dice';
 						rerollLink.addEventListener('click', function() {
 							let quirkResult = rollOnTable(table)[table][0].result;
-							textSpan.innerHTML = '<b>Quirk:</b> ' + quirkResult;
+							textSpan.innerHTML = quirkResult;
 						});
 
+						let label = document.createElement('b');
+						label.appendChild(rerollLink);
+						label.appendChild(document.createTextNode(' Quirk: '));
+
+						let textSpan = document.createElement('span');
+						textSpan.innerText = quirkResult;
+
+						quirkDiv.appendChild(label);
 						quirkDiv.appendChild(textSpan);
-						quirkDiv.appendChild(rerollLink);
 
 						resultCell.appendChild(quirkDiv);
 
@@ -392,13 +408,28 @@
 					viewButton.classList.add('fa-chevron-down');
 					header.classList.remove('closed');
 					tableSlider.classList.remove('closed');
+
+					setTimeout(function() {
+						tableSlider.style.transitionDuration = '0';
+						tableSelect.style.maxHeight = 'max-content';
+						tableSlider.style.transitionDuration = '0.5s';
+					}, 300);
 				} else {
-					tableSlider.setAttribute('data-prev-max-height', tableSlider.style.maxHeight);
-					tableSlider.style.maxHeight = '0px';
+					let tableHeight = tableSlider.querySelector('table').getBoundingClientRect().height + 'px';
+
+					tableSlider.style.transitionDuration = '0';
+					tableSlider.style.maxHeight = tableHeight;
+
+					setTimeout(function() {
+						tableSlider.style.transitionDuration = '.5s';
+						tableSlider.style.maxHeight = '0px';
+						tableSlider.classList.add('closed');	
+					}, 15);
+
+					tableSlider.setAttribute('data-prev-max-height', tableHeight);
 					viewButton.classList.remove('fa-chevron-down');
 					viewButton.classList.add('fa-chevron-up');
-					header.classList.add('closed');
-					tableSlider.classList.add('closed');
+					
 				}
 			});
 
