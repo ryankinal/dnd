@@ -46,7 +46,7 @@ button {
 table {
 	border-collapse: collapse;
 	min-width: 100%;
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 }
 
 td, th {
@@ -185,6 +185,7 @@ a {
 	color: #EEE;
 	font-size: 12px;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
 .detail {
@@ -194,4 +195,5 @@ a {
 
 .detail a {
 	animation-duration: 0.5s;
+	cursor: pointer;
 }
