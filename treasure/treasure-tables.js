@@ -1,4 +1,9 @@
 (function () {
+	let tableOutput = document.getElementById('tableOutput');
+	let tableTopButton = document.createElement('button');
+	tableTopButton.innerHTML = '<span class="fas fa-arrow-up"></span>';
+	tableTopButton.className = 'table-top';
+
 	function rollDice(str) {
 		let parts = str.replace(/,/g, '').matchAll(/(\d+)?d(\d+)([+-])?(\d+)?\s*x?\s*(\d+)?/ig).next();
 
@@ -28,8 +33,7 @@
 		return false;
 	}
 
-	function getTableTitle(table)
-	{
+	function getTableTitle(table) {
 		return treasureTableNames.filter(function(n) {
 			return n.toLowerCase() === table;
 		}).map(function(n) {
@@ -37,8 +41,142 @@
 		}).join('');
 	}
 
-	function rollOnTable(name, render)
-	{
+	function renderTable(name) {
+		let data = treasureTables[name];
+
+		if (data) {
+			let title = getTableTitle(name);
+
+			let header = document.createElement('h2');
+			header.appendChild(document.createTextNode(title));
+			header.className = treasureClasses[name];
+
+			let tableSlider = document.createElement('div');
+			tableSlider.className = 'slider';
+
+			let viewButton = document.createElement('a');
+			viewButton.className = 'view-button fas fa-chevron-down';
+			viewButton.setAttribute('data-table-name', name);
+			header.appendChild(viewButton);
+
+			viewButton.addEventListener('click', function() {
+				if (tableSlider.style.maxHeight === '2px') {
+					tableSlider.style.maxHeight = tableSlider.dataset.prevMaxHeight;
+					viewButton.classList.remove('fa-chevron-up');
+					viewButton.classList.add('fa-chevron-down');
+					header.classList.remove('closed');
+					
+
+					setTimeout(function() {
+						tableSlider.style.transitionDuration = '0';
+						tableSlider.style.maxHeight = 'max-content';
+						tableSlider.classList.remove('closed');
+					}, 300);
+				} else {
+					let tableHeight = tableSlider.getBoundingClientRect().height + 'px';
+
+					tableSlider.style.transitionDuration = '0';
+					tableSlider.style.maxHeight = tableHeight;
+
+					setTimeout(function() {
+						tableSlider.style.transitionDuration = '.5s';
+						tableSlider.style.maxHeight = '2px';
+						tableSlider.classList.add('closed');	
+					}, 15);
+
+					tableSlider.setAttribute('data-prev-max-height', tableHeight);
+					viewButton.classList.remove('fa-chevron-down');
+					viewButton.classList.add('fa-chevron-up');
+					
+				}
+			});
+
+			data.forEach(function(t) {
+				let table = document.createElement('table');
+				table.className = treasureClasses[name] + ' full-table';
+
+				t.forEach(function(r, i) {
+					let row = document.createElement('tr');
+
+					r.forEach(function(c, j) {
+						let dieMatches = c.matchAll(/(\d+)?d(\d+)([+-])?(\d+)?(\s*x\s*[\d,]+)?(\s*\([\d,]+\))?/ig);
+						let match = dieMatches.next();
+						let toReplace = {};
+
+						let cell = document.createElement(i === 0 ? 'th' : 'td');
+
+						if (j > 0) {
+							cell.className = 'result';
+						}
+
+						if (i > 0 && j > 0 && (name.indexOf('magic') >= 0 || name.indexOf("wondrous power") >= 0))
+						{
+							linkText = '<a href="https://www.dndbeyond.com/search?q=' + c + '" target="_blank">';
+							c = '<div class="result-text">' + linkText + c + ' <span class="fas fa-external-link-alt"></span></a></div>';
+						}
+						else
+						{
+							do {
+								if (match.value) {
+									let fullMatch = match.value[0];
+									let linkText = '<a class="rollable" data-dice-string="' + fullMatch + '" title="' + fullMatch + '"><span class="dice-string">' + fullMatch + '</span> <span class="fas fa-dice"></a>';
+									toReplace[fullMatch] = linkText;
+									match = dieMatches.next();
+								} else {
+									break;
+								}
+							} while (match && !match.done);
+
+							let tableMatches = c.matchAll(new RegExp('(' + Object.keys(treasureTables).join('|') + ')', 'ig'));
+							match = tableMatches.next();
+
+							do {
+								if (match.value) {
+									let fullMatch = match.value[0];
+									let lowerMatch = fullMatch.toLowerCase();
+									let linkText = '<a class="table-reference" data-table-name="' + lowerMatch + '" title="' + fullMatch + '">' + fullMatch + ' <span class="fas fa-table"></a>';
+									toReplace[fullMatch] = linkText;
+									match = tableMatches.next();
+								} else {
+									break;
+								}
+							} while (match && !match.done);
+
+							Object.keys(toReplace).forEach(function(k) {
+								c = c.replace(k, toReplace[k]);
+							});
+						}
+						
+						cell.innerHTML = c;
+
+						if (i > 0 && j > 0 && name.indexOf('challenge') < 0)
+						{
+							let detailsLink = document.createElement('a');
+							detailsLink.innerHTML = '<span class="fas fa-dice"> random details';
+							detailsLink.className = 'details-link';
+							addDetailHandler(detailsLink, cell);
+							
+							let linksDiv = document.createElement('div');
+							linksDiv.appendChild(detailsLink);
+
+							cell.appendChild(linksDiv);
+						}
+						
+						row.appendChild(cell);
+					});
+
+					table.appendChild(row);
+				});
+
+				tableSlider.appendChild(table);
+			});
+
+			tableOutput.appendChild(header);
+			tableOutput.appendChild(tableSlider);
+		}
+	}
+
+	function rollOnTable(name, render) {
 		render = (typeof render === 'undefined' ? false : render);
 
 		let data = treasureTables[name];
@@ -84,7 +222,7 @@
 
 						if (unit.toLowerCase() === 'gems or art objects')
 						{
-							let matches = row[j].matchAll(/(\d*d\d+(?:[+-]\d+)?)\s*\([\d,]+\)\s*([\d,]+ gp (?:gems(tones)?|art objects))/ig);
+							let matches = row[j].matchAll(/(\d*d\d+(?:[+-]\d+)?)\s*\([\d,]+\)\s*([\d,]+ gp (?:gems?|art objects))/ig);
 							let match = matches.next();
 
 							while (match && !match.done)
@@ -92,11 +230,6 @@
 								let die = match.value[1];
 								let table = match.value[2];
 								let roll = 1;
-
-								if (table.indexOf('gems') === table.length - 4)
-								{
-									table += 'tones';
-								}
 
 								if (die && die.toLowerCase() !== 'once')
 								{
@@ -211,40 +344,45 @@
 		return results;
 	}
 
-	function addDetailHandler(link, table, cell)
+	function addDetailHandler(link, cell)
 	{
 		link.addEventListener('click', function() {
-			let tableResult = rollOnTable(table)[table][0].result;
+			["who created it or was intended to use it?",
+			"what is a detail from its history?",
+			"what minor property does it have?",
+			"what quirk does it have?"].forEach(function(table) {
+				let tableResult = rollOnTable(table)[table][0].result;
 			
-			let detailDiv = document.createElement('div');
-			detailDiv.className = 'detail';
+				let detailDiv = document.createElement('div');
+				detailDiv.className = 'detail';
 
-			let rerollLink = document.createElement('a');
-			rerollLink.className = 'fas fa-dice';
-			rerollLink.addEventListener('click', function() {
-				text.style.visibility = 'hidden';
-				rerollLink.classList.add('fa-spin');
+				let rerollLink = document.createElement('a');
+				rerollLink.className = 'fas fa-dice';
+				rerollLink.addEventListener('click', function() {
+					text.style.visibility = 'hidden';
+					rerollLink.classList.add('fa-spin');
 
-				setTimeout(function() {
-					let tableResult = rollOnTable(table)[table][0].result;
-					text.innerHTML = tableResult;
-					text.style.visibility = 'visible';
-					rerollLink.classList.remove('fa-spin');
-				}, 500);
+					setTimeout(function() {
+						let tableResult = rollOnTable(table)[table][0].result;
+						text.innerHTML = tableResult;
+						text.style.visibility = 'visible';
+						rerollLink.classList.remove('fa-spin');
+					}, 250);
+				});
+
+				let label = document.createElement('b');
+				label.appendChild(rerollLink);
+				label.appendChild(document.createTextNode(' ' + getTableTitle(table)));
+
+				let text = document.createElement('div');
+				text.innerText = tableResult;
+
+				detailDiv.appendChild(label);
+				detailDiv.appendChild(text);
+
+				cell.appendChild(detailDiv);
 			});
-
-			let label = document.createElement('b');
-			label.appendChild(rerollLink);
-			label.appendChild(document.createTextNode(' ' + getTableTitle(table)));
-
-			let text = document.createElement('div');
-			text.innerText = tableResult;
-
-			detailDiv.appendChild(label);
-			detailDiv.appendChild(text);
-
-			cell.appendChild(detailDiv);
-
+			
 			link.remove();
 		});
 	}
@@ -279,34 +417,15 @@
 
 				if (table.indexOf('challenge') < 0)
 				{
-					let creatorLink = document.createElement('a');
-					creatorLink.appendChild(document.createTextNode('+Make/Intended User'));
-					creatorLink.className = 'detail-link';
-
-					let historyLink = document.createElement('a');
-					historyLink.appendChild(document.createTextNode('+History'));
-					historyLink.className = 'detail-link';
-
-					let propertyLink = document.createElement('a');
-					propertyLink.appendChild(document.createTextNode('+Minor Property'));
-					propertyLink.className = 'detail-link';
-
-					let quirkLink = document.createElement('a');
-					quirkLink.appendChild(document.createTextNode('+Quirk'));
-					quirkLink.className = 'detail-link';
+					let detailsLink = document.createElement('a');
+					detailsLink.innerHTML = '<span class="fas fa-dice"> random details';
+					detailsLink.className = 'details-link';
+					addDetailHandler(detailsLink, resultCell);
 					
 					let linksDiv = document.createElement('div');
-					linksDiv.appendChild(creatorLink);
-					linksDiv.appendChild(historyLink);
-					linksDiv.appendChild(propertyLink);
-					linksDiv.appendChild(quirkLink);
+					linksDiv.appendChild(detailsLink);
 
 					resultCell.appendChild(linksDiv);
-
-					addDetailHandler(creatorLink, 'who created it or was intended to use it?', resultCell);
-					addDetailHandler(historyLink, 'what is a detail from its history?', resultCell);
-					addDetailHandler(propertyLink, 'what minor property does it have?', resultCell);
-					addDetailHandler(quirkLink, 'what quirk does it have?', resultCell);
 				}
 				
 				return rowElement;
@@ -395,10 +514,120 @@
 	}
 
 	let tableSelect = document.getElementById('tableToRoll');
+
 	let rollButton = document.getElementById('rollButton');
 	rollButton.addEventListener('click', function() {
 		if (tableSelect.value) {
 			rollOnTable(tableSelect.value, true);	
+		}
+	});
+
+	let viewButton = document.getElementById('viewButton');
+	viewButton.addEventListener('click', function() {
+		if (tableSelect.value) {
+			tableOutput.innerText = '';
+			renderTable(tableSelect.value);
+		}
+	});
+
+	document.querySelector('.page-top').addEventListener('click', function() {
+		window.smoothScroll(0);
+	});
+
+	document.addEventListener('click', function(e) {
+		let target = e.target;
+
+		if (!target.classList.contains('rollable')) {
+			target = target.parentNode;
+		}
+
+		if (target && target.classList && target.classList.contains('rollable'))
+		{
+			let diceIcon = target.querySelector('.fa-dice');
+			diceIcon.classList.add('fa-spin');
+			let table = null;
+
+			if (target.parentNode.tagName === 'TH') {
+				table = target.parentNode.parentNode.parentNode;
+				table.querySelectorAll('.selected').forEach(function(s) {
+					s.classList.remove('selected');
+				});
+			}
+
+			setTimeout(function() {
+				diceIcon.classList.remove('fa-spin');
+				let diceString = target.dataset.diceString;
+				let roll = rollDice(diceString)
+				target.querySelector('.dice-string').innerText = new Intl.NumberFormat().format(roll);
+
+				if (target.parentNode.tagName === 'TH') {
+					table.querySelectorAll('td:first-child').forEach(function(td) {
+						let text = td.innerText;
+						let range = text.split(/\s*-\s*/).map(function(n) {
+							let num = parseInt(n);
+							return num === 0 ? 100 : num;
+						});
+
+						if (range.length === 1) {
+							range.push(range[0]);
+						}
+
+						if (roll >= range[0] && roll <= range[1]) {
+							td.parentNode.classList.add('selected');
+							td.appendChild(tableTopButton);
+							window.smoothScroll(td.parentNode.previousElementSibling);
+							return false;
+						}
+					});
+				}
+			}, 250);
+		}
+	});
+
+	document.addEventListener('click', function(e) {
+		let target = e.target;
+
+		if (!target.classList.contains('table-top')) {
+			target = target.parentNode;
+		}
+
+		if (target && target.classList && target.classList.contains('table-top')) {
+			let elem = target.parentNode;
+			while (elem && elem.tagName !== 'TABLE') {
+				elem = elem.parentNode;
+			}
+
+			if (elem && elem.tagName === 'TABLE') {
+				window.smoothScroll(elem);
+			}
+		}
+	});
+
+	document.addEventListener('click', function(e) {
+		let target = e.target;
+
+		if (!target.classList.contains('table-reference'))
+		{
+			target = target.parentNode;
+		}
+
+		if (target && target.classList && target.classList.contains('table-reference'))
+		{
+			let tableName = target.dataset.tableName;
+
+			if (treasureTables[tableName]) {
+				let headerElement = document.querySelector('h2 [data-table-name="' + tableName + '"]');
+				
+				if (headerElement)
+				{	
+					window.smoothScroll(headerElement);
+				}
+				else
+				{
+					renderTable(tableName);
+					window.smoothScroll(document.querySelector('h2 [data-table-name="' + tableName + '"]'));
+				}
+			}
 		}
 	});
 })();

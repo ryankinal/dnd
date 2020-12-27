@@ -7,12 +7,12 @@ var treasureTableNames = [
   "Treasure Hoard: Challenge 5-10",
   "Treasure Hoard: Challenge 11-16",
   "Treasure Hoard: Challenge 17+",
-  "10 gp Gemstones",
-  "50 gp Gemstones",
-  "100 gp Gemstones",
-  "500 gp Gemstones",
-  "1,000 gp Gemstones",
-  "5,000 gp Gemstones",
+  "10 gp gems",
+  "50 gp gems",
+  "100 gp gems",
+  "500 gp gems",
+  "1,000 gp gems",
+  "5,000 gp gems",
   "25 gp Art Objects",
   "250 gp Art Objects",
   "750 gp Art Objects",
@@ -46,12 +46,12 @@ var treasureClasses = {
   "treasure hoard: challenge 5-10": "treasure hoard-treasure",
   "treasure hoard: challenge 11-16": "treasure hoard-treasure",
   "treasure hoard: challenge 17+": "treasure hoard-treasure",
-  "10 gp gemstones": "gemstones",
-  "50 gp gemstones": "gemstones",
-  "100 gp gemstones": "gemstones",
-  "500 gp gemstones": "gemstones",
-  "1,000 gp gemstones": "gemstones",
-  "5,000 gp gemstones": "gemstones",
+  "10 gp gems": "gems",
+  "50 gp gems": "gems",
+  "100 gp gems": "gems",
+  "500 gp gems": "gems",
+  "1,000 gp gems": "gems",
+  "5,000 gp gems": "gems",
   "25 gp art objects": "art-objects",
   "250 gp art objects": "art-objects",
   "750 gp art objects": "art-objects",
@@ -195,7 +195,7 @@ var treasureTables = {
         "-",
         "4d6 x 100 (1,400)",
         "-",
-        "1d6  100 (350)",
+        "1d6 x 100 (350)",
         "-"
       ],
       [
@@ -560,7 +560,7 @@ var treasureTables = {
         "-",
         "-",
         "4d6 x 1,000 (14,000)",
-        "5d6 x 100 (1,750) pp"
+        "5d6 x 100 (1,750)"
       ]
     ],
     [
@@ -888,7 +888,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "10 gp gemstones": [
+  "10 gp gems": [
     [
       [
         "d12",
@@ -944,7 +944,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "50 gp gemstones": [
+  "50 gp gems": [
     [
       [
         "d12",
@@ -1000,7 +1000,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "100 gp gemstones": [
+  "100 gp gems": [
     [
       [
         "d10",
@@ -1048,7 +1048,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "500 gp gemstones": [
+  "500 gp gems": [
     [
       [
         "d6",
@@ -1080,7 +1080,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "1,000 gp gemstones": [
+  "1,000 gp gems": [
     [
       [
         "d8",
@@ -1120,7 +1120,7 @@ var treasureTables = {
       ]
     ]
   ],
-  "5,000 gp gemstones": [
+  "5,000 gp gems": [
     [
       [
         "d4",
@@ -1574,7 +1574,7 @@ var treasureTables = {
       ],
       [
         "4",
-        "Ornament. The item was created to honor a special occasion. Inset gemstones, gold or platinum inlays, and gold or silver filigree adorn its surface."
+        "Ornament. The item was created to honor a special occasion. Inset gems, gold or platinum inlays, and gold or silver filigree adorn its surface."
       ],
       [
         "5",

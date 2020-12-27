@@ -72,7 +72,7 @@ tr:nth-child(2n) {
 }
 
 .restrict {
-	max-width: 500px;
+	max-width: 1000px;
 	margin: 20px auto;
 }
 
@@ -83,8 +83,12 @@ tr:nth-child(2n) {
 }
 
 .controls div:first-child {
-	width: calc(100% - 40px);
+	width: calc(100% - 140px);
 	position: relative;
+}
+
+#viewButton {
+	margin-left: 1px;
 }
 
 .view-button {
@@ -114,7 +118,7 @@ h2.treasure {
 	color: rgba(0, 0, 0, 0.5);
 }
 
-h2.gemstones {
+h2.gems {
 	color: rgba(249,80,39,1);
 }
 
@@ -131,7 +135,7 @@ table.treasure {
 	color: #EEE;
 }
 
-table.gemstones {
+table.gems {
 	background-color: rgba(249,80,39,0.2);
 }
 
@@ -144,9 +148,55 @@ table.magic-items {
 	color: #EEE;
 }
 
+.full-table.treasure th,
+.full-table.treasure td {
+	text-align: center;
+	padding: 5px;
+}
+
+.full-table th:first-child,
+.full-table td:first-child {
+	text-align: center;
+}
+
 a {
 	color: inherit;
 	text-decoration: none;
+}
+
+.rollable,
+.table-reference {
+	margin: 3px 5px;
+	padding: 3px 5px;
+	display: block;
+	border: solid 1px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+tr.selected {
+	background-color: rgba(0, 100, 0, 0.8);
+	color: #EEE;
+}
+
+tr.selected td:first-child {
+	position: relative;
+}
+
+.table-top {
+	position: absolute;
+	bottom: 4px;
+	left: 4px;
+	padding: 5px;
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	font-size: 12px;
+	display: none;
+}
+
+.selected .table-top {
+	display: block;
 }
 
 .roll {
@@ -177,7 +227,7 @@ a {
 	width: 18px;
 }
 
-.detail-link {
+.details-link {
 	display: inline-block;
 	padding: 5px 10px;
 	margin: 5px 5px 0 0;
@@ -191,9 +241,41 @@ a {
 .detail {
 	font-size: 14px;
 	margin: 10px 0;
+	text-align: left;
 }
 
-.detail a {
-	animation-duration: 0.5s;
+.fa-dice {
+	animation-duration: 0.25s;
 	cursor: pointer;
+}
+
+.control-buttons {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	text-align: center;
+}
+
+.control-buttons > div {
+	margin: 0 10px;
+}
+
+.control-buttons button {
+	padding: 5px;
+	width: 35px;
+	height: 35px;
+	border-radius: 18px;
+}
+
+.control-buttons p {
+	margin: 5px 0;
+}
+
+.table-list,
+.stash {
+	display: none;
+}
+
+.page-top {
+	display: inline-block;
 }
