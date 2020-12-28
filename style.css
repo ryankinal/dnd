@@ -1,0 +1,48 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	margin: 10px;
+	padding: 0;
+	background-color: #38332F;
+	color: #EEEBD8;
+}
+
+header {
+	margin-bottom: 55px;
+}
+
+h1, h2, h3, h4 {
+	font-family: 'Lobster Two', sans-serif;
+	margin-top: 0;
+	position: relative;
+}
+
+h1 {
+	text-align: left;
+	position: relative;
+	color: rgb(244, 210, 68);
+}
+
+p {
+	margin-top: 0;
+	margin-bottom: 12px;
+}
+
+a {
+	color: #EA911D;
+	text-decoration: none;
+}
+
+a.back-link {
+	font-size: .8em;
+}
+
+.restrict {
+	width: 100%;
+	max-width: 1000px;
+	margin: 55px auto;
+}

@@ -1,0 +1,379 @@
+.restrict {
+	max-width: 400px;
+	margin:  25px auto 0;
+}
+
+.roll-id-container,
+.roll-average-container {
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.roll-average-container {
+	font-size: 0.8em;
+	display: none;
+}
+
+.form {
+	margin-bottom: 25px;
+}
+
+.dice {
+	font-size: 45px;
+	text-align: center;
+}
+
+.dice * {
+	display: inline-block;
+}
+
+.dice input {
+	font-size: 40px;
+	width: 60px;
+	text-align: center;
+	border: solid #DDD 1px;
+}
+
+.dice span {
+	margin: 4px;
+	vertical-align: top;
+}
+
+.options {
+	text-align: center;
+}
+
+.options label {
+	padding: 3px 5px;
+	margin: 3px 5px;
+	display: inline-block;
+	width: 45%;
+}
+
+.options .selected {
+	background-color: rgba(238, 235, 216, 0.1);
+}
+
+.error {
+	border: solid #DE0808 2px;
+}
+
+#doIt,
+#saveIt,
+#confirmSave,
+#cancelSave {
+	width: 49%;
+	border: none;
+	font-size: 18px;
+	outline: 0;
+	padding: 10px 20px;
+}
+
+#doIt {
+	background-color: #F4D244;
+}
+
+#saveIt,
+#confirmSave {
+	background-color: #EA911D;
+}
+
+#cancelSave {
+	background-color: #DE0808;
+}
+
+.total,
+.actual-rolled,
+#rolling {
+	text-align: center;
+}
+
+#rolling {
+	font-size: 32px;
+}
+
+.total {
+	margin-bottom: 10px;
+}
+
+#output, .options, .detail {
+	padding: 15px 0;
+}
+
+.output-section {
+	display: inline-block;
+	width: 80px;
+	border: solid #F4D244 1px;
+	background-color: #FFF;
+	color: #000;
+}
+
+.output-section-plus,
+.output-section-equals {
+	width: auto;
+	border: none;
+	background-color: transparent;
+	position: relative;
+	color: #EEEBD8;
+	top: -10px;
+}
+
+.output-header {
+	border-bottom: solid #F4D244 1px;
+	padding: 5px;
+}
+
+.output-section .output-value {
+	padding: 10px;
+	font-size: 45px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.output-die {
+	width: 30px;
+	height: 30px;
+	color: #FFF;
+	margin: 10px;
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	vertical-align: center;
+}
+
+.output-die-value {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.output-die::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	content: '';
+	display: block;
+	transform: rotate(51deg) skew(15deg);
+	background-color: #DE0808;
+	border-radius: 2px;
+}
+
+.output {
+	padding: 10px 15px;
+	margin-bottom: 5px;
+	vertical-align: middle;
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.output-text {
+	position: relative;
+	top: -18px;
+}
+
+.output.unkept {
+	opacity: 0.4;
+}
+
+.output-tags,
+.output-total-die-value {
+	font-size: .6em;
+	position: absolute;
+	right: 6px;
+}
+
+.output-tags {
+	top: 6px;
+}
+
+.output-total-die-value {
+	bottom: 6px;
+}
+
+#quickRollsButton {
+	padding: 5px 15px;
+	background-color: #EA911D;
+	outline: none;
+	border: none;
+	font-size: 16px;
+	position: absolute;
+	bottom: 8px;
+	right: 0;
+}
+
+#saveModal,
+#quickRollsModal {
+	position: fixed;
+	top: 15%;
+	width: 100%;
+	display: none;
+	padding: 15px;
+	background-color: #38332F;
+	z-index: 3;
+	left: 0;
+	max-height: 70%;
+	overflow: auto;
+}
+
+#quickRollsModal {
+	padding: 0;
+}
+
+#saveModal label,
+#saveModal input {
+	display: block;
+	text-align: left;
+}
+
+#saveModal label {
+	margin-bottom: 3px;
+}
+
+#saveModal input {
+	width: 100%;
+	padding: 5px 10px;
+	font-size: 18px;
+}
+
+#saveModal div {
+	margin-bottom: 10px;
+}
+
+#saveModal > div:last-child {
+	margin-top: 30px;
+}
+
+#nameSuggestions,
+#groupSuggestions {
+	margin: 10px 0 0 0;
+	overflow: hidden;
+}
+
+.suggestion {
+	padding: 5px 10px;
+	background-color: #F4D244;
+	color: #000;
+	display: block;
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+#quickRollsModal h2 {
+	font-size: 22px;
+	background-color: #EEEBD8;
+	color: #38332F;
+	padding: 10px;
+}
+
+#quickRollsModal h2:first-child {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.quick-roll {
+	border-bottom: solid 1px #EEEBD8;
+	overflow: hidden;
+	padding: 10px;
+}
+
+.quick-roll:last-child {
+	border-bottom: none;
+}
+
+.quick-roll.clicked {
+	background-color: rgba(238, 235, 216, 0.1);
+}
+
+.quick-roll-buttons span {
+	margin-left: 6px;
+}
+
+#quickRollsModal .button {
+	padding: 5px 10px;
+	color: #000;
+}
+
+.quick-roll-button {
+	position: relative;
+	background-color: #F4D244;
+}
+
+.quick-roll-button::after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 7px;
+	height: 7px;
+	left: 50%;
+	top: 6px;
+	transform: translateX(-50%) rotate(18deg) skew(12deg);
+	background-color: #000;
+}
+
+.void-roll-button {
+	background-color: #EA911D;
+}
+
+.delete-button {
+	color: #DE0808;
+	font-size: 14px;
+	padding: 8px 10px;
+}
+
+.key {
+	margin: 0 0 15px 0;
+	display: flex;
+	flex-direction: row;
+}
+
+.key div {
+	padding: 0 10px;
+	text-align: center;
+}
+
+.quick-roll-dice {
+	font-size: 0.8em;
+}
+
+.quick-roll-buttons {
+	float: right;
+	margin-top: 7px
+}
+
+.clear-roll {
+	margin: 10px 0;
+	text-align: center;
+	color: #DE0808;
+}
+
+.clear-roll span.fas {
+	font-size: 0.8em;
+}
+
+#blanket {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: none;
+	z-index: 2;
+}
+
+@media (min-width: 400px) {
+	.dice input {
+		width: 80px;
+		font-size: 45px;
+	}
+
+	#quickRollsModal,
+	#saveModal {
+		max-width: 600px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}

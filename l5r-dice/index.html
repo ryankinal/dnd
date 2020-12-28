@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>L5R 4E Dice | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Ruslan+Display|Lobster+Two:wght@700&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="dice.css?bust=6" rel="stylesheet">
+</head>
+<body>
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>L5R 4E Dice <button id="quickRollsButton"><span class="fas fa-list"></span> Saved Rolls</button></h1>
+		<div class="form">
+			<div class="roll-id-container" style="display: none">
+				<span class="roll-group"></span> - <span class="roll-name"></span>
+				<span class="clear-roll">
+					<span class="fas fa-minus-circle"></span></span>
+				</span>
+			</div>
+			<div class="dice">
+				<input type="number" id="roll" length="2" value="4">
+				<span>k</span>
+				<input type="number" id="keep" length="2" value="2">
+				<span>+</span>
+				<input type="number" id="bonus" length="2" value="0">
+			</div>
+			<div class="options">
+				<label><input type="checkbox" id="explode" checked="checked"> Explode 10's</label>
+				<label><input type="checkbox" id="explodeNines"> Explode 9's</label>
+				<label><input type="checkbox" id="reroll"> Reroll 1's</label>
+				<label><input type="checkbox" id="void"> Void (+1k1)</label>
+			</div>
+			<div class="roll-average-container">
+				Average: <span class="average"></span>
+			</div>
+			<div class="submit">
+				<button id="doIt">Roll</button>
+				<button id="saveIt">Save</button>
+			</div>
+		</div>
+		<div class="results">
+			<div id="rolling" style="display: none"><span class="fas fa-compass fa-spin"></span></div>
+			<div id="output">
+				<div class="total"></div>
+				<div class="actual-rolled"></div>
+				<div class="detail"></div>
+			</div>
+		</div>
+	</div>
+	<div id="saveModal">
+		<div class="summary"></div>
+		<div>
+			<label>Name</label>
+			<input type="text" id="nameInput">
+			<div id="nameSuggestions"></div>
+		</div>
+		<div>
+			<label>Group</label>
+			<input type="text" id="groupInput">
+			<div id="groupSuggestions"></div>
+		</div>
+		<div>
+			<button id="cancelSave">Cancel</button>
+			<button id="confirmSave">Save</button>
+		</div>
+	</div>
+	<div id="quickRollsModal">
+		<div class="list">
+			
+		</div>
+	</div>
+	<div id="blanket"></div>
+	<script type="text/javascript" src="skills.js?bust=6"></script>
+	<script type="text/javascript" src="averages.js?bust=6"></script>
+	<script type="text/javascript" src="dice.js?bust=6"></script>
+</body>
+</html>
