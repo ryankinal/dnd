@@ -93,6 +93,10 @@ tr:nth-child(2n) {
 	margin-bottom: 0;
 }
 
+h2 a {
+	color: inherit;
+}
+
 h2.closed {
 	border-bottom: solid 1px;
 }
