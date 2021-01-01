@@ -549,6 +549,7 @@
 	let rollButton = document.getElementById('rollButton');
 	rollButton.addEventListener('click', function() {
 		if (tableSelect.value) {
+			stash = [];
 			rollOnTable(tableSelect.value, true);
 			renderStash();
 		}
@@ -584,6 +585,11 @@
 	copyButton.addEventListener('click', function() {
 		stashOutput.select();
 		document.execCommand('copy');
+		copyButton.innerHTML = '<span class="fas fa-copy"></span> copied!';
+
+		setTimeout(function() {
+			copyButton.innerHTML = '<span class="fas fa-copy"></span> copy!';
+		}, 1500);
 	});
 
 	document.querySelector('.stash-controls .clear').addEventListener('click', function() {
