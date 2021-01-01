@@ -51,17 +51,25 @@
 			<div id="tableOutput"></div>
 		</div>
 		<div class="control-buttons">
-			<div class="table-list">& 
+			<!-- <div class="table-list">
 				<div></div>
 				<button><span class="fas fa-table"></span></button>
-			</div>
+			</div> -->
 			<div class="stash">
-				<div></div>
-				<button><span class="fas fa-coins"></span></button>
+				<button><span class="fas fa-coins"></span> stash <span class="stash-count"></span></button>
 			</div>
 			<div class="page-top">
-				<button><span class="fas fa-arrow-up"></span></button>
+				<button><span class="fas fa-arrow-up"></span> page top</button>
 			</div>
+		</div>
+		<div class="overlay"></div>
+		<div class="stash-modal stash-empty">
+			<div class="stash-controls">
+				<a class="copy"><span class="fas fa-copy"></span> copy</a>
+				<a class="clear"><span class="fas fa-trash"></span> clear</a>
+				<a class="close"><span class="far fa-times-circle"></span></a>
+			</div>
+			<textarea class="stash-output"></textarea>
 		</div>
 		<script type="text/javascript" src="../smoothscroll.js"></script>
 		<script type="text/javascript" src="treasure-tables-data.js"></script>

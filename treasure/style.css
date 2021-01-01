@@ -56,7 +56,7 @@ tr:nth-child(2n) {
 
 .restrict {
 	max-width: 1000px;
-	margin: 20px auto;
+	margin: 20px auto 50px;
 }
 
 .controls {
@@ -144,6 +144,7 @@ table a {
 	border: solid 1px;
 	border-radius: 4px;
 	text-align: center;
+	cursor: pointer;
 }
 
 tr.selected {
@@ -223,38 +224,203 @@ tr.selected td:first-child {
 
 .control-buttons {
 	position: fixed;
-	bottom: 10px;
-	right: 10px;
+	bottom: 0px;
+	left: 0px;
 	text-align: center;
+	letter-spacing: -15px;
+	background-color: #006;
+	width: 100%;
+	box-shadow: 0 0 50px 0px #000;
 }
 
 .control-buttons > div {
-	margin: 0 10px;
+	display: inline-block;
+	letter-spacing: normal;
 }
 
 .control-buttons button {
-	padding: 5px;
-	width: 35px;
+	padding: 5px 15px;
 	height: 35px;
-	border-radius: 18px;
+	border-right: solid #66D 1px;
+	cursor: pointer;
 }
 
-.control-buttons p {
-	margin: 5px 0;
+.control-buttons button .fas {
+	margin-right: 5px;
 }
 
-.table-list,
-.stash {
-	display: none;
+.control-buttons div:first-child button {
+	border-left: solid #66D 1px;
+}
+
+.table-list {
+	display: none !important;
 }
 
 .page-top {
 	display: inline-block;
 }
 
+.stash-modal {
+	position: fixed;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 94vw;
+	height: 94vh;
+	margin: 3vh auto;
+	padding: 10px;
+	background-color: #006;
+	max-width: 940px;
+	border-radius: 8px;
+	display: none;
+	z-index: 5;
+}
+
+.stash-empty .copy,
+.stash-empty .clear {
+	display: none;
+}
+
+.stash-controls {
+	text-align: left;
+	height: 20px;
+}
+
+.stash-controls a {
+	display: inline-block;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.stash-controls .close {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	margin: 0;
+}
+
+.stash-no-items {
+	padding: 20px;
+	text-align: center;
+}
+
+.stash-output {
+	display: block;
+	width: 100%;
+	height: calc(100% - 30px);
+	margin-top: 10px;
+	padding: 15px;
+}
+
+.stash-item {
+	padding: 8px 16px;
+	letter-spacing: -15px;
+}
+
+.stash-item * {
+	letter-spacing: normal;
+	vertical-align: top;
+}
+
+.stash-item:nth-child(even) {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.stash-item:nth-child(odd) {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.stash-item-text {
+	display: inline-block;
+	width: calc(100% - 40px);
+	text-align: left;
+}
+
+.stash-item-buttons {
+	width: 40px;
+	min-width: 40px;
+	display: inline-block;
+}
+
+.stash-item-buttons button {
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	width: auto;
+	background: transparent;
+	height: auto;
+}
+
+.stash-item-delete-button {
+	color: #E22;
+}
+
+.stash-item-delete-confirm-text {
+	display: none;
+	color: #E22;
+	margin-bottom: 10px;
+}
+
+.deleting .stash-item-delete-confirm-text {
+	display: block;
+}
+
+.stash-item .stash-item-confirm-button {
+	margin-bottom: 10px;
+}
+
+.stash-item .stash-item-confirm-button,
+.stash-item .stash-item-cancel-button {
+	padding: 3px 5px;
+	width: 100%;
+	border: solid 1px;
+	display: none;
+	border-radius: 0;
+}
+
+.stash-item.deleting .stash-item-confirm-button,
+.stash-item.deleting .stash-item-cancel-button {
+	display: inline-block;
+}
+
+.stash-item.deleting .stash-item-delete-button {
+	display: none;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: none;
+	z-index: 0;
+}
+
+
 @media screen and (min-width: 540px) {
 	.rollable,
 	.table-reference {
 		display: inline-block;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	.control-buttons {
+		width: auto;
+		left: 50%;
+		transform: translateX(-50%);
+		border-radius: 8px 8px 0 0;
+		overflow: hidden;
+	}
+
+	.control-buttons > div:first-child button {
+		border-left: none;
+	}
+
+	.control-buttons > div:last-child button {
+		border-right: none;
 	}
 }

@@ -1,6 +1,12 @@
 (function () {
 	let tableOutput = document.getElementById('tableOutput');
+	let stashOutput = document.querySelector('.stash-output');
+	let stashModal = document.querySelector('.stash-modal');
 	let tableTopButton = document.createElement('button');
+	let copyButton = document.querySelector('.stash-controls .copy');
+	let overlay = document.querySelector('.overlay');
+	let stash = [];
+	let currency = ['cp', 'sp', 'ep', 'gp', 'pp'];
 	tableTopButton.innerHTML = '<span class="fas fa-arrow-up"></span>';
 	tableTopButton.className = 'table-top';
 
@@ -39,6 +45,20 @@
 		}).map(function(n) {
 			return n.replace(/ gp/, 'gp');
 		}).join('');
+	}
+
+	function renderStash() {
+		document.querySelector('.stash-count').innerText = '(' + stash.length + ' items)';
+
+		if (stash.length) {
+			stashOutput.value = stash.map(function(i) {
+				return i.value;
+			}).join("\n\n");
+			stashModal.classList.remove('stash-empty');
+		} else {
+			stashOutput.value = 'No items in stash';
+			stashModal.classList.add('stash-empty');
+		}
 	}
 
 	function renderTable(name) {
@@ -290,20 +310,36 @@
 							if (row[j] !== '-')
 							{
 								let roll = rollDice(row[j]);
+								let stashItem = {
+									id: row[j].replace(/\s/g, '') + Date.now() + rollDice('1d1000'),
+									value: row[j]
+								};
 
 								if (roll !== false)
 								{
 									rowResult.push(new Intl.NumberFormat().format(roll) + unit.toLowerCase());
+									stashItem.value = new Intl.NumberFormat().format(roll) + unit.toLowerCase();
 								}
 								else if (name.indexOf('magic') >= 0 || name.indexOf("wondrous power") >= 0)
 								{
 									let linkText = '<a href="https://www.dndbeyond.com/search?q=' + row[j] + '" target="_blank">';
 									rowResult.push(linkText + row[j] + ' <span class="fas fa-external-link-alt"></span></a>');
+									stashItem.value = row[j];
 								}
 								else
 								{
+									let value = null;
+									let match = name.match(/^([\d,]+\s?\w\w)/);
+
+									if (match && match[0]) {
+										value = match[0].replace(/\s/ig, '');
+									}
+
 									rowResult.push(row[j]);
+									stashItem.value = (value ? value + ' ' : '') + row[j];
 								}
+
+								stash.push(stashItem);
 							}
 						}
 						j++;
@@ -508,17 +544,13 @@
 		return document.createDocumentFragment();
 	}
 
-	window.rollBy = {
-		table: rollOnTable,
-		dice: rollDice
-	}
-
 	let tableSelect = document.getElementById('tableToRoll');
 
 	let rollButton = document.getElementById('rollButton');
 	rollButton.addEventListener('click', function() {
 		if (tableSelect.value) {
-			rollOnTable(tableSelect.value, true);	
+			rollOnTable(tableSelect.value, true);
+			renderStash();
 		}
 	});
 
@@ -532,6 +564,31 @@
 
 	document.querySelector('.page-top').addEventListener('click', function() {
 		window.smoothScroll(0);
+	});
+
+	document.querySelector('.stash button').addEventListener('click', function() {
+		if (stashModal.style.display === 'block') {
+			stashModal.style.display = 'none';
+			overlay.style.display = 'none';
+		} else {
+			stashModal.style.display = 'block';
+			overlay.style.display = 'block';
+		}
+	});
+
+	document.querySelector('.stash-controls .close').addEventListener('click', function() {
+		stashModal.style.display = 'none';
+		overlay.style.display = 'none';
+	});
+
+	copyButton.addEventListener('click', function() {
+		stashOutput.select();
+		document.execCommand('copy');
+	});
+
+	document.querySelector('.stash-controls .clear').addEventListener('click', function() {
+		stash = [];
+		renderStash();
 	});
 
 	document.addEventListener('click', function(e) {
@@ -630,4 +687,11 @@
 			}
 		}
 	});
+
+	renderStash();
+
+	window.rollBy = {
+		table: rollOnTable,
+		dice: rollDice
+	}
 })();
