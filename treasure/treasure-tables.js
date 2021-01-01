@@ -588,7 +588,7 @@
 		copyButton.innerHTML = '<span class="fas fa-copy"></span> copied!';
 
 		setTimeout(function() {
-			copyButton.innerHTML = '<span class="fas fa-copy"></span> copy!';
+			copyButton.innerHTML = '<span class="fas fa-copy"></span> copy';
 		}, 1500);
 	});
 
