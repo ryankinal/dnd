@@ -1,4 +1,4 @@
-h2 {
+	h2 {
 	margin-top: 20px;
 	margin-bottom 20px;
 }
@@ -277,14 +277,63 @@ tr.selected td:first-child {
 	z-index: 5;
 }
 
-.stash-empty .copy,
+.stash-content {
+	height: calc(100% - 95px);
+	white-space: nowrap;
+	overflow: hidden auto;
+}
+
+.stash-content * {
+	white-space: initial;
+}
+
 .stash-empty .clear {
 	display: none;
+}
+
+.stash-header {
+	padding-left: 15px;
+	padding-top: 15px;
 }
 
 .stash-controls {
 	text-align: left;
 	height: 20px;
+	padding: 0 15px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.stash-controls .copy {
+	float: left;
+}
+
+.stash-controls .clear {
+	float: right;
+	text-align: right;
+}
+
+.top-message {
+	font-size: .8em;
+	position: absolute;
+	width: 100%;
+	max-width: 300px;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #060;
+	padding: 10px 20px;
+	box-shadow: 0 0 0 5px 5px #000;
+	transition-property: opacity;
+	transition-duration: 0.5s;
+	opacity: 0.0;
+	display: none;
+	text-align: center;
+	z-index: 10;
+}
+
+.top-message.show {
+	opacity: 1.0;
 }
 
 .stash-controls a {
@@ -293,7 +342,7 @@ tr.selected td:first-child {
 	cursor: pointer;
 }
 
-.stash-controls .close {
+.stash-modal .close {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -305,17 +354,40 @@ tr.selected td:first-child {
 	text-align: center;
 }
 
-.stash-output {
-	display: block;
+.stash-text-output,
+.stash-list-output {
+	display: inline-block;
 	width: 100%;
-	height: calc(100% - 30px);
-	margin-top: 10px;
+	height: 100%;
 	padding: 15px;
+	vertical-align: top;
+}
+
+.stash-list-output {
+	transition-property: margin-left;
+	transition-duration: .5s;
+	transition-timing-function: ease-in-out;
+	margin-left: 0;
+	overflow: hidden auto;
+}
+
+.stash-text-output {
+	white-space: pre-wrap;
+}
+
+.stash-empty .stash-list-output {
+	text-align: center;
+}
+
+.stash-list-output.hide {
+	margin-left: -100%;
 }
 
 .stash-item {
 	padding: 8px 16px;
 	letter-spacing: -15px;
+	min-height: 42px;
+	position: relative;
 }
 
 .stash-item * {
@@ -333,27 +405,10 @@ tr.selected td:first-child {
 
 .stash-item-text {
 	display: inline-block;
-	width: calc(100% - 40px);
+	margin-top: 5px;
+	width: calc(100% - 80px);
 	text-align: left;
-}
-
-.stash-item-buttons {
-	width: 40px;
-	min-width: 40px;
-	display: inline-block;
-}
-
-.stash-item-buttons button {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-	width: auto;
-	background: transparent;
-	height: auto;
-}
-
-.stash-item-delete-button {
-	color: #E22;
+	position: relative;
 }
 
 .stash-item-delete-confirm-text {
@@ -362,29 +417,66 @@ tr.selected td:first-child {
 	margin-bottom: 10px;
 }
 
-.deleting .stash-item-delete-confirm-text {
-	display: block;
+.stash-item-buttons {
+	width: 80px;
+	min-width: 40px;
+	display: inline-block;
+	text-align: right;
 }
 
-.stash-item .stash-item-confirm-button {
+.stash-item-buttons button {
+	display: inline-block;
+	padding: 0;
+	margin-bottom: 0;
+	width: auto;
+	background: transparent;
+	height: auto;
+}
+
+.stash-item-delete {
+	color: #E22;
+	margin-top: 5px;
+}
+
+.stash-item-delete-confirm {
+	display: none;
+	color: #E22;
 	margin-bottom: 10px;
 }
 
-.stash-item .stash-item-confirm-button,
-.stash-item .stash-item-cancel-button {
+.stash-item .stash-item-delete-confirm,
+.stash-item .stash-item-delete-cancel {
 	padding: 3px 5px;
-	width: 100%;
 	border: solid 1px;
 	display: none;
 	border-radius: 0;
 }
 
-.stash-item.deleting .stash-item-confirm-button,
-.stash-item.deleting .stash-item-cancel-button {
+.stash-item.deleting .stash-item-delete-confirm,
+.stash-item.deleting .stash-item-delete-confirm-text,
+.stash-item.deleting .stash-item-delete-cancel {
 	display: inline-block;
 }
 
-.stash-item.deleting .stash-item-delete-button {
+.stash-item.deleting .stash-item-delete {
+	display: none;
+}
+
+.stash-item-overlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, .5);
+	display: none;
+}
+
+.removed .stash-item-overlay {
+	display: block;
+}
+
+.removed .stash-item-delete {
 	display: none;
 }
 
@@ -397,6 +489,32 @@ tr.selected td:first-child {
 	background-color: rgba(0, 0, 0, 0.7);
 	display: none;
 	z-index: 0;
+}
+
+@keyframes stashslideout {
+	from {
+		margin-left: 0;
+	}
+
+	to {
+		margin-left: -100%;
+	}
+}
+
+@keyframes stashslidein {
+	from {
+		margin-left: -100%;
+	}
+
+	to {
+		margin-left: 0;
+	}
+}
+
+@media screen and (min-width: 301px) {
+	.top-message {
+		border-radius: 0 0 5px 5px;
+	}
 }
 
 

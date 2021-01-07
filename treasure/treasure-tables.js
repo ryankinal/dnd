@@ -1,9 +1,12 @@
 (function () {
 	let tableOutput = document.getElementById('tableOutput');
-	let stashOutput = document.querySelector('.stash-output');
+	let stashTextOutput = document.querySelector('.stash-text-output');
+	let stashListOutput = document.querySelector('.stash-list-output');
 	let stashModal = document.querySelector('.stash-modal');
 	let tableTopButton = document.createElement('button');
 	let copyButton = document.querySelector('.stash-controls .copy');
+	let copiedMessage = document.querySelector('.stash-copied-message');
+	let clearedMessage = document.querySelector('.stash-cleared-message');
 	let overlay = document.querySelector('.overlay');
 	let stash = [];
 	let currency = ['cp', 'sp', 'ep', 'gp', 'pp'];
@@ -39,6 +42,24 @@
 		return false;
 	}
 
+	function showTopMessage(elem) {
+		setTimeout(function() {
+			elem.style.display = 'block';
+
+			setTimeout(function() {
+				elem.classList.add('show');
+
+				setTimeout(function() {
+					elem.classList.remove('show');
+
+					setTimeout(function() {
+						elem.style.display = 'none';
+					}, 500);
+				}, 1800);
+			}, 50);
+		}, 400);
+	}
+
 	function getTableTitle(table) {
 		return treasureTableNames.filter(function(n) {
 			return n.toLowerCase() === table;
@@ -47,16 +68,68 @@
 		}).join('');
 	}
 
-	function renderStash() {
+	function renderStashButton() {
 		document.querySelector('.stash-count').innerText = '(' + stash.length + ' items)';
+	}
+
+	function renderStash() {
+		renderStashButton();
 
 		if (stash.length) {
-			stashOutput.value = stash.map(function(i) {
-				return i.value;
+			let stashFragment = document.createDocumentFragment();
+
+			stashListOutput.innerText = '';
+
+			stashTextOutput.value = stash.map(function(item) {
+				let outer = document.createElement('div');
+				outer.className = 'stash-item';
+
+				outer.innerHTML = `<div class="stash-item-text">
+										<span class="stash-item-delete-confirm-text">Delete this item?</span>
+										<span class="stash-item-description">${item.value}</span>
+									</div>
+									<div class="stash-item-buttons">
+										<button class="fas fa-trash stash-item-delete"></button>
+										<button class="stash-item-delete-confirm">Yes</button>
+										<button class="stash-item-delete-cancel">No</button>
+									</div>
+									<div class="stash-item-overlay"></div>`
+
+
+				let deleteButton = outer.querySelector('.stash-item-delete');
+				let deleteConfirm = outer.querySelector('.stash-item-delete-confirm');
+				let deleteCancel = outer.querySelector('.stash-item-delete-cancel');
+
+				deleteButton.addEventListener('click', function() {
+					outer.classList.add('deleting');
+				});
+
+				deleteCancel.addEventListener('click', function() {
+					outer.classList.remove('deleting');
+				});
+
+				deleteConfirm.addEventListener('click', function() {
+					stash = stash.filter(function(i) {
+						return item.id !== i.id;
+					});
+
+					renderStashButton();
+
+					outer.classList.remove('deleting');
+					outer.classList.add('removed');
+				});
+
+				stashFragment.appendChild(outer);
+
+				return item.value;
 			}).join("\n\n");
+
+			stashListOutput.appendChild(stashFragment);
+
 			stashModal.classList.remove('stash-empty');
 		} else {
-			stashOutput.value = 'No items in stash';
+			stashListOutput.innerHTML = '<p>No items in stash</p>';
+			stashTextOutput.value = 'No items in stash';
 			stashModal.classList.add('stash-empty');
 		}
 	}
@@ -549,7 +622,11 @@
 	let rollButton = document.getElementById('rollButton');
 	rollButton.addEventListener('click', function() {
 		if (tableSelect.value) {
-			stash = [];
+			if (stash.length > 0) {
+				showTopMessage(clearedMessage);
+				stash = [];
+			}
+			
 			rollOnTable(tableSelect.value, true);
 			renderStash();
 		}
@@ -568,6 +645,14 @@
 	});
 
 	document.querySelector('.stash button').addEventListener('click', function() {
+		renderStash();
+
+		if (stashListOutput.classList.contains('hide')) {
+			stashListOutput.classList.remove('hide');
+			stashListOutput.classList.add('show');
+			copyButton.innerHTML = '<span class="fas fa-copy"></span> copyable text';
+		}
+
 		if (stashModal.style.display === 'block') {
 			stashModal.style.display = 'none';
 			overlay.style.display = 'none';
@@ -577,19 +662,39 @@
 		}
 	});
 
-	document.querySelector('.stash-controls .close').addEventListener('click', function() {
+	document.querySelector('.stash-modal .close').addEventListener('click', function() {
 		stashModal.style.display = 'none';
 		overlay.style.display = 'none';
 	});
 
 	copyButton.addEventListener('click', function() {
-		stashOutput.select();
-		document.execCommand('copy');
-		copyButton.innerHTML = '<span class="fas fa-copy"></span> copied!';
+		if (stash.length) {
+			stashTextOutput.value = stash.map(function(item) {
+				return item.value;
+			}).join("\n\n");
 
-		setTimeout(function() {
-			copyButton.innerHTML = '<span class="fas fa-copy"></span> copy';
-		}, 1500);
+			stashModal.classList.remove('stash-empty');
+		} else {
+			stashTextOutput.value = 'No items in stash';
+			stashModal.classList.add('stash-empty');
+		}
+
+		if (stashListOutput.classList.contains('hide')) {
+			stashListOutput.classList.remove('hide');
+			stashListOutput.classList.add('show');
+			copyButton.innerHTML = '<span class="fas fa-copy"></span> copyable text';
+		} else {
+			stashListOutput.classList.remove('show');
+			stashListOutput.classList.add('hide');
+			copyButton.innerHTML = '<span class="fas fa-list"></span> list view';
+
+			if (stash.length) {
+				stashTextOutput.select();
+				document.execCommand('copy');	
+
+				showTopMessage(copiedMessage);
+			}
+		}
 	});
 
 	document.querySelector('.stash-controls .clear').addEventListener('click', function() {

@@ -64,13 +64,21 @@
 		</div>
 		<div class="overlay"></div>
 		<div class="stash-modal stash-empty">
-			<div class="stash-controls">
-				<a class="copy"><span class="fas fa-copy"></span> copy</a>
-				<a class="clear"><span class="fas fa-trash"></span> clear</a>
-				<a class="close"><span class="far fa-times-circle"></span></a>
+			<a class="close"><span class="far fa-times-circle"></span></a>
+			<div class="stash-header">
+				<h3>Stash</h3>
 			</div>
-			<textarea class="stash-output"></textarea>
+			<div class="stash-controls">
+				<a class="copy"><span class="fas fa-copy"></span> copyable text</a>
+				<a class="clear"><span class="fas fa-trash"></span> clear</a>
+			</div>
+			<div class="stash-content">
+				<div class="stash-list-output"></div>
+				<textarea class="stash-text-output" readonly="readonly"></textarea>
+			</div>
 		</div>
+		<div class="stash-copied-message top-message">Your stash has been<br>copied to your clipboard.</div>
+		<div class="stash-cleared-message top-message">Your stash has been replaced.</div>
 		<script type="text/javascript" src="../smoothscroll.js"></script>
 		<script type="text/javascript" src="treasure-tables-data.js"></script>
 		<script type="text/javascript" src="treasure-tables.js"></script>
