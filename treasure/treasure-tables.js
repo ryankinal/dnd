@@ -232,7 +232,6 @@
 							do {
 								if (match.value) {
 									let fullMatch = match.value[0];
-									console.log(units, units[j]);
 									let unitText = (units[j] && currency.indexOf(units[j].toLowerCase()) >= 0) ? ' data-units="' + units[j].toLowerCase() + '"' : '';
 									let linkText = '<a class="rollable"' + unitText + ' data-dice-string="' + fullMatch + '" title="' + fullMatch + '"><span class="dice-string">' + fullMatch + '</span> <span class="fas fa-dice"></a>';
 									toReplace[fullMatch] = linkText;
@@ -435,7 +434,7 @@
 									value = (value ? value + ' ' : '') + row[j];
 								}
 
-								addStashItem(row[j]);
+								addStashItem(value);
 							}
 						}
 						j++;
@@ -658,6 +657,12 @@
 	let viewButton = document.getElementById('viewButton');
 	viewButton.addEventListener('click', function() {
 		if (tableSelect.value) {
+			if (stash.length) {
+				showTopMessage(clearedMessage);
+				stash = [];	
+				renderStash();
+			}
+
 			tableOutput.innerText = '';
 			renderTable(tableSelect.value);
 		}
