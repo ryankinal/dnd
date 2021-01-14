@@ -261,6 +261,10 @@ tr.selected td:first-child {
 	display: inline-block;
 }
 
+.stash-highlight {
+	animation: stashhighlight 0.5s;
+}
+
 .stash-modal {
 	position: fixed;
 	top: 0;
@@ -491,23 +495,13 @@ tr.selected td:first-child {
 	z-index: 0;
 }
 
-@keyframes stashslideout {
+@keyframes stashhighlight {
 	from {
-		margin-left: 0;
+		background-color: #FFF;
 	}
 
 	to {
-		margin-left: -100%;
-	}
-}
-
-@keyframes stashslidein {
-	from {
-		margin-left: -100%;
-	}
-
-	to {
-		margin-left: 0;
+		background-color: #006;
 	}
 }
 

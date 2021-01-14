@@ -1,5 +1,6 @@
 (function () {
 	let tableOutput = document.getElementById('tableOutput');
+	let stashButton = document.querySelector('.stash button');
 	let stashTextOutput = document.querySelector('.stash-text-output');
 	let stashListOutput = document.querySelector('.stash-list-output');
 	let stashModal = document.querySelector('.stash-modal');
@@ -70,6 +71,20 @@
 
 	function renderStashButton() {
 		document.querySelector('.stash-count').innerText = '(' + stash.length + ' items)';
+	}
+
+	function addStashItem(itemText) {
+		stash.push({
+			id: itemText.replace(/\s/g, '') + Date.now() + rollDice('1d1000'),
+			value: itemText
+		});
+
+		stashButton.classList.add('stash-highlight');
+		setTimeout(function() {
+			stashButton.classList.remove('stash-highlight');
+		}, 500);
+
+		renderStash();
 	}
 
 	function renderStash() {
@@ -186,10 +201,15 @@
 
 			data.forEach(function(t) {
 				let table = document.createElement('table');
+				let units = [];
 				table.className = treasureClasses[name] + ' full-table';
 
 				t.forEach(function(r, i) {
 					let row = document.createElement('tr');
+
+					if (i === 0) {
+						units = r;
+					}
 
 					r.forEach(function(c, j) {
 						let dieMatches = c.matchAll(/(\d+)?d(\d+)([+-])?(\d+)?(\s*x\s*[\d,]+)?(\s*\([\d,]+\))?/ig);
@@ -205,14 +225,16 @@
 						if (i > 0 && j > 0 && (name.indexOf('magic') >= 0 || name.indexOf("wondrous power") >= 0))
 						{
 							linkText = '<a href="https://www.dndbeyond.com/search?q=' + c + '" target="_blank">';
-							c = '<div class="result-text">' + linkText + c + ' <span class="fas fa-external-link-alt"></span></a></div>';
+							c = linkText + c + ' <span class="fas fa-external-link-alt"></span></a>';
 						}
 						else
 						{
 							do {
 								if (match.value) {
 									let fullMatch = match.value[0];
-									let linkText = '<a class="rollable" data-dice-string="' + fullMatch + '" title="' + fullMatch + '"><span class="dice-string">' + fullMatch + '</span> <span class="fas fa-dice"></a>';
+									console.log(units, units[j]);
+									let unitText = (units[j] && currency.indexOf(units[j].toLowerCase()) >= 0) ? ' data-units="' + units[j].toLowerCase() + '"' : '';
+									let linkText = '<a class="rollable"' + unitText + ' data-dice-string="' + fullMatch + '" title="' + fullMatch + '"><span class="dice-string">' + fullMatch + '</span> <span class="fas fa-dice"></a>';
 									toReplace[fullMatch] = linkText;
 									match = dieMatches.next();
 								} else {
@@ -239,11 +261,11 @@
 								c = c.replace(k, toReplace[k]);
 							});
 						}
-						
-						cell.innerHTML = c;
 
 						if (i > 0 && j > 0 && name.indexOf('challenge') < 0)
 						{
+							cell.innerHTML = '<div class="result-text">' + c + '</div>';
+
 							let detailsLink = document.createElement('a');
 							detailsLink.innerHTML = '<span class="fas fa-dice"> random details';
 							detailsLink.className = 'details-link';
@@ -253,6 +275,10 @@
 							linksDiv.appendChild(detailsLink);
 
 							cell.appendChild(linksDiv);
+						}
+						else
+						{
+							cell.innerHTML = c;
 						}
 						
 						row.appendChild(cell);
@@ -383,21 +409,18 @@
 							if (row[j] !== '-')
 							{
 								let roll = rollDice(row[j]);
-								let stashItem = {
-									id: row[j].replace(/\s/g, '') + Date.now() + rollDice('1d1000'),
-									value: row[j]
-								};
+								let value = row[j];
 
 								if (roll !== false)
 								{
 									rowResult.push(new Intl.NumberFormat().format(roll) + unit.toLowerCase());
-									stashItem.value = new Intl.NumberFormat().format(roll) + unit.toLowerCase();
+									value = new Intl.NumberFormat().format(roll) + unit.toLowerCase();
 								}
 								else if (name.indexOf('magic') >= 0 || name.indexOf("wondrous power") >= 0)
 								{
 									let linkText = '<a href="https://www.dndbeyond.com/search?q=' + row[j] + '" target="_blank">';
 									rowResult.push(linkText + row[j] + ' <span class="fas fa-external-link-alt"></span></a>');
-									stashItem.value = row[j];
+									value = row[j];
 								}
 								else
 								{
@@ -409,10 +432,10 @@
 									}
 
 									rowResult.push(row[j]);
-									stashItem.value = (value ? value + ' ' : '') + row[j];
+									value = (value ? value + ' ' : '') + row[j];
 								}
 
-								stash.push(stashItem);
+								addStashItem(row[j]);
 							}
 						}
 						j++;
@@ -644,7 +667,7 @@
 		window.smoothScroll(0);
 	});
 
-	document.querySelector('.stash button').addEventListener('click', function() {
+	stashButton.addEventListener('click', function() {
 		renderStash();
 
 		if (stashListOutput.classList.contains('hide')) {
@@ -725,9 +748,15 @@
 			setTimeout(function() {
 				diceIcon.classList.remove('fa-spin');
 				let diceString = target.dataset.diceString;
+				let units = target.dataset.units ? target.dataset.units : '';
 				let roll = rollDice(diceString)
-				target.querySelector('.dice-string').innerText = new Intl.NumberFormat().format(roll);
+				let resultText = new Intl.NumberFormat().format(roll) + units
+				target.querySelector('.dice-string').innerText = resultText;
 
+				if (units) {
+					addStashItem(resultText);
+				}
+				
 				if (target.parentNode.tagName === 'TH') {
 					table.querySelectorAll('td:first-child').forEach(function(td) {
 						let text = td.innerText;
@@ -741,6 +770,13 @@
 						}
 
 						if (roll >= range[0] && roll <= range[1]) {
+							let resultElem = td.parentNode.querySelector('.result-text');
+
+							if (resultElem) {
+								let resultText = resultElem.innerText;
+								addStashItem(resultText);
+							}
+
 							td.parentNode.classList.add('selected');
 							td.appendChild(tableTopButton);
 							window.smoothScroll(td.parentNode.previousElementSibling);
