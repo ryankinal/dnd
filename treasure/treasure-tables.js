@@ -718,9 +718,11 @@
 
 			if (stash.length) {
 				stashTextOutput.select();
-				document.execCommand('copy');	
+				setTimeout(function() {
+					document.execCommand('copy');	
 
-				showTopMessage(copiedMessage);
+					showTopMessage(copiedMessage);
+				}, 100);
 			}
 		}
 	});
