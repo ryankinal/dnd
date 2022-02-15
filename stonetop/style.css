@@ -91,7 +91,7 @@ hr::after {
 	bottom: 0;
 	left: 50%;
 	transform: translate(-50%, 50%);
-	background-image: url('../images/hr-decoration.png');
+	background-image: url('./images/hr-decoration.png');
 	background-size: 98%;
 	background-position: center 1.5px;
 	background-repeat: no-repeat;

@@ -36,8 +36,8 @@ let editItemModal = document.querySelector('.item-edit-form');
 let editItemSaveButton = editItemModal.querySelector('[name=edit-item-save-button]');
 let editCategoryElem = document.querySelector('.item-edit-form [name=item-category]');
 
-let character = new Character();
-let inventory = character.getInventory();
+let character;
+let inventory;
 let smallItemCount = 0;
 let load = 0;
 let editIndex = null;
@@ -52,6 +52,34 @@ let itemCategories = items.map(function(item) {
 	}).filter(function(category, index, self) {
 		return self.indexOf(category) === index;
 	});
+
+function saveData() {
+	let campaign = character.campaign.getData();
+	campaign.steading = character.steading.getData();
+
+	localStorage.setItem('stonetop-character', JSON.stringify(character.getData()));
+	localStorage.setItem('stonetop-campaign', JSON.stringify(campaign));
+}
+
+function loadData() {
+	let campaignData = localStorage.getItem('stonetop-campaign');
+	let characterData = localStorage.getItem('stonetop-character');
+
+	if (campaignData && characterData) {
+		campaignData = JSON.parse(campaignData);
+		characterData = JSON.parse(characterData);
+
+		if (campaignData && characterData) {
+			character = new Character(characterData, campaignData);
+			inventory = character.getInventory();
+
+			return true;	
+		}
+	}
+
+	character = new Character();
+	inventory = character.getInventory();
+}
 
 // Rendering functions
 function renderItem(item, addRemove) {
@@ -237,6 +265,8 @@ function addItem(item) {
 		if (item.load === 0) {
 			smallItemCount++;
 		}
+
+		saveData();
 	} else {
 		// can't go over 9 load
 	}
@@ -253,11 +283,13 @@ function removeItem(item) {
 		smallItemCount--;
 	}
 
+	saveData();
 	updateLoadInterface();
 }
 
 function clearInventory() {
 	character.clearInventory();
+	saveData();
 	renderItems();
 }
 
@@ -369,14 +401,15 @@ editItemSaveButton.addEventListener('click', function() {
 			}
 		});
 
-		console.log(item);
-
 		character.setItem(editIndex, item);
 		editIndex = null;
+
 		closeModals();
 		renderInventory();
 		calculateLoad();
 		updateLoadInterface();
+
+		saveData();
 	}
 });
 
@@ -392,6 +425,8 @@ document.querySelector('[name=clear-items]').addEventListener('click', function(
 	setTimeout(function() {
 		renderInventory();
 	}, 200);
+
+	saveData();
 });
 
 document.addEventListener('click', function(e) {
@@ -421,6 +456,8 @@ document.querySelectorAll('.stat [name=decrease-stat]').forEach(function(statEle
 		if (stat === 'prosperity' || stat == 'size') {
 			updateLoadInterface();
 		}
+
+		saveData();
 	});
 });
 
@@ -433,6 +470,8 @@ document.querySelectorAll('.stat [name=increase-stat]').forEach(function(statEle
 		if (stat === 'prosperity' || stat == 'size') {
 			updateLoadInterface();
 		}
+
+		saveData();
 	})
 });
 
@@ -442,6 +481,7 @@ modalClose.addEventListener('click', closeModals);
 
 // Setup
 
+loadData();
 updateSteadingInterface();
 renderInventory();
 calculateLoad();

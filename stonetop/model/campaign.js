@@ -24,4 +24,17 @@ export class Campaign {
 		this.characters.push(data);
 		return true;
 	}
+
+	getData() {
+		let data = this.data || {};
+
+		data.steading = this.steading.getData();
+		data.characters = this.characters.map(function(c) {
+			return c.getData();
+		});
+		data.npcs = this.npcs;
+		data.chronicle = this.chronicle;
+
+		return data;
+	}
 }

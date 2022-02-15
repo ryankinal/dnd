@@ -78,7 +78,7 @@ export class Steading {
 			}
 		}
 
-		this.data = typeof steading === 'undefined' ? defaultData : null;
+		this.data = typeof steading === 'undefined' ? defaultData : steading;
 	}
 
 	getMinStat(name) {
@@ -159,5 +159,9 @@ export class Steading {
 		} else {
 			return this.statDescriptions[name][value];
 		}
+	}
+
+	getData() {
+		return this.data;
 	}
 }

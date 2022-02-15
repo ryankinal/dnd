@@ -61,4 +61,8 @@ export class Character {
 		this.data.inventory = [];
 		return true;
 	}
+
+	getData() {
+		return this.data;
+	}
 }
