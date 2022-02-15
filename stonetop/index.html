@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<section class="steading">
+			<header>
+				<h1>Stonetop</h1>
+				<p>These are Stonetop's current stats. You'll have to keep them updated for now - maybe later we'll have shared stats.</h1>
+				<hr>
+			</header>
+			<div class="stats columns text-center">
+				<div class="column is-2">
+					<div class="stat stat-fortunes">
+						<label>Fortunes</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">-3</div>
+							</div>
+							<div class="slide">
+								<div class="value">-2</div>
+							</div>
+							<div class="slide">
+								<div class="value">-1</div>
+							</div>
+							<div class="slide">
+								<div class="value">+0</div>
+							</div>
+							<div class="slide">
+								<div class="value">+1</div>
+							</div>
+							<div class="slide">
+								<div class="value">+2</div>
+							</div>
+							<div class="slide">
+								<div class="value">+3</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="fortunes"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="fortunes"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-2">
+					<div class="stat stat-surplus">
+						<label>Surplus</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">1</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="surplus"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="surplus"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-2">
+					<div class="stat stat-size">
+						<label>Size</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">-1</div>
+								<div class="description">Hamlet</div>
+							</div>
+							<div class="slide">
+								<div class="value">+0</div>
+								<div class="description">Village</div>
+							</div>
+							<div class="slide">
+								<div class="value">+1</div>
+								<div class="description">Town</div>
+							</div>
+							<div class="slide">
+								<div class="value">+2</div>
+								<div class="description">City</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="size"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="size"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-2">
+					<div class="stat stat-population">
+						<label>Population</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">-2</div>
+								<div class="description">Exodus</div>
+							</div>
+							<div class="slide">
+								<div class="value">-1</div>
+								<div class="description">Shrinking</div>
+							</div>
+							<div class="slide">
+								<div class="value">+0</div>
+								<div class="description">Steady</div>
+							</div>
+							<div class="slide">
+								<div class="value">+1</div>
+								<div class="description">Growing</div>
+							</div>
+							<div class="slide">
+								<div class="value">+2</div>
+								<div class="description">Booming</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="population"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="population"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-2">
+					<div class="stat stat-prosperity">
+						<label>Prosperity</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">-1</div>
+								<div class="description">Dirt</div>
+							</div>
+							<div class="slide">
+								<div class="value">0</div>
+								<div class="description">Poor</div>
+							</div>
+							<div class="slide">
+								<div class="value">+1</div>
+								<div class="description">Moderate</div>
+							</div>
+							<div class="slide">
+								<div class="value">+2</div>
+								<div class="description">Wealthy</div>
+							</div>
+							<div class="slide">
+								<div class="value">+3</div>
+								<div class="description">Rich</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="prosperity"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="prosperity"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="column is-2">
+					<div class="stat stat-defenses">
+						<label>Defenses</label>
+						<div class="display slides">
+							<div class="slide">
+								<div class="value">-1</div>
+								<div class="description">None</div>
+							</div>
+							<div class="slide">
+								<div class="value">+0</div>
+								<div class="description">Militia</div>
+							</div>
+							<div class="slide">
+								<div class="value">+1</div>
+								<div class="description">Watch</div>
+							</div>
+							<div class="slide">
+								<div class="value">+2</div>
+								<div class="description">Guard</div>
+							</div>
+							<div class="slide">
+								<div class="value">+3</div>
+								<div class="description">Garrison</div>
+							</div>
+						</div>
+						<div class="controls">
+							<button class="link-button" name="decrease-stat" data-obj="steading" data-stat="defenses"><span class="fa fa-angle-double-left"></span></button>
+							<span class="controls-spacer"></span>
+							<button class="link-button" name="increase-stat" data-obj="steading" data-stat="defenses"><span class="fa fa-angle-double-right"></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="inventory">
+			<header>
+				<h1>Inventory</h1>
+				<div>
+					<p>If you have 3 or less <span class="big-item"></span> you are carrying a light load. 4-6 <span class="big-item"></span> is normal, and 7-9 <span class="big-item"></span> is heavy. Your load is mostly a fictional device - a heavy load is difficult and unwieldy. A light load may not give you everything you need. You may carry up to 4 + Prosperity small items.</p>
+					<hr>
+				</div>
+			</header>
+
+			<div class="load-indicator">
+				<div class="columns">
+					<div class="big-items column is-6">
+						<div class="light">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>light</label>
+						</div>
+						<div class="normal">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>normal</label>
+						</div>
+						<div class="heavy">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>heavy</label>
+						</div>
+					</div>
+					<div class="small-items column is-6 text-right">
+						<b>Small Items</b>: <span class="count">0</span>/<span class="max"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="items">
+				<div class="items-controls columns">
+					<div class="column is-6">
+						<div class="search-input">
+							<input type="text" name="search-terms"> <button name="search-inventory"><span class="fa fa-search"></span></button>
+						</div>
+					</div>
+					<div class="column is-6 text-right">
+						<button name="clear-items">Clear <span class="fa fa-ban"></span></button>
+						<button name="add-item">Add Item <span class="fa fa-plus"></span></button>
+					</div>
+				</div>
+				<div class="items-list">
+				</div>
+			</div>
+		</section>
+
+		<section class="available-items modal">
+			<header class="columns">
+					<div class="column is-6">
+						<div class="search-input">
+							<input type="text" name="item-search-filter"> <button name="search-available"><span class="fa fa-search"></span></button>
+						</div>
+					</div>
+					<div class="column is-6 text-right">
+						Category: <select name="item-category-filter">
+							<option value="all">All</option>
+						</select>
+					</div>
+				</header>
+			<div class="modal-scroll">
+				<div class="items-list">
+				</div>
+			</div>
+			<div class="modal-load-indicator">
+				<div class="columns">
+					<div class="big-items column is-6">
+						<div class="light">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>light</label>
+						</div>
+						<div class="normal">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>normal</label>
+						</div>
+						<div class="heavy">
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<div class="big-item"><span class="fa fa-check"></span></div>
+							<label>heavy</label>
+						</div>
+					</div>
+					<div class="small-items column is-6 text-right">
+						<b>Small Items</b>: <span class="count">0</span>/<span class="max"></span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="item-edit-form modal">
+			<div class="columns">
+				<div class="column is-6">
+					<div class="form-field">
+						<label>Name</label>
+						<input type="text" name="item-name">
+					</div>
+				</div>
+				<div class="column is-6">
+					<div class="form-field">
+						<label>Category</label>
+						<select name="item-category">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column is-6">
+					<div class="form-field">
+						<label>Material</label>
+						<input type="text" name="item-material">
+					</div>
+				</div>
+				<div class="column is-3">
+					<div class="form-field">
+						<label>Load</label>
+						<input type="text" name="item-load">
+					</div>
+				</div>
+				<div class="column is-3">
+					<div class="form-field">
+						<label>Value</label>
+						<input type="text" name="item-value">
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column is-12">
+					<div class="form-field">
+						<label>Tags (comma separated)</label>
+						<input type="text" name="item-tags">
+					</div>
+					<div class="form-field">
+						<label>Notes</label>
+						<textarea name="item-notes"></textarea>
+					</div>
+					<div class="form-field">
+						<button name="edit-item-save-button">Save</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+	<div class="blanket"></div>
+
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<script type="module" src="character.js"></script>
+</body>
+</html>
