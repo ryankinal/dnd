@@ -28,10 +28,7 @@ let steadingStatElements = {
 
 // Inventory variables
 let inventoryItemsList = document.querySelector('.inventory .items-list');
-let smallItemCountElem = document.querySelector('.load-indicator .small-items .count');
-let modalSmallItemCountElem = document.querySelector('.modal-load-indicator .small-items .count');
-let smallItemMaxElem = document.querySelector('.load-indicator .small-items .max');
-let modalSmallItemMaxElem = document.querySelector('.modal-load-indicator .small-items .max');
+let inventorySearch = document.querySelector('.items-controls [name=search-terms]');
 let editItemModal = document.querySelector('.item-edit-form');
 let editItemSaveButton = editItemModal.querySelector('[name=edit-item-save-button]');
 let editCategoryElem = document.querySelector('.item-edit-form [name=item-category]');
@@ -43,7 +40,8 @@ let load = 0;
 let editIndex = null;
 
 // Avaialable items variables
-let categoryFilterElem = document.querySelector('[name="item-category-filter"]');
+let availableSearchElem = document.querySelector('.available-items [name=item-search-filter]');
+let categoryFilterElem = document.querySelector('[name=item-category-filter]');
 let availableItemsModal = document.querySelector('.available-items');
 let availableItemsList = document.querySelector('.available-items .items-list');
 
@@ -82,7 +80,7 @@ function loadData() {
 }
 
 // Rendering functions
-function renderItem(item, addRemove) {
+function renderItem(item, area) {
 	let container = document.createElement('div');
 	container.className = 'item columns';
 
@@ -99,10 +97,15 @@ function renderItem(item, addRemove) {
 
 	let material = item.material ? `<span class="tag material">${item.material}</span>` : '';
 
+	let notes = item.notes ? `<p class="notes">${item.notes}</p>` : '';
+
 	container.classList.add('item', 'columns');
-	container.innerHTML = `<div class="column is-8">
+	container.innerHTML = `<div class="column is-6">
 					<h4>${load} ${item.name}</h4>
+					${notes}
 					<div class="tags">${material} ${tags}</div>
+				</div>
+				<div class="column is-2 statuses">
 				</div>
 				<div class="column is-2">
 					<div class="label">Value</div>
@@ -112,7 +115,7 @@ function renderItem(item, addRemove) {
 	let buttonContainer = document.createElement('div');
 		buttonContainer.className = 'column is-2 text-center item-buttons';
 
-	if (addRemove === 'add') {
+	if (area === 'available') {
 		let addButton = document.createElement('button');
 		addButton.className = 'button add-button';
 	
@@ -126,7 +129,21 @@ function renderItem(item, addRemove) {
 		addButton.appendChild(addIcon);
 		buttonContainer.appendChild(addButton);
 		container.appendChild(buttonContainer);
-	} else if (addRemove === 'remove') {
+	} else if (area === 'inventory') {
+		// Edit button
+		let editButton = document.createElement('button');
+		editButton.className = 'button edit-button';
+
+		let editIcon = document.createElement('span');
+		editIcon.className = 'fa fa-pencil';
+
+		editButton.addEventListener('click', function() {
+			showEditModal(item);
+		});
+
+		editButton.appendChild(editIcon);
+		buttonContainer.appendChild(editButton);
+
 		// Remove button
 		let removeButton = document.createElement('button');
 		removeButton.className = 'button add-button';
@@ -137,6 +154,13 @@ function renderItem(item, addRemove) {
 		removeButton.addEventListener('click', function() {
 			if (!container.classList.contains('removing')) {
 				removeItem(item);
+
+				if (container.previousElementSibling.tagName === 'H2' && (!container.nextElementSibling || container.nextElementSibling.tagName === 'H2')) {
+					container.previousElementSibling.classList.add('removing');
+					setTimeout(function() {
+						container.parentNode && container.parentNode.removeChild(container.previousElementSibling);
+					}, 350);
+				}
 
 				container.classList.add('removing');
 				setTimeout(function() {
@@ -152,21 +176,105 @@ function renderItem(item, addRemove) {
 		removeButton.appendChild(removeIcon);
 		buttonContainer.appendChild(removeButton);
 
-		// Edit button
-		let editButton = document.createElement('button');
-		editButton.className = 'button edit-button';
-
-		let editIcon = document.createElement('span');
-		editIcon.className = 'fa fa-pencil';
-
-		editButton.addEventListener('click', function() {
-			showEditModal(item);
-		});
-
-		editButton.appendChild(editIcon);
-		buttonContainer.appendChild(editButton);
-
 		container.appendChild(buttonContainer);
+
+		// Stock
+		if (typeof item.stock === 'number') {
+			let i = 0;
+			let unit = item.stockunit || 'uses';
+			let used = item.used || 0;
+			let stockContainer = document.createElement('div');
+			stockContainer.className = 'item-stock';
+
+			for (; i < item.stock; i++) {
+				let stock = document.createElement('div');
+				stock.addEventListener('click', function() {
+					let count = stockContainer.querySelectorAll('.used').length;
+					let index = character.findItem(item);
+
+					if (stock.classList.contains('used')) {
+						stock.classList.remove('used');
+						
+						if (count > 0) {
+							count--;	
+						}
+					} else {
+						stock.classList.add('used');
+
+						if (count < item.stock) {
+							count++;	
+						}
+					}
+
+					item.used = count;
+					character.setItem(item);
+					saveData();
+				});
+
+				let checkMark = document.createElement('span');
+				checkMark.className = 'fa fa-check';
+
+				if (i < item.used) {
+					stock.classList.add('used');
+				}
+
+				stock.appendChild(checkMark);
+				stockContainer.appendChild(stock);
+			}
+
+			let unitLabel = document.createElement('label');
+			unitLabel.appendChild(document.createTextNode(unit));
+			container.querySelector('.statuses').appendChild(stockContainer);
+			stockContainer.appendChild(unitLabel);
+		}
+
+		// Conditions
+		if (typeof item.conditions === 'object') {
+			let conditionsContainer = document.createElement('div');
+			conditionsContainer.className = 'item-conditions';
+
+			Object.keys(item.conditions).forEach(function(key) {
+				let conditionContainer = document.createElement('div');
+				conditionContainer.className = 'item-condition';
+
+				let conditionMarker = document.createElement('div');
+				conditionMarker.className = 'item-condition-marker';
+
+				let checkMark = document.createElement('span');
+				checkMark.className = 'fa fa-check';
+
+				if (item.conditions[key]) {
+					conditionMarker.classList.add('used');
+				}
+
+				let conditionLabel = document.createElement('label');
+
+				conditionLabel.appendChild(document.createTextNode(key));
+				conditionMarker.appendChild(checkMark);
+				conditionContainer.appendChild(conditionMarker);
+				conditionContainer.appendChild(conditionLabel);
+				conditionsContainer.appendChild(conditionContainer);
+
+				conditionContainer.addEventListener('click', function() {
+					let index = character.findItem(item),
+						value;
+
+					if (conditionMarker.classList.contains('used')) {
+						value = false;
+						conditionMarker.classList.remove('used');
+					} else {
+						value = true;
+						conditionMarker.classList.add('used');
+					}
+
+					item.conditions[key] = value;
+					character.setItem(index, item);
+					saveData();
+				});
+			});
+
+			container.querySelector('.statuses').appendChild(conditionsContainer);
+		}
 	}
 
 	return container;
@@ -174,12 +282,40 @@ function renderItem(item, addRemove) {
 
 function renderInventory() {
 	let fragment = document.createDocumentFragment();
+	let currentCategory = false;
+	let search = inventorySearch.value.replace(/(^\s+|\s+$)/g, '');
 	inventoryItemsList.innerHTML = '';
 	inventory = character.getInventory();
 
+	if (search) {
+		inventory = inventory.filter(function(item) {
+			let nameMatches = item.name.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+			let materialMatches = item.material && item.material.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+			let tagsMatch = item.tags.map(function(tag) {
+					return tag.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+				}).reduce(function(prev, current) {
+					return prev || current;
+				}, false);
+
+			let searchMatches = materialMatches || tagsMatch || nameMatches;
+
+			return searchMatches;
+		});
+	}
+
 	if (inventory && inventory.length) {
 		inventory.forEach(function(item) {
-			fragment.appendChild(renderItem(item, 'remove'));
+			if (item.category !== currentCategory) {
+				let categoryContainer = document.createElement('h2');
+				categoryContainer.className = 'items-list-category-header';
+
+				categoryContainer.appendChild(document.createTextNode(item.category));
+				fragment.appendChild(categoryContainer);
+
+				currentCategory = item.category;
+			}
+
+			fragment.appendChild(renderItem(item, 'inventory'));
 		});
 
 		inventoryItemsList.appendChild(fragment);
@@ -203,16 +339,24 @@ function renderAvailableItems(filters) {
 	let fragment = document.createDocumentFragment();
 	let currentCategory = false;
 	filters = Object.assign({
-			search: false,
-			category: false
+			search: availableSearchElem.value.replace(/(^\s+|\s+$)/g, '') || false,
+			category: categoryFilterElem.value === 'all' ? false : categoryFilterElem.value
 		}, filters);
 
 	availableItemsList.innerHTML = '';
 
 
 	let filteredItems = items.filter(function(item) {
-		let searchMatches = filters.search ? item.name.indexOf(filters.search) >= 0 : true;
+		let nameMatches = filters.search ? item.name.toLowerCase().indexOf(filters.search.toLowerCase()) >= 0 : true;
+		let materialMatches = filters.search ? item.material && item.material.toLowerCase().indexOf(filters.search.toLowerCase()) >= 0 : true;
 		let categoryMatches = filters.category ? item.category === filters.category : true;
+		let tagsMatch = filters.search ? item.tags.map(function(tag) {
+				return tag.toLowerCase().indexOf(filters.search.toLowerCase()) >= 0;
+			}).reduce(function(prev, current) {
+				return prev || current;
+			}, false) : true;
+
+		let searchMatches = materialMatches || tagsMatch || nameMatches;
 
 		return searchMatches && categoryMatches;
 	});
@@ -221,7 +365,7 @@ function renderAvailableItems(filters) {
 		filteredItems.forEach(function(item) {
 			if (item.category !== currentCategory) {
 				let categoryContainer = document.createElement('h2');
-				categoryContainer.className = 'available-item-category-header';
+				categoryContainer.className = 'items-list-category-header';
 
 				categoryContainer.appendChild(document.createTextNode(item.category));
 				fragment.appendChild(categoryContainer);
@@ -229,11 +373,13 @@ function renderAvailableItems(filters) {
 				currentCategory = item.category;
 			}
 
-			let itemContainer = renderItem(item, 'add');
+			let itemContainer = renderItem(item, 'available');
 			fragment.appendChild(itemContainer);
 		});
 
 		availableItemsList.appendChild(fragment);
+	} else {
+		availableItemsList.innerHTML = '<div class="no-available-items">No items matching search</div>';
 	}
 }
 
@@ -259,7 +405,7 @@ function addItem(item) {
 		}
 
 		character.addInventory(item);
-		inventoryItemsList.insertBefore(renderItem(item, 'remove'), inventoryItemsList.firstChild);
+		renderInventory();
 		load += itemLoad;
 
 		if (item.load === 0) {
@@ -310,6 +456,8 @@ function calculateLoad() {
 }
 
 function updateLoadInterface() {
+	let maxSmallItems = character.getMaxSmallItems();
+
 	document.querySelectorAll('.load-indicator .big-items .big-item').forEach(function(elem, index) {
 		if (index < load) {
 			elem.classList.add('used');
@@ -326,10 +474,33 @@ function updateLoadInterface() {
 		}
 	});
 
-	smallItemCountElem.innerHTML = smallItemCount;
-	modalSmallItemCountElem.innerHTML = smallItemCount;
-	smallItemMaxElem.innerHTML = character.getMaxSmallItems();
-	modalSmallItemMaxElem.innerHTML = character.getMaxSmallItems();
+	document.querySelectorAll('.load-indicator .small-items .small-item').forEach(function(elem, index) {
+		if (index < smallItemCount) {
+			elem.classList.add('used');
+		} else {
+			elem.classList.remove('used');
+		}
+
+		if (index > maxSmallItems - 1) {
+			elem.classList.add('unavailable');
+		} else {
+			elem.classList.remove('unavailable');
+		}
+	});
+
+	document.querySelectorAll('.modal-load-indicator .small-items .small-item').forEach(function(elem, index) {
+		if (index < smallItemCount) {
+			elem.classList.add('used');
+		} else {
+			elem.classList.remove('used');
+		}
+
+		if (index > maxSmallItems - 1) {
+			elem.classList.add('unavailable');
+		} else {
+			elem.classList.remove('unavailable');
+		}
+	});	
 }
 
 function updateSteadingInterface() {
@@ -384,7 +555,7 @@ document.querySelector('[name=add-item]').addEventListener('click', function(e) 
 
 editItemSaveButton.addEventListener('click', function() {
 	if (typeof editIndex === 'number') {
-		let item = {};
+		let item = character.getItem(editIndex) || {};
 
 		editItemModal.querySelectorAll('[name^=item]').forEach(function(input) {
 			let name = input.name ? input.name.split(/\-/)[1] : false,
@@ -474,6 +645,13 @@ document.querySelectorAll('.stat [name=increase-stat]').forEach(function(statEle
 		saveData();
 	})
 });
+
+availableSearchElem.addEventListener('keyup', renderAvailableItems);
+availableSearchElem.addEventListener('change', renderAvailableItems);
+categoryFilterElem.addEventListener('change', renderAvailableItems);
+
+inventorySearch.addEventListener('keyup', renderInventory);
+inventorySearch.addEventListener('change', renderInventory);
 
 blanketElem.addEventListener('click', closeModals);
 

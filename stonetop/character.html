@@ -10,7 +10,7 @@
 		<section class="steading">
 			<header>
 				<h1>Stonetop</h1>
-				<p>These are Stonetop's current stats. You'll have to keep them updated for now - maybe later we'll have shared stats.</h1>
+				<p>These are Stonetop's current stats.</h1>
 				<hr>
 			</header>
 			<div class="stats columns text-center">
@@ -221,21 +221,30 @@
 						</div>
 					</div>
 					<div class="small-items column is-6 text-right">
-						<b>Small Items</b>: <span class="count">0</span>/<span class="max"></span>
+						<div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<label>small items</label>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="items">
 				<div class="items-controls columns">
-					<div class="column is-6">
+					<div class="column is-8">
 						<div class="search-input">
 							<input type="text" name="search-terms"> <button name="search-inventory"><span class="fa fa-search"></span></button>
 						</div>
 					</div>
-					<div class="column is-6 text-right">
+					<div class="column is-4 text-right">
 						<button name="clear-items">Clear <span class="fa fa-ban"></span></button>
-						<button name="add-item">Add Item <span class="fa fa-plus"></span></button>
+						<button name="add-item">Add <span class="mobile-hide">Item </span><span class="fa fa-plus"></span></button>
 					</div>
 				</div>
 				<div class="items-list">
@@ -244,7 +253,8 @@
 		</section>
 
 		<section class="available-items modal">
-			<header class="columns">
+			<header>
+				<div class="columns">
 					<div class="column is-6">
 						<div class="search-input">
 							<input type="text" name="item-search-filter"> <button name="search-available"><span class="fa fa-search"></span></button>
@@ -255,7 +265,8 @@
 							<option value="all">All</option>
 						</select>
 					</div>
-				</header>
+				</div>
+			</header>
 			<div class="modal-scroll">
 				<div class="items-list">
 				</div>
@@ -283,7 +294,16 @@
 						</div>
 					</div>
 					<div class="small-items column is-6 text-right">
-						<b>Small Items</b>: <span class="count">0</span>/<span class="max"></span>
+						<div class="small">
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<div class="small-item"><span class="fa fa-check"></span></div>
+							<label>small items</label>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -326,11 +346,27 @@
 				</div>
 			</div>
 			<div class="columns">
-				<div class="column is-12">
+				<div class="column is-6">
 					<div class="form-field">
 						<label>Tags (comma separated)</label>
 						<input type="text" name="item-tags">
 					</div>
+				</div>
+				<div class="column is-3">
+					<div class="form-field">
+						<label>Stock</label>
+						<input type="text" name="item-stock">
+					</div>
+				</div>
+				<div class="column is-3">
+					<div class="form-field">
+						<label>Stock Used</label>
+						<input type="text" name="item-used">
+					</div>
+				</div>
+			</div>
+			<div class="columns">
+				<div class="column is-12">
 					<div class="form-field">
 						<label>Notes</label>
 						<textarea name="item-notes"></textarea>
@@ -340,12 +376,15 @@
 					</div>
 				</div>
 			</div>
+
+			<input type="hidden" name="item-stockunits">
 		</section>
 	</div>
 
 
 	<div class="blanket"></div>
 
+	<script src="./vendor/dynamodb-marshaler.min.js"></script>
 	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
 	<script type="module" src="character.js"></script>
 </body>
