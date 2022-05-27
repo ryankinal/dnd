@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>FATE Core Dice | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Ruslan+Display|Lobster+Two:wght@700&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="dice.css?bust=6" rel="stylesheet">
+</head>
+<body>
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>FATE Core Dice</h1>
+		<div class="form">
+			<button id="doIt">Roll</button>
+		</div>
+		<div id="rolling" style="display: none"><span class="fas fa-compass fa-spin"></span></div>
+		<div class="results">
+			<div id="output">
+				<div class="dice">
+					<div><div class="die"><span class="fas fa-plus"></span></div></div>
+					<div><div class="die"><span class="fas fa-minus"></span></div></div>
+					<div><div class="die"><span class="fas fa-plus"></span></div></div>
+					<div><div class="die"><span class="fas fa-plus"></span></div></div>
+				</div>
+				<div class="level">
+					<table>
+						<tr class="plus-8"><td>+8</td><td>Legendary</td></tr>
+						<tr class="plus-7"><td>+7</td><td>Epic</td></tr>
+						<tr class="plus-6"><td>+6</td><td>Fantastic</td></tr>
+						<tr class="plus-5"><td>+5</td><td>Superb</td></tr>
+						<tr class="plus-4"><td>+4</td><td>Great</td></tr>
+						<tr class="plus-3"><td>+3</td><td>Good</td></tr>
+						<tr class="plus-2"><td>+2</td><td>Fair</td></tr>
+						<tr class="plus-1"><td>+1</td><td>Average</td></tr>
+						<tr class="zero"><td>0</td><td>Mediocre</td></tr>
+						<tr class="minus-1"><td>-1</td><td>Poor</td></tr>
+						<tr class="minus-2"><td>-2</td><td>Terrible</td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="reminder"><p>Remember to add your skill to your result!</p></div>
+	</div>
+	<script type="text/javascript" src="dice.js?bust=6"></script>
+</body>
+</html>
