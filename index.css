@@ -1,20 +1,65 @@
+#posts {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(490px, 1fr));
+	column-gap: 20px;
+	row-gap: 25px;
+}
+
+#posts > div {
+	
+}
+
 .post {
-	padding: 20px;
-	margin: 0 0 25px 0;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: #FFF;
+	color: #333;
+	display: grid;
+	grid-template-columns: minmax(150px, 45%) 1fr;
+	border: solid #33BBAA 1px;
+	width: 100%;
+}
+
+.post h2 {
+	color: #333;
 }
 
 .tags {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
-	display: none;
+	font-size: 14px;
 }
 
 .tag {
 	display: inline-block;
+	vertical-align: bottom;
 }
 
 .tag::before {
 	content: '#';
 }
+
+.image {
+	background-size: cover;
+	filter: blur(1px);
+	background-repeat: no-repeat;
+	background-position: 15px 15px;
+	border-right: solid black 1px;
+}
+
+.fate-core-post .image {
+	background-image: url(../images/fate-core.png);
+	background-color: #0E5084;
+}
+
+.l5r-dice-post .image {
+	background-image: url(../images/l5r-dice.png);
+	background-color: #38332F;
+}
+
+.content {
+	padding: 15px;
+	display: grid;
+	grid-template-rows: 1fr 15px;
+}
+

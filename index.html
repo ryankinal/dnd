@@ -6,36 +6,48 @@
 		<meta content="utf-8" http-equiv="encoding">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
-		<link href="https://fonts.googleapis.com/css?family=Ruslan+Display|Lobster+Two:wght@700&display=swap" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap" rel="stylesheet">
 		<link href="style.css" rel="stylesheet">
 		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
+		<header>
+			<div class="restrict">
+				<h1>CertifiedRandom <span class="fas fa-dice"></span></h1>
+				<p>Stuff for TTRPGs when they're not so TT anymore.</p>
+			</div>
+		</header>
 		<div class="restrict">
-			<header>
-				<h1>CertfiedRandom</h1>
-				<p>I make stuff for RPGs. Mostly stuff that solves specific problems that I have.</p>
-			</header>
 			<div id="posts">
-				<div class="post">
+				<div class="post fate-core-post">
+					<div class="image"></div>
 					<div class="content">
-						<h2><a href="treasure">D&D Treasure Tables</a></h2>
-						<p>Rollable treasure tables for D&D 5E, directly out of the DMG. One click to roll an entire hoard, or view the table to roll each item individually.</p>
+						<div>
+							<h2><a href="fate-core">FATE Core Dice Roller and Point Tracker</a></h2>
+							<p>Tools for the FATE Core System. Displays the dice as well as the result level, keeps track of and refreshes fate points.</p>
+						</div>
+						<ul class="tags">
+							<li class="tag">fate</li>
+							<li class="tag">rng</li>
+						</ul>
 					</div>
-					<ul class="tags">
-						<li class="tag">d&d</li>
-						<li class="tag">rng</li>
-					</ul>
+					
 				</div>
-				<div class="post">
+				<div class="post l5r-dice-post">
+					<div class="image"></div>
 					<div class="content">
-						<h2><a href="l5r-dice">L5R 4E Dice Roller</a></h2>
-						<p>Dice roller for Legend of the Five Rings 4th Edition. Implements exploding 9's and 10's, rerolling 1's, and adding a void point.</p>
+						<div>
+							<h2><a href="l5r-dice">L5R 4E Dice Roller</a></h2>
+							<p>Dice roller for Legend of the Five Rings 4th Edition. Implements exploding 9's and 10's, rerolling 1's, and adding a void point.</p>
+						</div>
+						<ul class="tags">
+							<li class="tag">l5r</li>
+							<li class="tag">rng</li>
+						</ul>
 					</div>
-					<ul class="tags">
-						<li class="tag">l5r</li>
-						<li class="tag">rng</li>
-					</ul>
+					
 				</div>
 			</div>
 		</div>

@@ -5,26 +5,29 @@
 body {
 	font-family: 'Roboto', sans-serif;
 	font-size: 18px;
-	margin: 10px;
 	padding: 0;
-	background-color: #38332F;
-	color: #EEEBD8;
+	margin: 0;
+	background-color: #6677BB;;
+	color: #FFF;
 }
 
 header {
 	margin-bottom: 55px;
+	background-color: #2C302F;
+	padding: 15px;
 }
 
 h1, h2, h3, h4 {
-	font-family: 'Lobster Two', sans-serif;
+	font-family: 'Righteous', serif;
 	margin-top: 0;
 	position: relative;
+	color: #9933CC;
 }
 
 h1 {
 	text-align: left;
 	position: relative;
-	color: rgb(244, 210, 68);
+	font-size: 32px;
 }
 
 p {
@@ -33,8 +36,12 @@ p {
 }
 
 a {
-	color: #EA911D;
 	text-decoration: none;
+	color: #9BC4B2;
+}
+
+h1 a, h2 a, h3 a, h4 a {
+	color: inherit;
 }
 
 a.back-link {
@@ -44,5 +51,5 @@ a.back-link {
 .restrict {
 	width: 100%;
 	max-width: 1000px;
-	margin: 55px auto;
+	margin: 0 auto;
 }
