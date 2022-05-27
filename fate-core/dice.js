@@ -105,7 +105,6 @@
 			if (!element.firstChild.matches('.spending')) {
 				element.firstChild.classList.add('spending');
 				fatePoints--;
-				console.log(fatePoints);
 				save();
 
 				setTimeout(function() {
