@@ -71,6 +71,7 @@ td:first-child,
 .results {
 	border: solid #B1C0DE 1px;
 	background-color: rgba(255, 255, 255, 0.1);
+	margin-bottom: 35px;
 }
 
 .dice {
@@ -196,6 +197,7 @@ td:first-child {
 }
 
 .fate-point {
+	cursor: pointer;
 	background-color: #273756;
 	border-radius: 50%;
 	height: 50px;
