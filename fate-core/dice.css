@@ -69,7 +69,6 @@ td:first-child,
 .results {
 	border: solid #B1C0DE 1px;
 	background-color: rgba(255, 255, 255, 0.1);
-	margin-bottom: 35px;
 }
 
 .dice {
@@ -194,7 +193,9 @@ label .fas {
 	color: #FFF;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-	font-size:  14px;
+	font-size: 14px;
+	margin-bottom: 35px;
+	min-height: 60px;
 }
 
 .fate-point {
@@ -207,6 +208,17 @@ label .fas {
 	align-items: center;
 	margin: 5px;
 	border: solid #B1C0DE 1px;
+	transition: opacity 0.3s ease-in, transform 0.6s ease-in-out;
+	opacity: 1;
+	transform: rotateY(0);
+}
+
+.fate-point.added {
+	transform: rotateY(180deg);
+}
+
+.fate-point.spending {
+	opacity: 0;
 }
 
 .fate-point > div {

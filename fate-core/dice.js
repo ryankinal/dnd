@@ -100,16 +100,26 @@
 			icon = pointIconClasses[iconIndex],
 			element = document.createElement('div');
 
-		element.innerHTML = `<div class="fate-point"><div><span class="fas fa-${icon}"></span></div></div>`;
+		element.innerHTML = `<div class="fate-point added"><div><span class="fas fa-${icon}"></span></div></div>`;
 		element.addEventListener('click', function() {
-			element.parentNode.removeChild(element);
-			fatePoints--;
-			save();
+			if (!element.firstChild.matches('.spending')) {
+				element.firstChild.classList.add('spending');
+				fatePoints--;
+				console.log(fatePoints);
+				save();
+
+				setTimeout(function() {
+					element.parentNode.removeChild(element);
+				}, 300)
+			}
 		});
 
 		fatePoints++;
 		save();
 		fatePointsDisplay.appendChild(element);
+		setTimeout(function() {
+			element.firstChild.classList.remove('added');
+		});
 	}
 
 	function save() {
