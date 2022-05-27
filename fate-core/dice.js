@@ -110,7 +110,7 @@
 
 				setTimeout(function() {
 					element.parentNode.removeChild(element);
-				}, 300)
+				}, 600)
 			}
 		});
 
