@@ -2,6 +2,7 @@ body {
 	background-color: #0E5084;
 	color: #FFF;
 	margin: 15px;
+	padding-bottom: 35px;
 }
 
 h1, h2 {
@@ -19,7 +20,8 @@ h2 {
 
 .restrict {
 	max-width: 400px;
-	margin:  5px auto 0;
+	margin:  5px auto 35px;
+	padding-bottom: 20px;
 }
 
 .form {
