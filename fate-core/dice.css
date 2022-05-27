@@ -41,6 +41,7 @@ h2 {
 
 #doIt .rolling {
 	display: none;
+	color: #273756;
 }
 
 #doIt.rolling .rolling {
@@ -148,6 +149,7 @@ td:first-child {
 	flex: 0 1 50%;
 	display: flex;
 	align-items: center;
+	font-size: 20px;
 }
 
 .fate-points-form > div:last-child {
@@ -159,6 +161,7 @@ td:first-child {
 	padding: 5px 10px;
 	border: none;
 	outline: none;
+	font-size: 18px;
 }
 
 #add {
@@ -173,7 +176,7 @@ td:first-child {
 }
 
 #refreshValue {
-	font-size: 18px;
+	font-size: 20px;
 	text-align: center;
 	background-color: transparent;
 	color: #FFF;
@@ -181,12 +184,6 @@ td:first-child {
 	border:  solid #FFF 1px;
 	padding: 1px 5px;
 	border-radius: 5px;
-}
-
-label .fas {
-	font-size: 14px;
-	position: relative;
-	top: -2px;
 }
 
 .fate-points {
