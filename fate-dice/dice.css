@@ -3,9 +3,8 @@ body {
 	color: #FFF;
 }
 
-h1 {
+h1, h2 {
 	color: white;
-	font-family: inherit;
 }
 
 .restrict {
@@ -26,7 +25,19 @@ h1 {
 	flex: 0 1 50%;
 }
 
-#rolling,
+#doIt .rolling {
+	display: none;
+	color: #FFF;
+}
+
+#doIt.rolling .rolling {
+	display: inline;
+}
+
+#doIt.rolling .roll {
+	display: none;
+}
+
 .dice,
 td:first-child,
 .reminder {
@@ -36,6 +47,7 @@ td:first-child,
 .results {
 	border: solid #B1C0DE 1px;
 	background-color: rgba(255, 255, 255, 0.1);
+	margin-bottom: 35px;
 }
 
 .dice {
@@ -73,10 +85,11 @@ td:first-child,
 	outline: 0;
 	padding: 10px 20px;
 	background-color: #B1C0DE;
+	transition: background-color 1s ease;
 }
 
-#rolling {
-	font-size: 32px;
+#doIt:active {
+	background-color: #FFF;
 }
 
 .options, .detail {

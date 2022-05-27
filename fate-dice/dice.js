@@ -1,5 +1,6 @@
 (function() {
 	var rolling = false,
+		rollButton = document.getElementById('doIt'),
 		diceDisplay = document.querySelector('.dice'),
 		diceIcons = document.querySelectorAll('.dice .fas'),
 		terribleDisplay = document.querySelector('tr.minus-2 td:first-child'),
@@ -52,7 +53,7 @@
 		return sign + (total === 0 ? 'zero' : String(total));
 	}
 
-	document.getElementById('doIt').addEventListener('click', function() {
+	rollButton.addEventListener('click', function() {
 		var rollAnimationInterval,
 			selected = document.querySelector('tr.selected');
 
@@ -60,6 +61,7 @@
 			rolling = true;
 
 			diceDisplay.classList.add('show');
+			rollButton.classList.add('rolling');
 
 			if (selected) {
 				document.querySelector('tr.selected').classList.remove('selected');	
@@ -110,6 +112,7 @@
 				}
 
 				rolling = false;
+				rollButton.classList.remove('rolling');
 			}, rollAnimationIntervalTime * rollAnimationCount);
 		}
 	});
