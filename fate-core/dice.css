@@ -1,6 +1,7 @@
 body {
 	background-color: #0E5084;
 	color: #FFF;
+	margin: 15px;
 }
 
 h1, h2 {
@@ -86,8 +87,8 @@ td:first-child,
 }
 
 .die {
+	display: flex;
 	border-radius: 10px;
-	display: none;
 	width: 75px;
 	height: 75px;
 	margin: 0 auto;
@@ -95,11 +96,6 @@ td:first-child,
 	justify-content: center;
 	align-items: center;
 }
-
-.dice.show .die {
-	display: flex;
-}
-
 
 
 .options, .detail {
