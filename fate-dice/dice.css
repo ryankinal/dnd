@@ -7,13 +7,48 @@ h1, h2 {
 	color: white;
 }
 
+h1 {
+	margin-bottom: 20px;
+	margin-top: 15px;
+}
+
+h2 {
+	border-bottom: solid white 1px;
+}
+
 .restrict {
 	max-width: 400px;
-	margin:  25px auto 0;
+	margin:  5px auto 0;
 }
 
 .form {
 	margin-bottom: 25px;
+}
+
+#doIt {
+	width: 100%;
+	border: none;
+	font-size: 18px;
+	outline: 0;
+	padding: 10px 20px;
+	background-color: #FFF;
+	transition: background-color 1s ease;
+}
+
+#doIt:active {
+	background-color: #B1C0DE;
+}
+
+#doIt .rolling {
+	display: none;
+}
+
+#doIt.rolling .rolling {
+	display: inline;
+}
+
+#doIt.rolling .roll {
+	display: none;
 }
 
 #output {
@@ -23,19 +58,6 @@ h1, h2 {
 
 #output > div {
 	flex: 0 1 50%;
-}
-
-#doIt .rolling {
-	display: none;
-	color: #FFF;
-}
-
-#doIt.rolling .rolling {
-	display: inline;
-}
-
-#doIt.rolling .roll {
-	display: none;
 }
 
 .dice,
@@ -78,19 +100,7 @@ td:first-child,
 	display: flex;
 }
 
-#doIt {
-	width: 100%;
-	border: none;
-	font-size: 18px;
-	outline: 0;
-	padding: 10px 20px;
-	background-color: #B1C0DE;
-	transition: background-color 1s ease;
-}
 
-#doIt:active {
-	background-color: #FFF;
-}
 
 .options, .detail {
 	padding: 15px 0;
@@ -101,6 +111,7 @@ table {
 	width: 100%;
 	border-collapse: collapse;
 	border: none;
+	color: #FFF;
 }
 
 tr:not(tr:last-child) {
@@ -128,6 +139,85 @@ td:first-child {
 
 .reminder {
 	margin: 15px 0;
+}
+
+.fate-points-form {
+	display: flex;
+}
+
+.fate-points-form > div {
+	flex: 0 1 50%;
+	display: flex;
+	align-items: center;
+}
+
+.fate-points-form > div:last-child {
+	justify-content: right;
+}
+
+#add, #refresh {
+	background-color: #FFF;
+	padding: 5px 10px;
+	border: none;
+	outline: none;
+}
+
+#add {
+	margin-right: 1px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#refresh {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#refreshValue {
+	font-size: 18px;
+	text-align: center;
+	background-color: transparent;
+	color: #FFF;
+	outline: none;
+	border:  solid #FFF 1px;
+	padding: 1px 5px;
+	border-radius: 5px;
+}
+
+label .fas {
+	font-size: 14px;
+	position: relative;
+	top: -2px;
+}
+
+.fate-points {
+	color: #FFF;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+	font-size:  14px;
+}
+
+.fate-point {
+	background-color: #273756;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 5px;
+	border: solid #B1C0DE 1px;
+}
+
+.fate-point > div {
+	border-radius: 50%;
+	padding: 8px;
+	border: dashed 1px;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @media (min-width: 400px) {

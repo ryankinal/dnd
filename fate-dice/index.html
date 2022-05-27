@@ -15,7 +15,7 @@
 		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
 		<h1>FATE Core System</h1>
 		<h2>Dice</h2>
-		<div class="form">
+		<div class="form roll-form">
 			<button id="doIt"><span class="roll">Roll</span><span class="rolling"><span class="fas fa-compass fa-spin"></span></span></button>
 		</div>
 		<div class="results">
@@ -41,6 +41,29 @@
 						<tr class="minus-2"><td>-2</td><td>Terrible</td></tr>
 					</table>
 				</div>
+			</div>
+		</div>
+
+		<h2>Fate Points</h2>
+		<div class="form fate-points-form">
+			<div>
+				<button id="add"><span class="fas fa-plus"></span></button>
+				<button id="refresh"><spsan class="fas fa-rotate-right"></span></button>
+			</div>
+			<div class="refresh-value">
+				Refresh &nbsp;
+				<select id="refreshValue">
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3" selected>3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+		</div>
+		<div>
+			<div class="fate-points">
 			</div>
 		</div>
 	</div>
