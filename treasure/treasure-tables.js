@@ -104,11 +104,10 @@
 										<span class="stash-item-description">${item.value}</span>
 									</div>
 									<div class="stash-item-buttons">
-										<button class="fas fa-trash stash-item-delete"></button>
+										<button class="fas fa-x stash-item-delete"></button>
 										<button class="stash-item-delete-confirm">Yes</button>
 										<button class="stash-item-delete-cancel">No</button>
-									</div>
-									<div class="stash-item-overlay"></div>`
+									</div>`
 
 
 				let deleteButton = outer.querySelector('.stash-item-delete');
@@ -264,16 +263,6 @@
 						if (i > 0 && j > 0 && name.indexOf('challenge') < 0)
 						{
 							cell.innerHTML = '<div class="result-text">' + c + '</div>';
-
-							let detailsLink = document.createElement('a');
-							detailsLink.innerHTML = '<span class="fas fa-dice"> random details';
-							detailsLink.className = 'details-link';
-							addDetailHandler(detailsLink, cell);
-							
-							let linksDiv = document.createElement('div');
-							linksDiv.appendChild(detailsLink);
-
-							cell.appendChild(linksDiv);
 						}
 						else
 						{
@@ -545,19 +534,6 @@
 				let rowElement = document.createElement('tr');
 				rowElement.appendChild(rollCell);
 				rowElement.appendChild(resultCell);
-
-				if (table.indexOf('challenge') < 0)
-				{
-					let detailsLink = document.createElement('a');
-					detailsLink.innerHTML = '<span class="fas fa-dice"> random details';
-					detailsLink.className = 'details-link';
-					addDetailHandler(detailsLink, resultCell);
-					
-					let linksDiv = document.createElement('div');
-					linksDiv.appendChild(detailsLink);
-
-					resultCell.appendChild(linksDiv);
-				}
 				
 				return rowElement;
 			});
@@ -698,8 +674,8 @@
 	copyButton.addEventListener('click', function() {
 		if (stash.length) {
 			stashTextOutput.value = stash.map(function(item) {
-				return item.value;
-			}).join("\n\n");
+				return '* ' + item.value;
+			}).join("\n");
 
 			stashModal.classList.remove('stash-empty');
 		} else {

@@ -58,6 +58,11 @@
 	background-color: #38332F;
 }
 
+.dnd-treasure-post .image {
+	background-image: url(../images/dnd-treasure.png);
+	background-color: #6677BB;
+}
+
 .content {
 	padding: 15px;
 	display: grid;

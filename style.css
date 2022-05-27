@@ -11,16 +11,9 @@ body {
 	font-size: 18px;
 	padding: 0;
 	margin: 0;
-	background-color: #6677BB;;
+	background-color: #2C302F;;
 	
 	height: 100%;
-}
-
-header,
-footer {
-	padding: 15px;
-	background-color: #2C302F;
-	color: #FFF;
 }
 
 footer {
@@ -35,11 +28,17 @@ h1, h2, h3, h4 {
 	color: #9933CC;
 }
 
-h1 {
+header h1 {
 	text-align: left;
 	position: relative;
 	font-size: 32px;
 	margin-bottom: 8px;
+	-webkit-text-stroke: 0.25px #33BBAA;
+	font-weight: bold;
+}
+
+header h1 .fas {
+	-webkit-text-stroke: 1px #33BBAA;
 }
 
 h2 {
@@ -72,11 +71,30 @@ a.back-link {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	min-height: 100%;
-	row-gap: 35px;
+}
+
+.layout > *:first-child,
+.layout > *:last-child {
+	padding: 15px;
+	background-color: #2C302F;
+	color: #FFF;
+}
+
+.layout > *:first-child {
+	border-bottom: solid #00FF99 2px;
+}
+
+.layout > *:last-child {
+	border-top: solid #00FF99 2px;	
+}
+
+.layout > *:nth-child(2) {
+	background-color: #6677BB;
 }
 
 .restrict {
 	width: 100%;
 	max-width: 1000px;
 	margin: 0 auto;
+	padding: 0;
 }
