@@ -115,6 +115,10 @@
 			}
 		});
 
+		if (fatePoints === 0) {
+			fatePointsDisplay.innerHTML = '';
+		}
+
 		fatePoints++;
 
 		fatePointsDisplay.appendChild(element);
