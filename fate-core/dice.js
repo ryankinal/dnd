@@ -107,6 +107,10 @@
 
 				setTimeout(function() {
 					element.parentNode.removeChild(element);
+
+					if (fatePoints === 0) {
+						fatePointsDisplay.innerHTML = `<div class="no-fate-points">No fate points - look for a&nbsp;<strong>compel</strong>.</div>`;
+					}
 				}, 600)
 			}
 		});
@@ -203,6 +207,7 @@
 
 	if (stored) {
 		if (stored.fatePoints && stored.fatePoints > 0) {
+			fatePointsDisplay.innerHTML = '';
 			while (stored.fatePoints--) {
 				addFatePoint();
 			}
