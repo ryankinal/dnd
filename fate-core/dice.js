@@ -3,8 +3,6 @@
 		rollButton = document.getElementById('doIt'),
 		diceDisplay = document.querySelector('.dice'),
 		diceIcons = document.querySelectorAll('.dice .fas'),
-		terribleDisplay = document.querySelector('tr.minus-2 td:first-child'),
-		legendaryDisplay = document.querySelector('tr.plus-8 td:first-child'),
 		fatePointsDisplay = document.querySelector('.fate-points'),
 		refreshValueInput = document.getElementById('refreshValue'),
 		stored = localStorage.getItem('fate'),
@@ -83,7 +81,7 @@
 	function getLevelClass(total) {
 		var sign = '';
 
-		total = Math.max(total, -2);
+		total = Math.max(total, -4);
 		total = Math.min(total, 8);
 
 		if (total > 0) {
@@ -142,9 +140,6 @@
 				document.querySelector('tr.selected').classList.remove('selected');	
 			}
 
-			terribleDisplay.innerText = '-2';
-			legendaryDisplay.innerText = '+8';
-
 			rollAnimationInterval = setInterval(function() {
 				diceIcons[0].className = diceIconClasses [fateDie() + 1];
 				diceIcons[0].style.transform = 'rotate(' + randomRotation() + 'deg)';
@@ -177,14 +172,6 @@
 				clearInterval(rollAnimationInterval);
 
 				document.querySelector('tr.' + getLevelClass(result.total)).classList.add('selected');
-
-				if (result.total < -2) {
-					terribleDisplay.innerText = result.total;
-				}
-
-				if (result.total > 8) {
-					legendaryDisplay.innerText = '+' + result.total;
-				}
 
 				rolling = false;
 				rollButton.classList.remove('rolling');
