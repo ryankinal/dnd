@@ -114,7 +114,7 @@
 		});
 
 		fatePoints++;
-		save();
+
 		fatePointsDisplay.appendChild(element);
 		setTimeout(function() {
 			element.firstChild.classList.remove('added');
@@ -192,7 +192,10 @@
 		}
 	});
 
-	document.getElementById('add').addEventListener('click', addFatePoint);
+	document.getElementById('add').addEventListener('click', function() { 
+		addFatePoint();
+		save();
+	});
 
 	document.getElementById('refresh').addEventListener('click', function(e) {
 		var refreshValue = parseInt(refreshValueInput.value);
@@ -203,6 +206,8 @@
 		while (refreshValue--) {
 			addFatePoint();
 		}
+
+		save();
 	});
 
 	refreshValueInput.addEventListener('change', function() {
@@ -213,7 +218,7 @@
 		if (stored.fatePoints && stored.fatePoints > 0) {
 			while (stored.fatePoints--) {
 				addFatePoint();
-			}	
+			}
 		}
 
 		if (stored.refreshValue) {
