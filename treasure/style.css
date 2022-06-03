@@ -314,7 +314,7 @@ tr.selected td:first-child {
 
 .top-message {
 	font-size: .8em;
-	position: absolute;
+	position: fixed;
 	width: 100%;
 	max-width: 300px;
 	top: 0;
