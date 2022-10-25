@@ -1,5 +1,6 @@
-h1, h2 {
-	-webkit-text-stroke: ;	
+body {
+	margin: 15px;
+	padding-bottom: 35px;
 }
 
 h1 {
@@ -8,7 +9,7 @@ h1 {
 
 h2 {
 	margin-top: 20px;
-	margin-bottom 20px;
+	margin-bottom: 20px;
 	color: #00FF99;
 }
 
@@ -48,7 +49,7 @@ td, th {
 }
 
 th {
-	background-color: #2C302F;
+	background-color: #6677BB;
 	color: #FFF;
 }
 
@@ -259,21 +260,37 @@ tr.selected td:first-child {
 	animation: stashhighlight 0.5s;
 }
 
-.stash-modal {
+.stash-modal,
+.roll-confirm-modal {
 	position: fixed;
 	top: 0;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 94vw;
-	height: 94vh;
-	margin: 3vh auto;
-	padding: 10px;
 	background-color: #2C302F;
-	max-width: 940px;
 	border-radius: 8px;
 	display: none;
 	z-index: 5;
 	color: #FFF;
+	padding: 10px;
+}
+
+.stash-modal {
+	width: 94vw;
+	height: 94vh;
+	margin: 3vh auto;
+	max-width: 940px;
+}
+
+.roll-confirm-modal {
+	width: 94vh;
+	max-width: 500px;
+	margin: 3vh auto;
+	text-align: center;
+}
+
+#cancelRollButton {
+	background-color: transparent;
+	color: #F00;
 }
 
 .stash-content {

@@ -196,9 +196,9 @@ td:first-child {
 .fate-points {
 	color: #FFF;
 	font-size: 14px;
-	margin-bottom: 35px;
 	min-height: 70px;
 	text-align: center;
+	margin-bottom: 15px;
 }
 
 .fate-points > div {
@@ -212,6 +212,13 @@ td:first-child {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.fate-points-usage {
+	width: 80%;
+	margin: 0 auto 35px;
+	text-align: center;
+	font-size: 12px;
 }
 
 .fate-point {

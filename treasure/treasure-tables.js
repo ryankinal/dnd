@@ -4,6 +4,7 @@
 	let stashTextOutput = document.querySelector('.stash-text-output');
 	let stashListOutput = document.querySelector('.stash-list-output');
 	let stashModal = document.querySelector('.stash-modal');
+	let rollConfirmModal = document.querySelector('.roll-confirm-modal');
 	let tableTopButton = document.createElement('button');
 	let copyButton = document.querySelector('.stash-controls .copy');
 	let copiedMessage = document.querySelector('.stash-copied-message');
@@ -11,6 +12,7 @@
 	let overlay = document.querySelector('.overlay');
 	let stash = [];
 	let currency = ['cp', 'sp', 'ep', 'gp', 'pp'];
+	let action = null;
 	tableTopButton.innerHTML = '<span class="fas fa-arrow-up"></span>';
 	tableTopButton.className = 'table-top';
 
@@ -621,12 +623,15 @@
 	rollButton.addEventListener('click', function() {
 		if (tableSelect.value) {
 			if (stash.length > 0) {
-				showTopMessage(clearedMessage);
-				stash = [];
+				action = 'roll';
+				rollConfirmModal.style.display = 'block';
+				overlay.style.display = 'block';
+			} else {
+				rollOnTable(tableSelect.value, true);
+				renderStash();
 			}
 			
-			rollOnTable(tableSelect.value, true);
-			renderStash();
+			
 		}
 	});
 
@@ -634,14 +639,54 @@
 	viewButton.addEventListener('click', function() {
 		if (tableSelect.value) {
 			if (stash.length) {
-				showTopMessage(clearedMessage);
-				stash = [];	
-				renderStash();
+				rollConfirmModal.style.display = 'block';
+				overlay.style.display = 'block';
+				action = 'view';
+			} else {
+				tableOutput.innerText = '';
+				renderTable(tableSelect.value);
 			}
+		}
+	});
 
+	let clearStashButton = document.getElementById('clearStashButton');
+	clearStashButton.addEventListener('click', function() {
+		showTopMessage(clearedMessage);
+		stash = [];
+
+		if (action === 'view') {
 			tableOutput.innerText = '';
 			renderTable(tableSelect.value);
+		} else if (action === 'roll') {
+			rollOnTable(tableSelect.value, true);
 		}
+
+		renderStash();
+		action = null;
+		rollConfirmModal.style.display = 'none';
+		overlay.style.display = 'none';
+	});
+
+	let saveStashButton = document.getElementById('saveStashButton');
+	saveStashButton.addEventListener('click', function() {
+		if (action === 'view') {
+			tableOutput.innerText = '';
+			renderTable(tableSelect.value);
+		} else if (action === 'roll') {
+			rollOnTable(tableSelect.value, true);
+		}
+
+		renderStash();
+		action = null;
+		rollConfirmModal.style.display = 'none';
+		overlay.style.display = 'none';
+	});
+
+	let cancelRollButton = document.getElementById('cancelRollButton');
+	cancelRollButton.addEventListener('click', function() {
+		action = null;
+		rollConfirmModal.style.display = 'none';
+		overlay.style.display = 'none';
 	});
 
 	document.querySelector('.page-top').addEventListener('click', function() {
