@@ -1,0 +1,170 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #FFF;
+}
+
+h1 {
+	color: #000;
+}
+
+.restrict {
+	max-width: 400px;
+	margin:  5px auto 35px;
+	padding: 10px;
+}
+
+.base-config {
+	display: flex;
+	border-radius: 10px;
+	background-color: #FFF;
+	margin-bottom: 15px;
+	border: solid #000 1px;
+}
+
+.base-config > * {
+	font-size: 36px;
+	flex-basis: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px 0;
+}
+
+.dice {
+	border-right: solid 1px #000;
+}
+
+.modifier {
+	position: relative;
+}
+
+.value-display {
+	width: 50px;
+	height: 50px;
+	overflow: hidden;
+}
+
+.values {
+	transform: translateY(-250px);
+	transition: all .2s ease-out;
+}
+
+.value {
+	display: flex;
+	width: 50px;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+}
+
+.controls {
+	width: 40px;
+	font-size: 18px;
+	flex-basis: 40px;
+	display: flex;
+	flex-direction: column;
+	border-left: solid #000 1px;
+	padding: 0;
+}
+
+.controls > * {
+	border-bottom: solid #000 1px;
+	flex-basis: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.controls > *:last-child {
+	border-bottom: none;
+}
+
+.buffs {
+	display: flex;
+	flex-basis: 100%;
+	flex-grow: 0;
+	flex-shrink: 0;
+	color: #000;
+	margin-bottom: 40px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.buffs > * {
+	flex-basis: 50%;
+	text-align: center;
+	padding: 5px;
+}
+
+#doIt {
+	width: 100%;
+	border: none;
+	font-size: 18px;
+	outline: 0;
+	padding: 10px 20px;
+	background-color: #000;
+	color: #FFF;
+	transition: background-color 1s ease;
+	margin-bottom: 40px;
+}
+
+#doIt:active {
+	background-color: #B1C0DE;
+}
+
+#doIt .rolling {
+	display: none;
+}
+
+#doIt.rolling .rolling {
+	display: inline;
+}
+
+#doIt.rolling .roll {
+	display: none;
+}
+
+.output {
+	display: none;
+}
+
+.output-dice {
+	font-size: 46px;
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+.output-dice > * {
+	display: inline-block;
+}
+
+.die.ignored {
+	color: #AAA;
+}
+
+.output-total {
+	border: solid #000 1px;
+	border-radius: 15px;
+	text-align: center;
+	font-size: 46px;
+	width: 100px;
+	margin: 0 auto;
+	padding: 10px 0 0 0;
+}
+
+.hit {
+	padding: 5px 10px;
+	font-size: 16px;
+	border-top: solid #000 1px;
+	margin-top: 10px;
+}
+
+@media (max-width: 300px) {
+	.buffs > * {
+		flex-basis: 100%;
+	}
+}

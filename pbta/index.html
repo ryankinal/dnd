@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>PbtA Dice | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="dice.css?bust=8" rel="stylesheet">
+</head>
+<body>
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>PbtA Dice</h1>
+		<div class="form roll-form">
+			<div class="config">
+				<div class="base-config">
+					<div class="dice">2d6</div>
+					<div class="modifier">
+						<div class="value-display">
+							<div class="values">
+								<div class="value value-5">+5</div>
+								<div class="value value-4">+4</div>
+								<div class="value value-3">+3</div>
+								<div class="value value-2">+2</div>
+								<div class="value value-1">+1</div>
+								<div class="value value-0">0</div>
+								<div class="value value-negative1">-1</div>
+								<div class="value value-negative2">-2</div>
+								<div class="value value-negative3">-3</div>
+								<div class="value value-negative4">-4</div>
+								<div class="value value-negative5">-5</div>
+							</div>
+						</div>
+					</div>
+					<div class="controls">
+						<div class="up"><span class="fas fa-caret-up"></span></div>
+						<div class="down"><span class="fas fa-caret-down"></span></div>
+					</div>
+				</div>
+				<div class="buffs">
+					<label><input type="radio" name="advantage" value="advantage"> Advantage</label>
+					<label><input type="radio" name="advantage" value="disadvantage"> Disdvantage</label>
+					<label><input type="radio" name="advantage" value="no" checked> Normal</label>
+				</div>
+			</div>
+			<button id="doIt"><span class="roll">Roll</span><span class="rolling"><span class="fas fa-compass fa-spin"></span></span></button>
+		</div>
+		<div class="results">
+			<div class="output">
+				<div class="output-dice">
+				</div>
+				<div class="output-total">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="dice.js?bust=8"></script>
+</body>
+</html>

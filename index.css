@@ -48,6 +48,11 @@
 	border-right: solid black 1px;
 }
 
+.pbta-post .image {
+	background-image: url(../images/pbta.png);
+	background-color: #FFF;
+}
+
 .fate-core-post .image {
 	background-image: url(../images/fate-core.png);
 	background-color: #0E5084;
