@@ -122,14 +122,10 @@
 				rolls = roll(),
 				total = getTotal(rolls);
 
-			if (total < 6) {
+			if (total <= 6) {
 				hitText = 'MISS!';
 			} else {
-				hitText = 'HIT!'
-
-				if (total < 10) {
-					hitText += ' (Mixed)';
-				}
+				hitText = 'HIT!';
 			}
 
 			doIt.classList.remove('rolling');

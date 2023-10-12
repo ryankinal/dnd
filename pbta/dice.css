@@ -154,13 +154,15 @@ h1 {
 	width: 100px;
 	margin: 0 auto;
 	padding: 10px 0 0 0;
+	overflow: hidden;
 }
 
 .hit {
-	padding: 5px 10px;
+	padding: 10px;
 	font-size: 16px;
-	border-top: solid #000 1px;
 	margin-top: 10px;
+	background-color: #000;
+	color: #FFF;
 }
 
 @media (max-width: 300px) {
