@@ -48,6 +48,11 @@
 	border-right: solid black 1px;
 }
 
+.timers-post .image {
+	background-image: url(../images/timers.png);
+	background-color: #64635F;
+}
+
 .pbta-post .image {
 	background-image: url(../images/pbta.png);
 	background-color: #FFF;

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Timers | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="timers.css?bust=8" rel="stylesheet">
+</head>
+<body>
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>Timers</h1>
+		<p>Name your timer and set the amount of ticks remaining, then count them down all at once or one-by-one.</p>
+		<div class="form timer-form">
+			<div class="timer-input">
+				<div class="field name">
+					<input type="text" id="name" placeholder="Name" />
+				</div>
+				<div class="field duration">
+					<input type="text" id="duration" placeholder="Ticks" />
+				</div>
+				<div class="field start">
+					<button id="start"><span class="fa fa-plus"></span></button>
+				</div>
+			</div>
+		</div>
+		<div id="recentTimers"></div>
+		<div id="controls" class="controls">
+			<div>
+				<button id="clear">Clear <span class="fa fa-trash"></span></button>
+			</div>
+			<div>
+				<button id="tick">Tick <span class="fa fa-clock"></span></button>
+			</div>
+		</div>
+		<div id="timers"></div>
+		<div id="noTimers">
+			<h2>No Ticking Timers</h2>
+			<p>So peaceful.</p>
+		</div>
+	</div>
+	<script type="text/javascript" src="timers.js?bust=8"></script>
+</body>
+</html>
