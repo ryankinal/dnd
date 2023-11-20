@@ -14,8 +14,12 @@
 		values = document.querySelector('.values'),
 		modifier = 0;
 
+	document.body.classList.add('dark-mode');
+
 	if (darkMode) {
 		document.body.classList.add('dark-mode');
+	} else {
+		document.body.classList.remove('dark-mode');
 	}
 
 	function d6() {
