@@ -64,8 +64,7 @@
 		console.log(timers);
 
 		if (timers && timers.length) {
-			noTimers.style.opacity = 0;
-			noTimers.style.display = 'none';
+			noTimers.classList.remove('show');
 			timerOutput.style.display = 'block';
 			controls.style.display = 'flex';
 
@@ -83,8 +82,7 @@
 		} else {
 			controls.style.display = 'none';
 			timerOutput.style.display = 'none';
-			noTimers.style.display = 'block';
-			noTimers.style.opacity = 1;
+			noTimers.classList.add('show');
 		}
 	}
 
