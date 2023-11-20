@@ -185,7 +185,8 @@
 
 			recentTimers.push({
 				name: name,
-				duration: duration
+				duration: duration,
+				time: Date.now()
 			});
 			
 			timers.push({
@@ -233,6 +234,10 @@
 		searchResults = recentTimers ? recentTimers.filter(function(timer) {
 			return timer.name.match(new RegExp(value, 'gi'));
 		}) : [];
+
+		searchResults.sort(function(a, b) {
+			return b.time - a.time;
+		});
 
 		return searchResults;
 	}
