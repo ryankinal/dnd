@@ -6,8 +6,17 @@ body {
 	background-color: #FFF;
 }
 
+body.dark-mode {
+	background-color: #000;
+	color: #FFF;
+}
+
 h1 {
 	color: #000;
+}
+
+.dark-mode h1 {
+	color: #FFF;
 }
 
 .restrict {
@@ -16,12 +25,36 @@ h1 {
 	padding: 10px;
 }
 
+#darkMode {
+	font-family: 'Roboto', sans-serif;;
+	font-size: 12px;
+	float: right;
+	padding: 5px 10px;
+	border: solid #000 1px;
+	border-radius: 8px;
+	position: relative;
+	top: 10px;
+}
+
+#darkMode span {
+	margin-right: 3px;
+}
+
+.dark-mode #darkMode {
+	border-color: #FFF;
+}
+
 .base-config {
 	display: flex;
 	border-radius: 10px;
 	background-color: #FFF;
 	margin-bottom: 15px;
 	border: solid #000 1px;
+}
+
+.dark-mode .base-config {
+	background-color: #000;
+	border-color: #FFF;
 }
 
 .base-config > * {
@@ -35,6 +68,10 @@ h1 {
 
 .dice {
 	border-right: solid 1px #000;
+}
+
+.dark-mode .dice {
+	border-color: #FFF;
 }
 
 .modifier {
@@ -70,6 +107,10 @@ h1 {
 	padding: 0;
 }
 
+.dark-mode .controls {
+	border-color: #FFF;
+}
+
 .controls > * {
 	border-bottom: solid #000 1px;
 	flex-basis: 50%;
@@ -77,6 +118,10 @@ h1 {
 	justify-content: center;
 	align-items: center;
 	width: 100%;
+}
+
+.dark-mode .controls > * {
+	border-color: #FFF;
 }
 
 .controls > *:last-child {
@@ -92,6 +137,10 @@ h1 {
 	margin-bottom: 40px;
 	flex-wrap: wrap;
 	justify-content: center;
+}
+
+.dark-mode .buffs {
+	color: #FFF;
 }
 
 .buffs > * {
@@ -110,6 +159,11 @@ h1 {
 	color: #FFF;
 	transition: background-color 1s ease;
 	margin-bottom: 40px;
+}
+
+.dark-mode #doIt {
+	background-color: #FFF;
+	color: #000;
 }
 
 #doIt:active {
@@ -157,12 +211,21 @@ h1 {
 	overflow: hidden;
 }
 
+.dark-mode .output-total {
+	border-color: #FFF;
+}
+
 .hit {
 	padding: 10px;
 	font-size: 16px;
 	margin-top: 10px;
 	background-color: #000;
 	color: #FFF;
+}
+
+.dark-mode .hit {
+	background-color: #FFF;
+	color: #000;
 }
 
 @media (max-width: 300px) {

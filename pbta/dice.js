@@ -1,5 +1,8 @@
 (function() {
-	var diceClasses = ['', 'fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'],
+	var darkModeKey = 'pbtaDarkMode',
+		darkMode = localStorage.getItem(darkModeKey),
+		darkModeButton = document.querySelector('#darkMode'),
+		diceClasses = ['', 'fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'],
 		output = document.querySelector('.output'),
 		diceOutput = document.querySelector('.output-dice'),
 		totalOutput = document.querySelector('.output-total'),
@@ -11,25 +14,25 @@
 		values = document.querySelector('.values'),
 		modifier = 0;
 
-	function d6()
-	{
+	if (darkMode) {
+		document.body.classList.add('dark-mode');
+	}
+
+	function d6() {
 		return Math.floor(Math.random() * 6) + 1
 	}
 
-	function roll()
-	{
+	function roll() {
 		var rolls = [d6(), d6()];
 
-		if (advantage.checked || disadvantage.checked)
-		{
+		if (advantage.checked || disadvantage.checked) {
 			rolls.push(d6());
 		}
 
 		return rolls;
 	}
 
-	function renderRolls(rolls, final)
-	{
+	function renderRolls(rolls, final) {
 		var ignoreValue = [].concat(rolls).reduce(function(a, b) {
 				if (advantage.checked) {
 					return a < b ? a : b;
@@ -69,8 +72,7 @@
 			});
 		}
 
-		if (ignoreFirst)
-		{
+		if (ignoreFirst) {
 			rollsCopy.shift();
 		}
 
@@ -79,16 +81,14 @@
 		}, 0) + modifier;
 	}
 
-	function setModifierTransform()
-	{
+	function setModifierTransform() {
 		var val = (modifier - 5) * 50;
 		values.style.transform = 'translateY(' + val + 'px)';
 		console.log(modifier);
 	}
 
 	upButton.addEventListener('click', function() {
-		if (modifier < 5)
-		{
+		if (modifier < 5) {
 			modifier++;
 			setModifierTransform();
 		}
@@ -133,5 +133,24 @@
 			totalOutput.innerHTML = `<div>${total}</div><div class="hit">${hitText}</div>`;
 			totalOutput.style.display = 'block';
 		}, 300);
+	});
+
+	if (darkMode) {
+		darkModeButton.innerHTML = '<span class ="fa fa-sun"></span> Light Mode';
+	} else {
+		darkModeButton.innerHTML = '<span class ="fa fa-moon"></span> Dark Mode';
+	}
+
+	darkModeButton.addEventListener('click', function() {
+		if (document.body.classList.contains('dark-mode')) {
+			// Set to light mode
+			document.body.classList.remove('dark-mode');
+			darkModeButton.innerHTML = '<span class ="fa fa-moon"></span> Dark Mode';
+			localStorage.removeItem(darkModeKey)
+		} else {
+			document.body.classList.add('dark-mode');
+			localStorage.setItem(darkModeKey, 'on');
+			darkModeButton.innerHTML = '<span class ="fa fa-sun"></span> Light Mode';
+		}
 	});
 })();
