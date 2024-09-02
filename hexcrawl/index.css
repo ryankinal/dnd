@@ -1,0 +1,28 @@
+body,
+html,
+#scroll,
+.outer {
+	width: 100%;
+	height: 100%;
+}
+
+#scroll {
+	overflow: scroll;
+}
+
+#display {
+	position: relative;
+}
+
+.hex {
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.hex.add {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 40px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
