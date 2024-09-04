@@ -136,11 +136,13 @@ export class Map {
 			document.addEventListener('touchmove', pan);
 
 			let zoom = function(e) {
-				if (e.deltaY > 0 && self.transform.scale < self.maxScale || e.deltaY < 0 && self.transform.scale > self.minScale) {
-					// Scale calculations
-					let currentScale = self.transform.scale || 1;
-					let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
-					self.transform.scale = newScale;
+				if (self.panEnabled) {
+					if (e.deltaY > 0 && self.transform.scale < self.maxScale || e.deltaY < 0 && self.transform.scale > self.minScale) {
+						// Scale calculations
+						let currentScale = self.transform.scale || 1;
+						let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
+						self.transform.scale = newScale;
+					}
 				}
 			};
 

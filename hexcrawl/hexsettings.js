@@ -39,11 +39,13 @@ export class HexSettings {
 		let self = this;
 
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
-			self.buttons.backgroundAdjust.classList.remove('on');
-			hex.backgroundAdjust = false;
-			self.map.panEnabled = true;
-			self.hex = hex;
-			self.show();
+			if (hex !== self.hex) {
+				self.buttons.backgroundAdjust.classList.remove('on');
+				hex.backgroundAdjust = false;
+				self.map.panEnabled = true;
+				self.hex = hex;
+				self.show();
+			}
 		});
 
 		window.hexcrawl.events.sub('hex.unselected', () => {
@@ -63,16 +65,32 @@ export class HexSettings {
 					if (!self.hex.backgroundAdjust) {
 						self.buttons.backgroundAdjust.classList.add('on');
 						self.map.panEnabled = false;
-						self.hex.backgroundAdjust = true;
+						
+						self.hex.startBackgroundAdjust();
 					} else {
 						self.buttons.backgroundAdjust.classList.remove('on');
 						self.map.panEnabled = true;
-						self.hex.backgroundAdjust = false;
+						
+						self.hex.confirmBackgroundAdjust();
 					}
 	
 					e.preventDefault();
 					e.stopPropagation();
 					return false;
+				}
+			});
+
+			document.addEventListener('keyup', (e) => {
+				if (self.hex && self.hex.backgroundAdjust) {
+					if (e.code === 'Enter') {
+						self.buttons.backgroundAdjust.classList.remove('on');
+						self.map.panEnabled = true;
+						self.hex.confirmBackgroundAdjust();
+					} else if (e.code === 'Escape') {
+						self.buttons.backgroundAdjust.classList.remove('on');
+						self.map.panEnabled = true;
+						self.hex.cancelBackgroundAdjust();
+					}	
 				}
 			});
 		}

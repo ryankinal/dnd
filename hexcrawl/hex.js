@@ -13,6 +13,8 @@ export class Hex {
 		this.selected = false;
 		this.backgroundAdjust = false;
 		this.adjustingBackground = false;
+		this.minBackgroundWidth = 500;
+		this.maxBackgroundWidth = 15000;
 		this.addInterface = false;
 		this.element = false;
 		this.background = {
@@ -200,8 +202,8 @@ export class Hex {
 				this.element.style.backgroundRepeat = 'no-repeat';
 				this.element.style.backgroundImage = `url(${this.background.image})`;
 
-				if (this.background.scale) {
-					this.element.style.backgroundSize = `${this.background.scale * this.background.dimensions.width}px ${this.background.scale * this.background.dimensions.height}px`;
+				if (this.background.width && this.background.height) {
+					this.element.style.backgroundSize = `${this.background.width}px ${this.background.height}px`;
 				}
 
 				if (this.background.position) {
@@ -230,9 +232,8 @@ export class Hex {
 		};
 
 		let bodyClick = function(e) {
-			self.removeAddInterface();
-
-			if (self.selected) {
+			if (self.selected && !self.backgroundAdjust) {
+				self.removeAddInterface();
 				hexcrawl.events.pub('hex.unselected', self);
 				self.selected = false;
 			}
@@ -241,23 +242,50 @@ export class Hex {
 		this.element.addEventListener('click', hexClick);
 		document.body.addEventListener('click', bodyClick);
 
-		let adjustStart = function(e) {
+		let adjustBackgroundSize = function(e) {
 			if (self.backgroundAdjust) {
-				self.adjustingBackground = true;
+				let backgroundWidth = self.background.width;
+				let backgroundHeight = self.background.height;
+
+				if (backgroundWidth < self.maxBackgroundWidth && e.deltaY > 0 || backgroundWidth > self.minBackgroundWidth && e.deltaY < 0) {
+					let heightRatio = backgroundHeight / backgroundWidth;
+					backgroundWidth = Math.min(self.maxBackgroundWidth, backgroundWidth + (e.deltaY * 4));
+					backgroundHeight = heightRatio * backgroundWidth;
+
+					self.background.position.x = backgroundWidth * (self.background.position.x / self.background.width);
+					self.background.position.y = backgroundHeight * (self.background.position.y / self.background.height);
+					
+					self.background.width = backgroundWidth;
+					self.background.height = backgroundHeight;
+
+					console.log(self.background.width, self.background.height);
+
+					self.adjustBackground();
+				}
 			}
+			
 		};
 
-		let adjustEnd = function(e) {
-			if (self.adjustingBackground) {
-				self.adjustingBackground = false;
+		let adjustBackgroundPositionStart = function(e) {
+			if (self.backgroundAdjust) {
+				self.adjustingBackgroundPosition = true;
 				e.stopPropagation();
 				e.preventDefault();
 				return false;
 			}
 		};
 
-		let adjust = function(e) {
-			if (self.adjustingBackground) {
+		let adjustBackgroundPositionEnd = function(e) {
+			if (self.adjustingBackgroundPosition) {
+				self.adjustingBackgroundPosition = false;
+				e.stopPropagation();
+				e.preventDefault();
+				return false;
+			}
+		};
+
+		let adjustBackgroundPosition = function(e) {
+			if (self.adjustingBackgroundPosition) {
 				self.background.position.x += e.movementX;
 				self.background.position.y += e.movementY;
 
@@ -265,9 +293,10 @@ export class Hex {
 			}
 		};
 
-		this.element.addEventListener('mousedown', adjustStart);
-		document.body.addEventListener('mousemove', adjust);
-		document.body.addEventListener('mouseup', adjustEnd);
+		this.element.addEventListener('wheel', adjustBackgroundSize);
+		this.element.addEventListener('mousedown', adjustBackgroundPositionStart);
+		document.body.addEventListener('mousemove', adjustBackgroundPosition);
+		document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
 
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
 			if (hex !== self) {
@@ -278,6 +307,22 @@ export class Hex {
 		window.hexcrawl.events.sub('hex.unselected', () => {
 			self.removeAddInterface();
 		});
+	}
+
+	startBackgroundAdjust() {
+		this.backgroundAdjust = true;
+		this.backgroundAdjustUndo = JSON.parse(JSON.stringify(this.background));
+	}
+
+	confirmBackgroundAdjust() {
+		this.backgroundAdjust = false;
+		this.backgroundAdjustUndo = null;
+	}
+
+	cancelBackgroundAdjust() {
+		this.background = this.backgroundAdjustUndo;
+		this.backgroundAdjust = false;
+		this.adjustBackground();
 	}
 
 	// Click handler to add neighboring hexes

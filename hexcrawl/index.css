@@ -47,6 +47,7 @@ html,
 	justify-content: left;
 	box-shadow: 0 5px 15px #CCC;
 	transition: 0.2s ease-in;
+	background-color: #FFF;
 }
 
 .settings .button-container {

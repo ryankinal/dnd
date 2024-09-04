@@ -12,6 +12,8 @@ let map = window.map = new Map({
 	start: {
 		background: {
 			scale: scale,
+			width: 8300.25,
+			height: 5851.25,
 			position: {
 				x: -7591,
 				y: -2401
