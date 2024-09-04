@@ -1,10 +1,20 @@
+import { Map } from './map.js';
+
 export class Hex {
 	constructor(data) {
 		let self = this;
 
+
+		// The map
+		this.map = null;
+
+		// This hex interface
+		this.hidden = false;
+		this.selected = false;
+		this.backgroundAdjust = false;
+		this.adjustingBackground = false;
 		this.addInterface = false;
 		this.element = false;
-		this.map = null;		
 		this.background = {
 			image: null,
 			position: {
@@ -13,19 +23,18 @@ export class Hex {
 			},
 			scale: 1
 		};
+		this.diameter = 100;
+		this.height = this.diameter * .86;
+		this.x = this.diameter / 2 * -1;
+		this.y = this.height / 2 * -1;
 
+		// Surrounding hexes
 		this.nw = null;
 		this.n = null;
 		this.ne = null;
 		this.se = null;
 		this.s = null;
 		this.sw = null;
-
-		this.diameter = 100;
-		this.height = this.diameter * .86;
-		this.x = this.diameter / 2 * -1;
-		this.y = this.height / 2 * -1;
-
 		this.positions = {
 			nw: {
 				x: (this.diameter - this.diameter / 4) * -1 - 1,
@@ -59,6 +68,7 @@ export class Hex {
 			}
 		};
 
+		// SVG
 		let hexCoords = [
 			[.25, 0],
 			[.75, 0],
@@ -75,7 +85,7 @@ export class Hex {
 		this.svg = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  points="${hexCoords}"></polygon></svg>')`
 
 		if (data) {
-			if (typeof data.map === 'object') {
+			if (data.map instanceof Map) {
 				this.map = data.map;
 			}
 
@@ -83,27 +93,27 @@ export class Hex {
 				this.background = data.background;
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.nw instanceof Hex) {
 				this.nw = new Hex(data.nw);
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.n instanceof Hex) {
 				this.n = new Hex(data.n);
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.ne instanceof Hex) {
 				this.ne = new Hex(data.ne);
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.se instanceof Hex) {
 				this.se = new Hex(data.se);
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.s instanceof Hex) {
 				this.s = new Hex(data.s);
 			}
 
-			if (typeof data.nw === 'object') {
+			if (data.sw instanceof Hex) {
 				this.sw = new Hex(data.sw);
 			}
 
@@ -119,22 +129,27 @@ export class Hex {
 
 	addNeighbor(position, data) {
 		if (typeof this.positions[position] === 'object') {
-			let positionData = this.positions[position];
+			if (this[position] instanceof Hex) {
+				this[position].show();
+			} else {
+				let positionData = this.positions[position];
 
-			data = data || {};
-			data.x = this.x + positionData.x,
-			data.y = this.y + positionData.y
-			data.map = this.map;
+				data = data || {};
+				data.x = this.x + positionData.x,
+				data.y = this.y + positionData.y
+				data.map = this.map;
 
-			data.background = Object.assign({}, this.background);
-			data.background.position = {
-				x: this.background.position.x - positionData.x,
-				y: this.background.position.y - positionData.y
-			};
+				data.background = Object.assign({}, this.background);
+				data.background.position = {
+					x: this.background.position.x - positionData.x,
+					y: this.background.position.y - positionData.y
+				};
 
-			this[position] = new Hex(data);
+				this[position] = new Hex(data);
 
-			this[position].render(this.container);
+				this[position].render(this.container);
+			}
+			
 		}
 	}
 
@@ -154,35 +169,7 @@ export class Hex {
 		div.style.width = this.diameter + 'px';
 		div.style.height = (this.diameter * .86) + 'px';
 
-		if (this.background) {
-			if (this.background.image) {
-				div.style.backgroundRepeat = 'no-repeat';
-				div.style.backgroundImage = `url(${this.background.image})`;
-
-				if (this.background.scale) {
-					div.style.backgroundSize = `${this.background.scale * this.background.dimensions.width}px ${this.background.scale * this.background.dimensions.height}px`;
-				}
-
-				if (this.background.position) {
-					if (this.background.position.x && this.background.position.y) {
-						div.style.backgroundPosition = `${this.background.position.x}px ${this.background.position.y}px`;
-					}
-				}
-			}
-		}
-
 		container.appendChild(div);
-
-		div.addEventListener('click', (e) => {
-			self.renderAddInterface();
-			e.preventDefault();
-			e.stopPropagation();
-			return false;
-		})
-
-		document.body.addEventListener('click', (e) => {
-			self.removeAddInterface();
-		})
 
 		Object.keys(this.positions).forEach((position) => {
 			if (self[position]) {
@@ -192,6 +179,150 @@ export class Hex {
 
 		this.container = container;
 		this.element = div;
+
+		this.adjustBackground();
+		this.wireEvents();
+	}
+
+	hide() {
+		this.hidden = true;
+		this.element.classList.add('hidden');
+	}
+
+	show() {
+		this.hidden = false;
+		this.element.classList.remove('hidden');
+	}
+
+	adjustBackground() {
+		if (this.background) {
+			if (this.background.image) {
+				this.element.style.backgroundRepeat = 'no-repeat';
+				this.element.style.backgroundImage = `url(${this.background.image})`;
+
+				if (this.background.scale) {
+					this.element.style.backgroundSize = `${this.background.scale * this.background.dimensions.width}px ${this.background.scale * this.background.dimensions.height}px`;
+				}
+
+				if (this.background.position) {
+					if (this.background.position.x && this.background.position.y) {
+						this.element.style.backgroundPosition = `${this.background.position.x}px ${this.background.position.y}px`;
+					}
+				}
+			}
+		}
+	}
+
+	wireEvents() {
+		let self = this;
+
+		let hexClick = function(e) {
+			if (!self.map.panning) {
+				self.selected = true;
+				self.element.classList.add('selected');
+				self.renderAddInterface();
+				hexcrawl.events.pub('hex.selected', self);
+			}
+			
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		};
+
+		let bodyClick = function(e) {
+			self.removeAddInterface();
+
+			if (self.selected) {
+				hexcrawl.events.pub('hex.unselected', self);
+				self.selected = false;
+			}
+		};
+
+		this.element.addEventListener('click', hexClick);
+		document.body.addEventListener('click', bodyClick);
+
+		let adjustStart = function(e) {
+			if (self.backgroundAdjust) {
+				self.adjustingBackground = true;
+			}
+		};
+
+		let adjustEnd = function(e) {
+			if (self.adjustingBackground) {
+				self.adjustingBackground = false;
+				e.stopPropagation();
+				e.preventDefault();
+				return false;
+			}
+		};
+
+		let adjust = function(e) {
+			if (self.adjustingBackground) {
+				self.background.position.x += e.movementX;
+				self.background.position.y += e.movementY;
+
+				self.adjustBackground();
+			}
+		};
+
+		this.element.addEventListener('mousedown', adjustStart);
+		document.body.addEventListener('mousemove', adjust);
+		document.body.addEventListener('mouseup', adjustEnd);
+
+		window.hexcrawl.events.sub('hex.selected', (hex) => {
+			if (hex !== self) {
+				self.removeAddInterface();
+			}
+		});
+
+		window.hexcrawl.events.sub('hex.unselected', () => {
+			self.removeAddInterface();
+		});
+	}
+
+	// Click handler to add neighboring hexes
+	makeAddHandler(position) {
+		let self = this;
+		return function() {
+			if (!self.map.panning) {
+				self.removeAddInterface();
+				self.addNeighbor(position);
+			}
+		}
+	}
+
+	// Remove
+	renderAddInterface() {
+		let self = this;
+
+		if (this.container && (!this.addInterface || this.addInterface.length === 0)) {
+			this.addInterface = [];
+
+			Object.keys(this.positions).forEach((position) => {
+				let positionData = self.positions[position];
+				let newX = self.x + positionData.x;
+				let newY = self.y + positionData.y;
+
+				if (!self.map.hexAtPoint(newX + self.diameter / 2, newY + self.height / 2))
+				{
+					let div = document.createElement('div');
+
+					div.innerHTML = '+';
+					div.className = 'hex add';
+
+					div.style.maskImage = self.svg;
+					div.style.left = self.x + positionData.x + 'px';
+					div.style.top = self.y + positionData.y + 'px';
+					div.style.width = self.diameter + 'px';
+					div.style.height = (self.diameter * .86) + 'px';
+					
+					self.container.appendChild(div);
+					self.addInterface.push(div);
+
+					div.addEventListener('click', self.makeAddHandler(position));
+				}
+			});
+		}
 	}
 
 	removeAddInterface() {
@@ -200,50 +331,6 @@ export class Hex {
 				div.parentNode.removeChild(div);
 			})
 			this.addInterface = null
-		}
-	}
-
-	makeAddHandler(position) {
-		let self = this;
-		return function() {
-			self.removeAddInterface();
-			self.addNeighbor(position);
-		}
-	}
-
-	renderAddInterface() {
-		let self = this;
-
-		if (this.container && (!this.addInterface || this.addInterface.length === 0)) {
-			this.addInterface = [];
-
-			Object.keys(this.positions).forEach((position) => {
-				if (!self[position]) {
-					let boundingBox = self.element.getBoundingClientRect();
-					let positionData = self.positions[position];
-					let newX = self.x + positionData.x;
-					let newY = self.y + positionData.y;
-
-					if (!self.map.hexAtPoint(newX + boundingBox.width / 2, newY + self.height / 2))
-					{
-						let div = document.createElement('div');
-
-						div.innerHTML = '+';
-						div.className = 'hex add';
-	
-						div.style.maskImage = self.svg;
-						div.style.left = self.x + positionData.x + 'px';
-						div.style.top = self.y + positionData.y + 'px';
-						div.style.width = self.diameter + 'px';
-						div.style.height = (self.diameter * .86) + 'px';
-						
-						self.container.appendChild(div);
-						self.addInterface.push(div);
-
-						div.addEventListener('click', self.makeAddHandler(position));
-					}
-				}
-			});
 		}
 	}
 
@@ -259,5 +346,7 @@ export class Hex {
 				data[position] = self[position].getData();
 			}
 		});
+
+		return data;
 	}
 }

@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<title>HexCrawl</title>
+		<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="index.css" />
 	</head>
 	<body>
@@ -9,7 +10,18 @@
 			<div id="scroll">
 				<div id="display"></div>
 			</div>
-			<div class="settings">
+			<div id="notes"></div>
+			<div id="mapSettings" class="settings map-settings hidden"></div>
+			<div id="hexSettings" class="settings hex-settings hidden">
+				<div class="button-container">
+					<button class="background-position"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+				</div>
+				<div class="button-container">
+					<button class="background-image"><i class="fa-solid fa-map"></i></button>
+				</div>
+				<div class="button-container">
+					<button class="hide"><i class="fa-solid fa-map"></i></button>
+				</div>
 			</div>
 		</div>
 		<script type="module" src="index.js"></script>
