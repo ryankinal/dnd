@@ -10,8 +10,6 @@ export class Map {
 		// Zoom vars
 		this.minScale = 0.5;
 		this.maxScale = 4.0;
-
-		
 		
 		// Defaults
 		this.container = null;
@@ -197,11 +195,6 @@ export class Map {
 	// Worry about scaling later
 	hexAtPoint(x, y) {
 		let containerBox = this.container.getBoundingClientRect();
-		let viewportPoints = {
-			x: (x * this.transform.scale) + containerBox.x,
-			y: (y * this.transform.scale) + containerBox.y
-		};
-
 		let elements = document.elementsFromPoint((x * this.transform.scale) + containerBox.x, (y * this.transform.scale) + containerBox.y);
 
 		if (elements && elements.length) {
@@ -214,6 +207,9 @@ export class Map {
 	}
 
 	getData() {
-
+		return {
+			background: this.background,
+			start: this.start.getData()
+		};
 	}
 }
