@@ -48,15 +48,14 @@ export class HexSettings {
 			}
 		});
 
-		window.hexcrawl.events.sub('hex.unselected', () => {
-			if (self.hex) {
+		window.hexcrawl.events.sub('hex.unselected', (hex) => {
+			if (hex === self.hex) {
 				self.hex.backgroundAdjust = false;
 				self.hex = null;
+				self.buttons.backgroundAdjust.classList.remove('on');
+				self.map.panEnabled = true;
+				self.hide();
 			}
-			
-			self.buttons.backgroundAdjust.classList.remove('on');
-			self.map.panEnabled = true;
-			self.hide();
 		});
 
 		if (this.buttons.backgroundAdjust) {

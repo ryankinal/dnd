@@ -133,6 +133,7 @@ export class Hex {
 		if (typeof this.positions[position] === 'object') {
 			if (this[position] instanceof Hex) {
 				this[position].show();
+				this[position].select();
 			} else {
 				let positionData = this.positions[position];
 
@@ -147,11 +148,14 @@ export class Hex {
 					y: this.background.position.y - positionData.y
 				};
 
+				this.unselect();
 				this[position] = new Hex(data);
-
 				this[position].render(this.container);
+
+				setTimeout(() => {
+					this[position].select();	
+				}, 10);
 			}
-			
 		}
 	}
 
@@ -215,15 +219,29 @@ export class Hex {
 		}
 	}
 
+	select() {
+		if (!this.selected) {
+			this.selected = true;
+			this.element.classList.add('selected');
+			this.renderAddInterface();
+			hexcrawl.events.pub('hex.selected', this);
+		}
+	}
+
+	unselect() {
+		if (this.selected) {
+			this.removeAddInterface();
+			hexcrawl.events.pub('hex.unselected', this);
+			this.selected = false;	
+		}
+	}
+
 	wireEvents() {
 		let self = this;
 
 		let hexClick = function(e) {
 			if (!self.map.panning) {
-				self.selected = true;
-				self.element.classList.add('selected');
-				self.renderAddInterface();
-				hexcrawl.events.pub('hex.selected', self);
+				self.select();
 			}
 			
 			e.preventDefault();
@@ -232,10 +250,8 @@ export class Hex {
 		};
 
 		let bodyClick = function(e) {
-			if (self.selected && !self.backgroundAdjust) {
-				self.removeAddInterface();
-				hexcrawl.events.pub('hex.unselected', self);
-				self.selected = false;
+			if (self.selected && !self.map.panning && !self.backgroundAdjust) {
+				self.unselect();
 			}
 		};
 
@@ -257,8 +273,6 @@ export class Hex {
 					
 					self.background.width = backgroundWidth;
 					self.background.height = backgroundHeight;
-
-					console.log(self.background.width, self.background.height);
 
 					self.adjustBackground();
 				}
@@ -300,12 +314,8 @@ export class Hex {
 
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
 			if (hex !== self) {
-				self.removeAddInterface();
+				self.unselect();
 			}
-		});
-
-		window.hexcrawl.events.sub('hex.unselected', () => {
-			self.removeAddInterface();
 		});
 	}
 
@@ -330,7 +340,6 @@ export class Hex {
 		let self = this;
 		return function() {
 			if (!self.map.panning) {
-				self.removeAddInterface();
 				self.addNeighbor(position);
 			}
 		}

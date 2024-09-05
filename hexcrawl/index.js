@@ -2,18 +2,17 @@ import { Events } from './events.js';
 import { Map } from './map.js';
 import { HexSettings } from './hexsettings.js';
 
-let scale = 1.55;
 let output = document.getElementById('display');
 
 let map = window.map = new Map({
-	image: 'barovia-map.jpg',
-	imageScale: scale,
+	background: {
+		image: 'barovia-map.jpg',
+		width: 8300.25,
+		height: 5851.25
+	},
 	container: output,
 	start: {
 		background: {
-			scale: scale,
-			width: 8300.25,
-			height: 5851.25,
 			position: {
 				x: -7591,
 				y: -2401

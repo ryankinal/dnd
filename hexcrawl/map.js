@@ -11,10 +11,18 @@ export class Map {
 		this.minScale = 0.5;
 		this.maxScale = 4.0;
 
+		
+		
 		// Defaults
-		this.start = null;
-		this.image = null;
 		this.container = null;
+		this.start = null;
+		this.background = {
+			image: null,
+			scale: 1,
+			width: 5355,
+			height: 3775
+		};
+		
 		this.transform = {
 			origin: {
 				x: 0,
@@ -26,31 +34,22 @@ export class Map {
 			},
 			scale: 1
 		};
-		this.imageScale = 1;
-		this.imageDimensions = {
-			width: 5355,
-			height: 3775
-		};
 		
 		// Arguments
 		if (data) {
-			if (typeof data.image === 'string') {
-				this.image = data.image;
+			if (typeof data.background === 'object') {
+				this.background = data.background;
 			}
 
 			if (typeof data.start === 'object') {
 				data.start.background = data.start.background || {};
-				data.start.background.image = data.start.background.image || this.image;
-				data.start.background.position = data.start.background.position || [0, 0];
-				data.start.background.scale = data.start.background.scale || 1;
-				data.start.background.dimensions = data.start.background.dimensions || this.imageDimensions;
+				data.start.background.image = data.start.background.image || this.background.image;
+				data.start.background.position = data.start.background.position || { x: 0, y: 0};
+				data.start.background.width = data.start.background.width || this.background.width;
+				data.start.background.height = data.start.background.height || this.background.height;
 				data.start.map = this;
 
 				this.start = new Hex(data.start);
-			}
-
-			if (typeof data.imageScale === 'number') {
-				this.imageScale = data.imageScale;
 			}
 
 			if (typeof data.container === 'object') {
@@ -62,13 +61,12 @@ export class Map {
 		if (!this.start) {
 			this.start = new Hex({
 				background: {
-					image: this.image,
-					scale: this.imageScale,
+					image: this.background.image,
 					position: {
 						x: -6642,
 						y: -2486
 					},
-					dimensions: this.imageDimensions
+					dimensions: this.background.dimensions
 				},
 				map: this
 			});
@@ -95,7 +93,10 @@ export class Map {
 			let panEnd = function(e) {
 				if (!e.touches || e.touches.length === 0) {
 					self.panStartCoordinates = null;
-					self.panning = false;
+
+					setTimeout(() => {
+						self.panning = false;
+					}, 10);
 				}
 			};
 
@@ -115,8 +116,6 @@ export class Map {
 							x: (scrollBox.width / 2 - self.transform.translate.x),
 							y: (scrollBox.height / 2 - self.transform.translate.y)
 						};
-
-						console.log(self.transform.origin);
 
 						self.applyTransform();
 					}
@@ -212,5 +211,9 @@ export class Map {
 		}
 
 		return elements.length ? elements[0] : null;
+	}
+
+	getData() {
+
 	}
 }
