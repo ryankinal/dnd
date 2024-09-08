@@ -1,6 +1,7 @@
 import { Events } from './events.js';
 import { Map } from './map.js';
 import { HexSettings } from './hexsettings.js';
+import { MapSettings } from './mapsettings.js';
 
 let output = document.getElementById('display');
 
@@ -41,6 +42,14 @@ let hexSettingsContainer = document.getElementById('hexSettings');
 new HexSettings({
 	map: map,
 	container: hexSettingsContainer
+});
+
+
+let mapSettingsContainer = document.getElementById('mapSettings');
+
+new MapSettings({
+	map: map,
+	container: mapSettingsContainer
 });
 
 map.render();
