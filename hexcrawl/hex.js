@@ -149,11 +149,13 @@ export class Hex {
 				};
 
 				this.unselect();
-				this[position] = new Hex(data);
-				this[position].render(this.container);
+				
+				let hex = this.map.addHex(data);
+				this[position] = hex;
+				hex.render(this.container);
 
 				setTimeout(() => {
-					this[position].select();	
+					hex.select();
 				}, 10);
 			}
 		}
@@ -163,8 +165,6 @@ export class Hex {
 		if (this.element) {
 			return;
 		}
-
-		let self = this;
 
 		let div = document.createElement('div');
 
@@ -176,12 +176,6 @@ export class Hex {
 		div.style.height = (this.diameter * .86) + 'px';
 
 		container.appendChild(div);
-
-		Object.keys(this.positions).forEach((position) => {
-			if (self[position]) {
-				self[position].render(container);
-			}
-		});
 
 		this.container = container;
 		this.element = div;
@@ -240,10 +234,7 @@ export class Hex {
 		let self = this;
 
 		let hexClick = function(e) {
-			if (!self.map.panning) {
-				self.select();
-			}
-			
+			self.select();
 			e.preventDefault();
 			e.stopPropagation();
 			return false;
@@ -385,6 +376,13 @@ export class Hex {
 				div.parentNode.removeChild(div);
 			})
 			this.addInterface = null
+		}
+	}
+
+	getCenterPoint() {
+		return {
+			x: this.x + this.diameter / 2,
+			y: this.x + this.height / 2
 		}
 	}
 

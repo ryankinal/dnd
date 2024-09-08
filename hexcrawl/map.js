@@ -2,6 +2,9 @@ import { Hex } from './hex.js';
 
 export class Map {
 	constructor(data) {
+		let self = this;
+		this.fullMapElement = document.getElementById('fullMap');
+
 		// Pan vars
 		this.panEnabled = true;
 		this.panStartCoordinates = null;
@@ -13,7 +16,7 @@ export class Map {
 		
 		// Defaults
 		this.container = null;
-		this.start = null;
+		this.hexes = null;
 		this.background = {
 			image: null,
 			scale: 1,
@@ -39,15 +42,14 @@ export class Map {
 				this.background = data.background;
 			}
 
-			if (typeof data.start === 'object') {
-				data.start.background = data.start.background || {};
-				data.start.background.image = data.start.background.image || this.background.image;
-				data.start.background.position = data.start.background.position || { x: 0, y: 0};
-				data.start.background.width = data.start.background.width || this.background.width;
-				data.start.background.height = data.start.background.height || this.background.height;
-				data.start.map = this;
+			if (typeof data.hexes === 'object') {
+				this.hexes = {};
 
-				this.start = new Hex(data.start);
+				Object.keys(data.hexes).forEach((key) => {
+					let hex = new Hex(data.hexes[key]);
+					hex.map = self;
+					this.hexes[key] = hex;
+				});
 			}
 
 			if (typeof data.container === 'object') {
@@ -55,22 +57,67 @@ export class Map {
 			}
 		}
 
-		// Default start location
-		if (!this.start) {
-			this.start = new Hex({
+		// Default hex location
+		if (!this.hexes) {
+			this.addHex({
 				background: {
 					image: this.background.image,
 					position: {
-						x: -6642,
-						y: -2486
+						x: this.background.width / -2,
+						y: this.background.height / -2
 					},
 					dimensions: this.background.dimensions
-				},
-				map: this
+				}
 			});
 		}
 
+		if (this.background.image) {
+			this.fullMapElement.style.backgroundImage = `url(${this.background.image})`;
+			this.fullMapElement.style.width = (this.background.width || 0) + 'px';
+			this.fullMapElement.style.height = (this.background.height || 0) + 'px';
+
+			if (this.hexes && Object.values(this.hexes).length) {
+				let hex = Object.values(this.hexes)[0]
+				let background = hex.background;
+				let position = background.position;
+				this.fullMapElement.style.backgroundSize = `${background.width}px ${background.height}px`;
+				this.fullMapElement.style.transform = `translate(${position.x}px, ${position.y}px)`;
+				this.fullMapElement.style.transform = `translate(${position.x - hex.diameter / 2}px, ${position.y - hex.height / 2}px)`;
+				
+			}
+		}
 		this.wireEvents();
+	}
+
+	generateHexId() {
+		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
+	}
+
+	addHex(data) {
+		let hex = null;
+		this.hexes = this.hexes || {};
+
+		if (data instanceof Hex) {
+			hex = data;
+		} else if (typeof data === 'object') {
+			data.background = data.background || {};
+			data.background.image = data.background.image || this.background.image;
+			data.background.position = data.background.position || { x: 0, y: 0};
+			data.background.width = data.background.width || this.background.width;
+			data.background.height = data.background.height || this.background.height;
+
+			hex = new Hex(data);
+		}
+
+		if (!hex.id) {
+			hex.id = this.generateHexId();
+		}
+		
+		hex.map = this;
+		
+		this.hexes[hex.id] = hex;
+
+		return hex;
 	}
 
 	wireEvents() {
@@ -168,11 +215,24 @@ export class Map {
 	}
 
 	render(container) {
+		let self = this;
+		let x = 0;
+		let y = 0;
 		this.container = container || this.container;
 
-		if (this.start && typeof this.start.render === 'function') {
-			this.start.render(this.container);
-			this.centerOnPoint(0, 0);
+		if (this.hexes) {0
+			Object.keys(this.hexes).forEach((key) => {
+				self.hexes[key].render(self.container);
+
+				if (self.hexes[key].party) {
+					let center = self.hexes[key].getCenterPoint();
+					x = center.x;
+					y = center.y;
+				}
+			})
+
+			
+			this.centerOnPoint(x, y);
 		}
 	}
 
@@ -192,7 +252,7 @@ export class Map {
 		}
 	}
 
-	// Worry about scaling later
+	// is there a hex at this point?
 	hexAtPoint(x, y) {
 		let containerBox = this.container.getBoundingClientRect();
 		let elements = document.elementsFromPoint((x * this.transform.scale) + containerBox.x, (y * this.transform.scale) + containerBox.y);
@@ -207,9 +267,16 @@ export class Map {
 	}
 
 	getData() {
+		let hexData = {};
+		let self = this;
+
+		Object.keys(this.hexes).forEach((key) => {
+			hexData[key] = self.hexes[key].getData();
+		});
+
 		return {
 			background: this.background,
-			start: this.start.getData()
+			hexes: hexData
 		};
 	}
 }

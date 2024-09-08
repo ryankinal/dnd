@@ -5,20 +5,27 @@ import { HexSettings } from './hexsettings.js';
 let output = document.getElementById('display');
 
 let map = window.map = new Map({
-	background: {
-		image: 'barovia-map.jpg',
-		width: 8300.25,
-		height: 5851.25
-	},
 	container: output,
-	start: {
-		background: {
-			position: {
-				x: -7591,
-				y: -2401
-			}
-		}
-	}
+    "background": {
+        "image": "barovia-map.jpg",
+        "width": 8300.25,
+        "height": 5851.25
+    },
+    "hexes": {
+        "6f8ea9ab-c7a6-4322-b3d4-caba5b64c758": {
+            "x": -50,
+            "y": -43,
+            "background": {
+                "position": {
+                    "x": -7591,
+                    "y": -2401
+                },
+                "image": "barovia-map.jpg",
+                "width": 8300.25,
+                "height": 5851.25
+            }
+        }
+    }
 });
 
 window.hexcrawl = {
