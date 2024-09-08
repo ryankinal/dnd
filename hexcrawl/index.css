@@ -19,12 +19,22 @@ html,
 }
 
 #fullMap {
+	display: none;
 	background-repeat: no-repeat;
+}
+
+.gm-view #fullMap {
+	display: block;
 }
 
 .hex {
 	position: absolute;
 	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.gm-view .hex {
+	background-color: rgba(255, 255, 255, 0.5);
+	background-image: none !important;
 }
 
 .hex.add {
@@ -35,8 +45,16 @@ html,
 	background-color: rgba(0, 0, 0, 0.1);
 }
 
+.gm-view .hex.add {
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
 .hex.hidden {
 	display: none;
+}
+
+.gm-view .hex.hidden {
+	display: block;
 }
 
 .settings {
