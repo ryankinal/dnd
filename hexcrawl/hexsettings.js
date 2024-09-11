@@ -1,5 +1,6 @@
 import { Map } from './map.js';
 import { Hex } from './hex.js';
+import { config } from './config.js';
 
 export class HexSettings {
 	constructor(data) {
@@ -9,28 +10,7 @@ export class HexSettings {
 		this.container = null;
 		this.notesContainer = null;
 
-		this.noteTypes = {
-			player: {
-				name: 'Note',
-				icon: 'fa-duotone fa-solid fa-file-lines'
-			},
-			combat: {
-				name: 'Combat Encounter',
-				icon: 'fa-duotone fa-solid fa-swords'
-			},
-			social: {
-				name: 'Social Encounter',
-				icon: 'fa-duotone fa-solid fa-comments'
-			},
-			treasure: {
-				name: 'Treasure',
-				icon: 'fa-duotone fa-solid fa-treasure-chest'
-			},
-			secret: {
-				name: 'GM Secret',
-				icon: 'fa-duotone fa-solid fa-lock'
-			}
-		};
+		this.noteTypes = config.noteTypes;
 
 		if (data) {
 			if (data.map instanceof Map) {
@@ -141,6 +121,8 @@ export class HexSettings {
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
 			if (hex !== self.hex) {
 				self.buttons.backgroundAdjust.classList.remove('on');
+				self.buttons.notes.classList.remove('on');
+				self.buttons.hide.classList.remove('on');
 				hex.allowBackgroundAdjust = false;
 				self.map.panEnabled = true;
 				self.hex = hex;

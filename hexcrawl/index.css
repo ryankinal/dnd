@@ -30,13 +30,15 @@ html,
 	top: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 40px;
-	background-color: rgba(0, 170, 0, 0.9);
+	background-color: rgba(0, 170, 0, 1);
 	color: #FFF;
 	padding: 15px;
 	width: 75px;
 	height: 75px;
 	text-align: center;
 	display: none;
+	align-items: center;
+	justify-content: center;
 }
 
 .full-map {

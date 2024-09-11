@@ -70,12 +70,13 @@ new MapSetup({
 
 window.hexcrawl.events.sub('map.new', (map) => {
 	output.innerHTML = '';
+	map.positioningConfirmButton = positioningConfirmButton;
 	hexSettings.map = map;
 	mapSettings.map = map;
 	hexcrawl.map = map
 	map.render(output);
 	mapSettings.toggleGMView(1);
-	positioningConfirmButton.style.display = 'block';
+	positioningConfirmButton.style.display = 'flex';
 });
 
 positioningConfirmButton.addEventListener('click', () => {

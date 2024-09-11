@@ -6,6 +6,7 @@ export class Map {
 		
 		this.fullMapElement = document.createElement('div');
 		this.fullMapElement.className = "full-map";
+		this.positioningConfirmButton = null;
 
 		// Hex selection vars
 		this.allowHexSelection = false;
@@ -224,13 +225,7 @@ export class Map {
 						hex.background.height = backgroundHeight;
 	
 						hex.adjustBackground();
-
-						self.background.x = hex.background.position.x - 50;
-						self.background.y = hex.background.position.y - 43;
-						self.background.width = backgroundWidth;
-						self.background.height = backgroundHeight;
-		
-						self.adjustBackground();
+						self.alignBackgroundWithHex(hex);
 					}
 				}
 			};
@@ -246,6 +241,10 @@ export class Map {
 	
 			let adjustBackgroundPositionEnd = function(e) {
 				if (self.adjustingBackgroundPosition) {
+					if (self.positioningConfirmButton) {
+						self.positioningConfirmButton.style.display = 'flex';
+					}
+
 					self.adjustingBackgroundPosition = false;
 					e.stopPropagation();
 					e.preventDefault();
@@ -263,6 +262,10 @@ export class Map {
 						hex.background.position.y += e.movementY;
 		
 						hex.adjustBackground();
+					}
+
+					if (self.positioningConfirmButton) {
+						self.positioningConfirmButton.style.display = 'none';
 					}
 
 					self.background.x += e.movementX;
@@ -313,10 +316,6 @@ export class Map {
 		}
 	}
 
-	moveFullMap(x, y) {
-		this.fullMapElement.style
-	}
-
 	adjustBackground() {
 		let width = this.background.width || 0;
 		let height = this.background.height || 0;
@@ -328,6 +327,19 @@ export class Map {
 		this.fullMapElement.style.transformOrigin = `${width}px ${height}px`;
 		this.fullMapElement.style.backgroundSize = `${width}px ${height}px`;
 		this.fullMapElement.style.transform = `translate(${x}px, ${y}px)`;
+	}
+
+	alignBackgroundWithHex(hex) {
+		console.log(hex.x, hex.y);
+
+		this.background.x = hex.background.position.x + hex.x;
+		this.background.y = hex.background.position.y + hex.y;
+		this.background.width = hex.background.width;
+		this.background.height = hex.background.height;
+
+		// console.log(this.background);
+
+		this.adjustBackground();
 	}
 
 	render(container) {

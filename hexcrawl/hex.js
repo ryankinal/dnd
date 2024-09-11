@@ -1,11 +1,15 @@
 import { Map } from './map.js';
+import { config } from './config.js';
 
 export class Hex {
 	constructor(data) {
 		let self = this;
 
+		this.noteTypes = config.noteTypes;
+
 		// The map
 		this.map = null;
+		
 
 		// This hex interface
 		this.hidden = false;
@@ -40,33 +44,33 @@ export class Hex {
 		this.sw = null;
 		this.positions = {
 			nw: {
-				x: (this.diameter - this.diameter / 4) * -1 - 1,
-				y: (this.height / 2 * -1) - 1,
+				x: (this.diameter - this.diameter / 4) * -1,
+				y: (this.height / 2 * -1),
 				opposite: 'se'
 			},
 			n: {
 				x: 0,
-				y: (this.height * -1) - 1,
+				y: (this.height * -1),
 				opposite: 's'
 			},
 			ne: {
-				x: (this.diameter - this.diameter / 4) + 1,
-				y: (this.height / 2 * -1) - 1,
+				x: (this.diameter - this.diameter / 4),
+				y: (this.height / 2 * -1),
 				opposite: 'sw'
 			},
 			se: {
-				x: (this.diameter - this.diameter / 4) + 1,
-				y: (this.height / 2) + 1,
+				x: (this.diameter - this.diameter / 4),
+				y: (this.height / 2),
 				opposite: 'nw'
 			},
 			s: {
 				x: 0,
-				y: (this.height) + 1,
+				y: (this.height),
 				opposite: 'n'
 			},
 			sw: {
-				x: (this.diameter - this.diameter / 4) * -1 - 1,
-				y: (this.height / 2) + 1,
+				x: (this.diameter - this.diameter / 4) * -1,
+				y: (this.height / 2),
 				opposite: 'ne'
 			}
 		};
@@ -85,7 +89,8 @@ export class Hex {
 			return [set[0] * self.diameter, set[1] * self.diameter].join(',');
 		}).join(' ');
 
-		this.svg = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  points="${hexCoords}"></polygon></svg>')`
+		this.mask = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="rgba(0, 0, 0, 0)" stroke-width="3" points="${hexCoords}"></polygon></svg>')`;
+		this.border = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="black" stroke-width="1" fill="transparent" points="${hexCoords}"></polygon></svg>')`;
 
 		if (data) {
 			if (data.map instanceof Map) {
@@ -142,7 +147,10 @@ export class Hex {
 		if (typeof this.positions[position] === 'object') {
 			if (this[position] instanceof Hex) {
 				this[position].show();
-				this[position].select();
+
+				setTimeout(() => {
+					this[position].select();
+				}, 10);
 			} else {
 				let positionData = this.positions[position];
 
@@ -178,7 +186,7 @@ export class Hex {
 		let div = document.createElement('div');
 
 		div.className = 'hex';
-		div.style.maskImage = this.svg;
+		div.style.maskImage = this.mask;
 		div.style.left = this.x + 'px';
 		div.style.top = this.y + 'px';
 		div.style.width = this.diameter + 'px';
@@ -198,6 +206,32 @@ export class Hex {
 		}
 	}
 
+	renderIcons() {
+		let propertyIcons = {
+			party: 'fa-solid fa-location-dot',
+			notes: 'fa-solid fa-location-dot',
+			combat: 'fa-solid fa-location-dot',
+			social: 'fa-solid fa-location-dot'
+		};
+		let icons = [];
+
+		if (this.party) {
+			let div = document.createElement('div');
+			div.className = 'party-icon';
+			
+			let icon = document.createElement('i');
+			icon.className = propertyIcons.party;
+		}
+
+		if (this.notes) {
+			let notes = Object.values(this.notes);
+			let generalNotes = notes.filter((n) => {
+				return n.type === 'note'
+			});
+			let combatNotes = notes.filter(n => n.type === 'note');
+		}
+	}
+
 	hide() {
 		this.hidden = true;
 		this.element.classList.add('hidden');
@@ -212,15 +246,15 @@ export class Hex {
 		if (this.background) {
 			if (this.background.image) {
 				this.element.style.backgroundRepeat = 'no-repeat';
-				this.element.style.backgroundImage = `url(${this.background.image})`;
+				this.element.style.backgroundImage = `${this.border}, url(${this.background.image})`;
 
 				if (this.background.width && this.background.height) {
-					this.element.style.backgroundSize = `${this.background.width}px ${this.background.height}px`;
+					this.element.style.backgroundSize = `contain, ${this.background.width}px ${this.background.height}px`;
 				}
 
 				if (this.background.position) {
 					if (this.background.position.x && this.background.position.y) {
-						this.element.style.backgroundPosition = `${this.background.position.x}px ${this.background.position.y}px`;
+						this.element.style.backgroundPosition = `0 0, ${this.background.position.x}px ${this.background.position.y}px`;
 					}
 				}
 			}
@@ -339,14 +373,7 @@ export class Hex {
 		this.allowBackgroundAdjust = false;
 		this.backgroundAdjustUndo = null;
 
-		if (this.backgroundAdjusted) {
-			this.map.background.x = this.background.position.x - this.diameter / 2;
-			this.map.background.y = this.background.position.y - this.height / 2;
-			this.map.background.width = this.background.width;
-			this.map.background.height = this.background.height;
-
-			// this.map.adjustBackground();
-		}
+		this.map.alignBackgroundWithHex(this);
 	}
 
 	cancelBackgroundAdjust() {
@@ -377,15 +404,20 @@ export class Hex {
 				let positionData = self.positions[position];
 				let newX = self.x + positionData.x;
 				let newY = self.y + positionData.y;
+				let hex = self.map.hexAtPoint(newX + self.diameter / 2, newY + self.height / 2);
+				self[position] = hex;
 
-				if (!self.map.hexAtPoint(newX + self.diameter / 2, newY + self.height / 2))
-				{
+				if (hex) {
+					self[position] = hex;
+				}
+				
+				if (!hex || hex.hidden) {
 					let div = document.createElement('div');
 
 					div.innerHTML = '+';
 					div.className = 'hex add';
 
-					div.style.maskImage = self.svg;
+					div.style.maskImage = self.mask;
 					div.style.left = self.x + positionData.x + 'px';
 					div.style.top = self.y + positionData.y + 'px';
 					div.style.width = self.diameter + 'px';
