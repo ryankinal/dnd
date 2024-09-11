@@ -2,18 +2,67 @@
 <html lang="en">
 	<head>
 		<title>HexCrawl</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="index.css" />
 	</head>
 	<body>
 		<div class="outer">
 			<div id="scroll">
-				<div id="display">
-					<div id="fullMap"></div>
+				<div id="display"></div>
+			</div>
+			<div id="mapNotes"></div>
+			<div id="hexNotes" class="notes modal hidden">
+				<div>
+					<div class="add-note">
+						<a href="#">Add note &raquo;</a>
+					</div>
+					<div class="content">
+						<div class="no-content">No notes. Perfect. Let's wrap.</div>
+					</div>
+				</div>
+				<div class="note-form">
+					<div class="form-field">
+						<input type="hidden" class="note-type-input">
+						<div class="note-type-select"></div>
+						<div class="note-type-options"></div>
+					</div>
+					<div class="form-field">
+						<textarea class="note-input"></textarea>
+					</div>
+					<div class="form-buttons">
+						<button class="submit">Save</button>
+						<button class="cancel">Cancel</button>
+					</div>
 				</div>
 			</div>
-			<div id="notes"></div>
-			<div id="mapSettings" class="settings map-settings">
+			<div id="openRecentMap"></div>
+			<div id="mapSetup" class="modal">
+				<h2>Setup</h2>
+				<div class="form-field">
+					<label>Map Name</label>
+					<input id="mapNameInput" type="text" value="Barovia">
+				</div>
+				<div class="form-field">
+					<label>Map Image</label>
+					<input id="mapImageInput" type="text" placeholder="Temporary text input" value="barovia-map.jpg">
+				</div>
+				<div class="form-field">
+					<label>GM Password</label>
+					<input id="gmPasswordInput" type="password" value="asdf"><br />
+					<input id="gmPasswordConfirm" type="password" placeholder="confirm" value="asdf">
+				</div>
+				<div class="form-field">
+					<label>Player Password</label>
+					<input id="playerPasswordInput" type="password" value="asdf"><br />
+					<input id="playerPasswordConfirm" type="password" placeholder="confirm" value="asdf">
+				</div>
+				<div class="form-buttons">
+					<button id="setupSubmitButton" class="submit">Create</button>
+					<button id="setupCancelButton" class="cancel">Cancel</button>
+				</div>
+			</div>
+			<div id="mapSettings" class="settings map-settings hidden">
 				<div class="button-container">
 					<button class="gm-view-button"><i class="fa-regular fa-eye"></i></button>
 				</div>
@@ -23,12 +72,13 @@
 					<button class="background-position"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
 				</div>
 				<div class="button-container">
-					<button class="background-image"><i class="fa-solid fa-map"></i></button>
+					<button class="notes"><i class="fa-solid fa-file-lines"></i></button>
 				</div>
 				<div class="button-container">
-					<button class="hide"><i class="fa-solid fa-map"></i></button>
+					<button class="hide"><i class="fa-regular fa-ban"></i></button>
 				</div>
 			</div>
+			<div id="positioningConfirm"><i class="fa-solid fa-check"></i></div>
 		</div>
 		<script type="module" src="index.js"></script>
 	</body>

@@ -3,6 +3,12 @@
 }
 
 body,
+html {
+	margin: 0;
+	padding: 0;
+}
+
+body,
 html,
 #scroll,
 .outer {
@@ -18,23 +24,34 @@ html,
 	position: relative;
 }
 
-#fullMap {
+#positioningConfirm {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 40px;
+	background-color: rgba(0, 170, 0, 0.9);
+	color: #FFF;
+	padding: 15px;
+	width: 75px;
+	height: 75px;
+	text-align: center;
 	display: none;
-	background-repeat: no-repeat;
 }
 
-.gm-view #fullMap {
+.full-map {
+	display: none;
+	background-repeat: no-repeat;
+	opacity: 0.2;
+}
+
+.gm-view .full-map {
 	display: block;
 }
 
 .hex {
 	position: absolute;
 	background-color: rgba(0, 0, 0, 0.4);
-}
-
-.gm-view .hex {
-	background-color: rgba(255, 255, 255, 0.5);
-	background-image: none !important;
 }
 
 .hex.add {
@@ -50,11 +67,63 @@ html,
 }
 
 .hex.hidden {
-	display: none;
+	opacity: 0;
 }
 
 .gm-view .hex.hidden {
+	opacity: 1;
+}
+
+.fake-image-for-loading {
+	position: absolute;
+	bottom: 100%;
+}
+
+.modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 500px;
+	min-height: 300px;
+	max-width: 90%;
+	max-height: 90%;
+	background-color: #FFF;
+	box-shadow: 0 5px 25px #AAA;
+	padding: 25px;
+	overflow: auto;
+	transition: all 0.2 ease-in;
+	opacity: 1;
+}
+
+.form-field {
+	padding: 0 0 25px 0;
+	position: relative;
+}
+
+.form-field label {
 	display: block;
+	margin-bottom: 5px;
+}
+
+.form-field input {
+	padding: 5px 10px;
+	display: block;
+	width: 100%;
+}
+
+.form-buttons {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	margin-top: 40px
+}
+
+.form-buttons button {
+	flex-grow: 1;
+	background-color: #000;
+	color: #FFF;
+	padding: 5px 10px;
 }
 
 .settings {
@@ -87,6 +156,15 @@ html,
 	bottom: -75px;
 }
 
+a {
+	text-decoration: none;
+}
+
+textarea {
+	width: 100%;
+	min-height: 60px;
+}
+
 button {
 	width: 100px;
 	padding: 10px;
@@ -106,4 +184,111 @@ button.on {
 	height: 3px;
 	position: fixed;
 	background-color: #F00;
+}
+
+.no-content {
+	padding: 5px 10px;
+	text-align: center;
+	background-color: #DDD;
+}
+
+.modal.notes {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 50px;
+}
+
+.modal.notes > div {
+	width: 100%;
+	flex-grow: 0;
+	flex-shrink: 0;
+	transition: all 0.2s ease-in;
+}
+
+.note {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.note:last-child {
+	margin-bottom: 0;
+}
+
+.note .icon {
+	flex-grow: 0;
+	flex-shrink: 0;
+	padding-top: 15px;
+}
+
+.note .text {
+	flex-grow: 1;
+	flex-shrink: 1;
+	padding: 15px;
+	background-color: #EEE;
+}
+
+.add-note {
+	text-align: right;
+	padding: 10px 0
+}
+
+.note-type-select {
+	width:max-content;	
+	border: solid #444 1px;
+}
+
+.note-type-options {
+	display: none;
+	border: solid #444 1px;
+	width: fit-content;
+	box-shadow: 0 5px 5px #CCC;
+	position: absolute;
+	z-index: 100;
+	background-color: #FFF;
+}
+
+.note-type-select,
+.note-type-options > div {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.note-type-options > div {
+	border-bottom: solid #444 1px;
+	width: 100%;
+}
+
+.note-type-select div,
+.note-type-options > div div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 10px 0 0;
+}
+
+.note-type-select div:first-child,
+.note-type-options > div div:first-child {
+	flex-shrink: 0;
+	flex-grow: 0;
+	padding: 10px 0 10px 10px;
+}
+
+.note-type-options > div:last-child {
+	border-bottom: none;	
+}
+
+.add-note .form-buttons {
+	margin-top: 0;
+}
+
+.modal.hiding {
+	opacity: 0;
+}
+
+.modal.hidden {
+	display: none;
 }

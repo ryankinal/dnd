@@ -3,18 +3,30 @@ import { Hex } from './hex.js';
 export class Map {
 	constructor(data) {
 		let self = this;
-		this.fullMapElement = document.getElementById('fullMap');
+		
+		this.fullMapElement = document.createElement('div');
+		this.fullMapElement.className = "full-map";
 
+		// Hex selection vars
+		this.allowHexSelection = false;
+
+		// Background vars
+		this.allowBackgroundAdjust = false;
+		this.adjustingBackgroundPosition = false;
+		this.minBackgroundWidth = 400;
+		this.maxBackgroundWidth = 60000;
+		
 		// Pan vars
 		this.panEnabled = true;
 		this.panStartCoordinates = null;
 		this.panning = false;
 
 		// Zoom vars
-		this.minScale = 0.5;
+		this.minScale = 0.2;
 		this.maxScale = 4.0;
 		
 		// Defaults
+		this.name = null;
 		this.container = null;
 		this.hexes = null;
 		this.background = {
@@ -38,6 +50,10 @@ export class Map {
 		
 		// Arguments
 		if (data) {
+			if (typeof data.name === 'string') {
+				this.name = data.name;
+			}
+
 			if (typeof data.background === 'object') {
 				this.background = data.background;
 			}
@@ -83,9 +99,9 @@ export class Map {
 				this.fullMapElement.style.backgroundSize = `${background.width}px ${background.height}px`;
 				this.fullMapElement.style.transform = `translate(${position.x}px, ${position.y}px)`;
 				this.fullMapElement.style.transform = `translate(${position.x - hex.diameter / 2}px, ${position.y - hex.height / 2}px)`;
-				
 			}
 		}
+
 		this.wireEvents();
 	}
 
@@ -190,6 +206,77 @@ export class Map {
 				}
 			};
 
+			let adjustBackgroundSize = function(e) {
+				if (self.allowBackgroundAdjust) {
+					let backgroundWidth = self.background.width;
+					let backgroundHeight = self.background.height;
+					let heightRatio = backgroundHeight / backgroundWidth;
+					let hexes = Object.values(self.hexes);
+					let hex = hexes && hexes.length ? hexes[0] : null;
+
+					backgroundWidth = Math.max(self.minBackgroundWidth, Math.min(self.maxBackgroundWidth, backgroundWidth + (e.deltaY * 4)));
+					backgroundHeight = heightRatio * backgroundWidth;
+					
+					if (hex) {
+						hex.background.position.x = backgroundWidth * (hex.background.position.x / hex.background.width);
+						hex.background.position.y = backgroundHeight * (hex.background.position.y / hex.background.height);
+						hex.background.width = backgroundWidth;
+						hex.background.height = backgroundHeight;
+	
+						hex.adjustBackground();
+
+						self.background.x = hex.background.position.x - 50;
+						self.background.y = hex.background.position.y - 43;
+						self.background.width = backgroundWidth;
+						self.background.height = backgroundHeight;
+		
+						self.adjustBackground();
+					}
+				}
+			};
+	
+			let adjustBackgroundPositionStart = function(e) {
+				if (self.allowBackgroundAdjust) {
+					self.adjustingBackgroundPosition = true;
+					e.stopPropagation();
+					e.preventDefault();
+					return false;
+				}
+			};
+	
+			let adjustBackgroundPositionEnd = function(e) {
+				if (self.adjustingBackgroundPosition) {
+					self.adjustingBackgroundPosition = false;
+					e.stopPropagation();
+					e.preventDefault();
+					return false;
+				}
+			};
+	
+			let adjustBackgroundPosition = function(e) {
+				if (self.adjustingBackgroundPosition) {
+					let hexes = Object.values(self.hexes);
+					let hex = hexes && hexes.length ? hexes[0] : null;
+
+					if (hex) {
+						hex.background.position.x += e.movementX;
+						hex.background.position.y += e.movementY;
+		
+						hex.adjustBackground();
+					}
+
+					self.background.x += e.movementX;
+					self.background.y += e.movementY;
+
+					self.adjustBackground();
+				}
+			};
+	
+			document.body.addEventListener('wheel', adjustBackgroundSize);
+			document.body.addEventListener('mousedown', adjustBackgroundPositionStart);
+			document.body.addEventListener('mousemove', adjustBackgroundPosition);
+			document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
+
 			let placeVisualizer = function(e) {
 				let box = self.container.getBoundingClientRect();
 				let visualizer = document.createElement('div');
@@ -209,18 +296,66 @@ export class Map {
 	}
 
 	// Rendering
-	applyTransform() {
+	applyTransform(animate) {
+		let self = this;
+
+		if (animate) {
+			this.container.style.transition = 'all 0.2s ease-in';
+		}
+
 		this.container.style.transformOrigin = `${this.transform.origin.x}px ${this.transform.origin.y}px`;
 		this.container.style.transform = `translate(${this.transform.translate.x}px, ${this.transform.translate.y}px) scale(${this.transform.scale})`;
+
+		if (animate) {
+			setTimeout(() => {
+				self.container.style.transition = 'none';
+			}, 200);
+		}
+	}
+
+	moveFullMap(x, y) {
+		this.fullMapElement.style
+	}
+
+	adjustBackground() {
+		let width = this.background.width || 0;
+		let height = this.background.height || 0;
+		let x = this.background.x || 0;
+		let y = this.background.y || 0;
+
+		this.fullMapElement.style.width = width + 'px';
+		this.fullMapElement.style.height = width + 'px';
+		this.fullMapElement.style.transformOrigin = `${width}px ${height}px`;
+		this.fullMapElement.style.backgroundSize = `${width}px ${height}px`;
+		this.fullMapElement.style.transform = `translate(${x}px, ${y}px)`;
 	}
 
 	render(container) {
 		let self = this;
 		let x = 0;
 		let y = 0;
-		this.container = container || this.container;
 
-		if (this.hexes) {0
+		if (container instanceof HTMLDivElement) {
+			this.container = container;
+		}
+
+		this.fullMapElement.style.backgroundImage = `url(${this.background.image})`;
+		this.fullMapElement.style.width = (this.background.width || 0) + 'px';
+		this.fullMapElement.style.height = (this.background.height || 0) + 'px';
+
+		this.container.appendChild(this.fullMapElement);
+			
+		if (this.hexes) {
+			if (Object.values(this.hexes).length) {
+				let hex = Object.values(this.hexes)[0]
+				let background = hex.background;
+				let position = background.position;
+
+				this.fullMapElement.style.backgroundSize = `${background.width}px ${background.height}px`;
+				this.fullMapElement.style.transform = `translate(${position.x}px, ${position.y}px)`;
+				this.fullMapElement.style.transform = `translate(${position.x - hex.diameter / 2}px, ${position.y - hex.height / 2}px)`;
+			}
+			
 			Object.keys(this.hexes).forEach((key) => {
 				self.hexes[key].render(self.container);
 
@@ -263,7 +398,16 @@ export class Map {
 			});
 		}
 
-		return elements.length ? elements[0] : null;
+		if (elements.length) {
+			let element = elements[0];
+			let id = element.dataset.id;
+
+			if (this.hexes[id] instanceof Hex) {
+				return this.hexes[id];
+			}
+		}
+
+		return null;
 	}
 
 	getData() {

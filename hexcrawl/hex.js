@@ -4,15 +4,16 @@ export class Hex {
 	constructor(data) {
 		let self = this;
 
-
 		// The map
 		this.map = null;
 
 		// This hex interface
 		this.hidden = false;
 		this.selected = false;
-		this.backgroundAdjust = false;
+		this.notes = {};
+		this.allowBackgroundAdjust = false;
 		this.adjustingBackground = false;
+		this.backgroundAdjusted = false;
 		this.minBackgroundWidth = 500;
 		this.maxBackgroundWidth = 15000;
 		this.addInterface = false;
@@ -126,6 +127,14 @@ export class Hex {
 			if (typeof data.y === 'number') {
 				this.y = data.y;
 			}
+
+			if (typeof data.hidden === 'boolean') {
+				this.hidden = data.hidden;
+			}
+
+			if (typeof data.notes === 'object') {
+				this.notes = data.notes;
+			}
 		}
 	}
 
@@ -174,6 +183,7 @@ export class Hex {
 		div.style.top = this.y + 'px';
 		div.style.width = this.diameter + 'px';
 		div.style.height = (this.diameter * .86) + 'px';
+		div.dataset.id = this.id;
 
 		container.appendChild(div);
 
@@ -182,6 +192,10 @@ export class Hex {
 
 		this.adjustBackground();
 		this.wireEvents();
+
+		if (this.hidden) {
+			this.hide();
+		}
 	}
 
 	hide() {
@@ -214,7 +228,7 @@ export class Hex {
 	}
 
 	select() {
-		if (!this.selected) {
+		if (this.map.allowHexSelection && !this.selected) {
 			this.selected = true;
 			this.element.classList.add('selected');
 			this.renderAddInterface();
@@ -226,7 +240,11 @@ export class Hex {
 		if (this.selected) {
 			this.removeAddInterface();
 			hexcrawl.events.pub('hex.unselected', this);
-			this.selected = false;	
+			this.selected = false;
+
+			if (this.backgroundAdjusted) {
+				this.confirmBackgroundAdjust();
+			}
 		}
 	}
 
@@ -241,7 +259,7 @@ export class Hex {
 		};
 
 		let bodyClick = function(e) {
-			if (self.selected && !self.map.panning && !self.backgroundAdjust) {
+			if (self.selected && !self.map.panning && !self.allowBackgroundAdjust) {
 				self.unselect();
 			}
 		};
@@ -250,7 +268,7 @@ export class Hex {
 		document.body.addEventListener('click', bodyClick);
 
 		let adjustBackgroundSize = function(e) {
-			if (self.backgroundAdjust) {
+			if (self.allowBackgroundAdjust) {
 				let backgroundWidth = self.background.width;
 				let backgroundHeight = self.background.height;
 
@@ -265,6 +283,7 @@ export class Hex {
 					self.background.width = backgroundWidth;
 					self.background.height = backgroundHeight;
 
+					self.backgroundAdjusted = true;
 					self.adjustBackground();
 				}
 			}
@@ -272,7 +291,7 @@ export class Hex {
 		};
 
 		let adjustBackgroundPositionStart = function(e) {
-			if (self.backgroundAdjust) {
+			if (self.allowBackgroundAdjust) {
 				self.adjustingBackgroundPosition = true;
 				e.stopPropagation();
 				e.preventDefault();
@@ -294,6 +313,7 @@ export class Hex {
 				self.background.position.x += e.movementX;
 				self.background.position.y += e.movementY;
 
+				self.backgroundAdjusted = true;
 				self.adjustBackground();
 			}
 		};
@@ -311,18 +331,28 @@ export class Hex {
 	}
 
 	startBackgroundAdjust() {
-		this.backgroundAdjust = true;
+		this.allowBackgroundAdjust = true;
 		this.backgroundAdjustUndo = JSON.parse(JSON.stringify(this.background));
 	}
 
 	confirmBackgroundAdjust() {
-		this.backgroundAdjust = false;
+		this.allowBackgroundAdjust = false;
 		this.backgroundAdjustUndo = null;
+
+		if (this.backgroundAdjusted) {
+			this.map.background.x = this.background.position.x - this.diameter / 2;
+			this.map.background.y = this.background.position.y - this.height / 2;
+			this.map.background.width = this.background.width;
+			this.map.background.height = this.background.height;
+
+			// this.map.adjustBackground();
+		}
 	}
 
 	cancelBackgroundAdjust() {
 		this.background = this.backgroundAdjustUndo;
-		this.backgroundAdjust = false;
+		this.allowBackgroundAdjust = false;
+		this.backgroundAdjusted = false;
 		this.adjustBackground();
 	}
 
@@ -386,18 +416,24 @@ export class Hex {
 		}
 	}
 
+	addNote(note) {
+		let id = this.generateNoteId();
+		note.id = id;
+
+		this.notes[id] = note;
+	}
+
+	generateNoteId() {
+		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
+	}
+
 	getData() {
 		let data = {
 			x: this.x,
 			y: this.y,
 			background: this.background,
+			notes: this.notes
 		};
-
-		Object.keys(this.positions).forEach((position) => {
-			if (self[position]) {
-				data[position] = self[position].getData();
-			}
-		});
 
 		return data;
 	}
