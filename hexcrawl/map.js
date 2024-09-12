@@ -1,4 +1,6 @@
+import { Id } from './id.js';
 import { Hex } from './hex.js';
+import { Party } from './party.js';
 
 export class Map {
 	constructor(data) {
@@ -10,6 +12,7 @@ export class Map {
 
 		// Hex selection vars
 		this.allowHexSelection = false;
+		this.parties = {};
 
 		// Background vars
 		this.allowBackgroundAdjust = false;
@@ -72,12 +75,31 @@ export class Map {
 			if (typeof data.container === 'object') {
 				this.container = data.container;
 			}
+
+			if (typeof data.parties === 'object') {
+				this.parties = {};
+
+				Object.keys(data.parties).forEach((key) => {
+					let party = new Party(data.parties[key]);
+					self.parties[party.id] = party;
+
+					if (data.parties[key].hex && data.parties[key].hex.id) {
+						party.moveTo()
+					}
+				});
+			}
 		}
 
 		// Default hex location
 		if (!this.hexes) {
-			this.addHex({
-				party: true,
+			let party = new Party({
+				name: 'The Party'
+			});	
+
+			this.parties[party.id] = party;
+		
+			let hex = this.addHex({
+				party: party,
 				background: {
 					image: this.background.image,
 					position: {
@@ -87,6 +109,8 @@ export class Map {
 					dimensions: this.background.dimensions
 				}
 			});
+
+			party.hex = hex;
 		}
 
 		if (this.background.image) {
@@ -107,10 +131,6 @@ export class Map {
 		this.wireEvents();
 	}
 
-	generateHexId() {
-		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
-	}
-
 	addHex(data) {
 		let hex = null;
 		this.hexes = this.hexes || {};
@@ -128,7 +148,7 @@ export class Map {
 		}
 
 		if (!hex.id) {
-			hex.id = this.generateHexId();
+			hex.id = Id.generate();
 		}
 		
 		hex.map = this;
@@ -424,16 +444,22 @@ export class Map {
 	}
 
 	getData() {
-		let hexData = {};
 		let self = this;
-
+		let hexData = {};
+		let partyData = {};
+		
 		Object.keys(this.hexes).forEach((key) => {
 			hexData[key] = self.hexes[key].getData();
 		});
 
+		Object.keys(this.parties).forEach((key) => {
+			partyData[key] = self.parties[key].getData();
+		})
+
 		return {
 			background: this.background,
-			hexes: hexData
+			hexes: hexData,
+			parties: partyData
 		};
 	}
 }

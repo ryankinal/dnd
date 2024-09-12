@@ -25,10 +25,10 @@ export class MapSetup {
 		if (this.container) {
 			this.inputs.name = this.container.querySelector('#mapNameInput');
 			this.inputs.image = this.container.querySelector('#mapImageInput');
-			this.inputs.gmPassword = this.container.querySelector('#gmPasswordInput');
-			this.inputs.gmPasswordConfirm = this.container.querySelector('#gmPasswordConfirm');
-			this.inputs.playerPassword = this.container.querySelector('#playerPasswordInput');
-			this.inputs.playerPasswordConfirm = this.container.querySelector('#playerPasswordConfirm');
+			// this.inputs.gmPassword = this.container.querySelector('#gmPasswordInput');
+			// this.inputs.gmPasswordConfirm = this.container.querySelector('#gmPasswordConfirm');
+			// this.inputs.playerPassword = this.container.querySelector('#playerPasswordInput');
+			// this.inputs.playerPasswordConfirm = this.container.querySelector('#playerPasswordConfirm');
 
 			this.buttons.submit = this.container.querySelector('#setupSubmitButton');
 			this.buttons.cancel = this.container.querySelector('#setupCancelButton');

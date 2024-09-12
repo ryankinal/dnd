@@ -5,7 +5,7 @@ let noteTypes = {
 	},
 	combat: {
 		name: 'Combat Encounter',
-		icon: 'fa-duotone fa-solid fa-swords'
+		icon: 'fa-duotone fa-solid fa-shield-halved'
 	},
 	social: {
 		name: 'Social Encounter',
@@ -13,7 +13,7 @@ let noteTypes = {
 	},
 	treasure: {
 		name: 'Treasure',
-		icon: 'fa-duotone fa-solid fa-treasure-chest'
+		icon: 'fa-duotone fa-regular fa-gem'
 	},
 	secret: {
 		name: 'GM Secret',

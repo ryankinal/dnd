@@ -1,5 +1,6 @@
 import { Map } from './map.js';
 import { Hex } from './hex.js';
+import { Party } from './party.js';
 import { config } from './config.js';
 
 export class HexSettings {
@@ -38,7 +39,8 @@ export class HexSettings {
 			notes: this.container.querySelector('.notes'),
 			backgroundAdjust: this.container.querySelector('.background-position'),
 			backgroundImage: this.container.querySelector('.background-image'),
-			hide: this.container.querySelector('.hide')
+			hide: this.container.querySelector('.hide'),
+			party: this.container.querySelector('.party')
 		};
 
 		this.render();
@@ -215,6 +217,18 @@ export class HexSettings {
 			document.body.addEventListener('click', () => {
 				self.notesContainer.classList.add('hidden');
 				self.buttons.notes.classList.remove('on');
+			});
+		}
+
+		if (this.buttons.party) {
+			this.buttons.party.addEventListener('click', function() {
+				if (self.hex && self.map.parties) {
+					let parties = Object.values(self.map.parties);
+
+					if (parties && parties[0] instanceof Party) {
+						parties[0].moveTo(self.hex);
+					}
+				}
 			});
 		}
 

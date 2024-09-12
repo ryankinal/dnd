@@ -83,8 +83,9 @@ html,
 	color: #00F;
 	background-color: transparent;
 	border: none;
-	font-size: 22px;
+	font-size: 26px;
 	text-align: center;
+	-webkit-text-stroke: #FFF 1px;
 }
 
 .hex.add {
@@ -96,7 +97,12 @@ html,
 	color: #000
 }
 
-.gm-view .hex.add {
+.hex.add .party-icon {
+	opacity: 0.2;
+}
+
+.gm-view .hex.add,
+.hex.add.overlaid {
 	background-color: rgba(255, 255, 255, 0.7);
 }
 
@@ -165,7 +171,6 @@ html,
 	left: 50%;
 	transform: translateX(-50%);
 	bottom: 25px;
-	width: 400px;
 	max-width: 100%;
 	display: flex;
 	flex-direction: row;
@@ -179,11 +184,15 @@ html,
 	flex-shrink: 0;
 	flex-grow: 0;
 	border: solid #CCC;
-	border-width: 0 1px;
+	border-width: 0 1px 0 0;
 }
 
-.settings.button-container:first-child {
+.settings .button-container:first-child {
 	border-left-width: 0;
+}
+
+.settings .button-container:last-child {
+	border-right-width: 0;
 }
 
 .settings.hidden {

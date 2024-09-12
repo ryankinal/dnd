@@ -1,5 +1,7 @@
 import { Map } from './map.js';
+import { Party } from './party.js';
 import { config } from './config.js';
+import { Id } from './id.js';
 
 export class Hex {
 	constructor(data) {
@@ -9,7 +11,7 @@ export class Hex {
 
 		// The map
 		this.map = null;
-		
+		this.party = null;
 
 		// This hex interface
 		this.hidden = false;
@@ -101,8 +103,9 @@ export class Hex {
 				this.background = data.background;
 			}
 
-			if (typeof data.party === 'boolean') {
+			if (data.party instanceof Party) {
 				this.party = data.party;
+				this.party.hex = this;
 			}
 
 			if (data.nw instanceof Hex) {
@@ -149,8 +152,11 @@ export class Hex {
 
 	addNeighbor(position, data) {
 		if (typeof this.positions[position] === 'object') {
+			let hex = null;
+
 			if (this[position] instanceof Hex) {
-				this[position].show();
+				hex = this[position];
+				hex.show();
 
 				setTimeout(() => {
 					this[position].select();
@@ -171,13 +177,19 @@ export class Hex {
 
 				this.unselect();
 				
-				let hex = this.map.addHex(data);
+				hex = this.map.addHex(data);
 				this[position] = hex;
+
 				hex.render(this.container);
 
 				setTimeout(() => {
 					hex.select();
 				}, 10);
+			}
+
+			if (this.party) {
+				this.party.moveTo(hex);
+				this.renderIcons();	
 			}
 		}
 	}
@@ -213,62 +225,68 @@ export class Hex {
 
 	renderIcons() {
 		let self = this;
-		this.element.innerHTML = '';
 
-		let propertyIcons = {
-			party: 'fa-solid fa-location-dot',
-			notes: config.noteTypes.note.icon,
-			combat: config.noteTypes.combat.icon,
-			social: config.noteTypes.social.icon,
-			gm: config.noteTypes.secret.icon
-		};
-		
-		let showIcons = {};
-		let notesContainer = document.createElement('div');
-		notesContainer.className = 'icons';
+		if (this.element instanceof HTMLElement) {
+			this.element.innerHTML = '';
 
-		if (this.party) {
-			showIcons.party = true;
-		}
+			let propertyIcons = {
+				party: this.party && this.party.icon ? this.party.icon : 'fa-solid fa-location-pin',
+				notes: config.noteTypes.note.icon,
+				combat: config.noteTypes.combat.icon,
+				social: config.noteTypes.social.icon,
+				gm: config.noteTypes.secret.icon
+			};
+			
+			let showIcons = {};
+			let notesContainer = document.createElement('div');
+			notesContainer.className = 'icons';
 
-		if (this.notes) {
-			let notes = Object.values(this.notes);
-			showIcons.combat = notes.filter(n => n.type === 'combat').length;
-			showIcons.social = notes.filter(n => n.type === 'social').length;
-			showIcons.gm = notes.filter(n => n.type === 'secret').length;
-			showIcons.notes = !showIcons.combat && !showIcons.social && notes.filter(n => n.type === 'note').length;
-		}
-
-		Object.keys(showIcons).forEach((key) => {
-			if (showIcons[key]) {
-				let div = document.createElement('div');
-				div.className = `icon ${key}-icon`;
-
-				let i = document.createElement('i');
-				i.className = propertyIcons[key];
-				div.appendChild(i);
-
-				if (key === 'party') {
-					self.element.appendChild(div);
-				} else {
-					notesContainer.append(div);
-					self.element.append(notesContainer);
-				}
-				
-
-
+			if (this.party) {
+				showIcons.party = true;
 			}
-		});
+
+			if (this.notes) {
+				let notes = Object.values(this.notes);
+				showIcons.combat = notes.filter(n => n.type === 'combat').length;
+				showIcons.social = notes.filter(n => n.type === 'social').length;
+				showIcons.gm = notes.filter(n => n.type === 'secret').length;
+				showIcons.notes = !showIcons.combat && !showIcons.social && notes.filter(n => n.type === 'note').length;
+			}
+
+			Object.keys(showIcons).forEach((key) => {
+				if (showIcons[key]) {
+					let div = document.createElement('div');
+					div.className = `icon ${key}-icon`;
+
+					let i = document.createElement('i');
+					i.className = propertyIcons[key];
+					div.appendChild(i);
+
+					if (key === 'party') {
+						self.element.appendChild(div);
+					} else {
+						notesContainer.append(div);
+						self.element.append(notesContainer);
+					}
+				}
+			});
+		}
 	}
 
 	hide() {
 		this.hidden = true;
-		this.element.classList.add('hidden');
+
+		if (this.element instanceof HTMLElement) {
+			this.element.classList.add('hidden');
+		}
 	}
 
 	show() {
 		this.hidden = false;
-		this.element.classList.remove('hidden');
+
+		if (this.element instanceof HTMLElement) {
+			this.element.classList.remove('hidden');
+		}
 	}
 
 	adjustBackground() {
@@ -440,13 +458,25 @@ export class Hex {
 					self[position] = hex;
 				}
 				
-				if (!hex || hex.hidden) {
+				if (!hex || hex.hidden || this.party) {
 					let div = document.createElement('div');
+					let icon = document.createElement('i');
 
-					div.innerHTML = '+';
+					if (self.party) {
+						icon.className = 'party-icon fa-solid fa-location-pin';
+					} else {
+						icon.innerHTML = '+';
+					}
+
+					div.appendChild(icon);
 					div.className = 'hex add';
 
+					if (hex) {
+						div.classList.add('overlaid');
+					}
+
 					div.style.maskImage = self.mask;
+					div.style.backgroundImage = this.border;
 					div.style.left = self.x + positionData.x + 'px';
 					div.style.top = self.y + positionData.y + 'px';
 					div.style.width = self.diameter + 'px';
@@ -478,15 +508,11 @@ export class Hex {
 	}
 
 	addNote(note) {
-		let id = this.generateNoteId();
+		let id = Id.generate();
 		note.id = id;
 
 		this.notes[id] = note;
 		this.renderIcons();
-	}
-
-	generateNoteId() {
-		return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
 	}
 
 	getData() {
