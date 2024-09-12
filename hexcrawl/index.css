@@ -27,18 +27,20 @@ html,
 #positioningConfirm {
 	position: fixed;
 	left: 50%;
-	top: 50%;
+	bottom: 25px;
 	transform: translate(-50%, -50%);
 	font-size: 40px;
 	background-color: rgba(0, 170, 0, 1);
 	color: #FFF;
-	padding: 15px;
-	width: 75px;
-	height: 75px;
+	padding: 15px 30px;
+	/*width: 100px;
+	height: 86px;*/
 	text-align: center;
 	display: none;
 	align-items: center;
 	justify-content: center;
+	/*mask-image: url("data:image/svg+xml,<svg id=\"tile0_0\" class=\"hex\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><polygon class=\"hex\"  stroke=\"rgba(0, 0, 0, 0)\" stroke-width=\"3\" points=\"25,0 75,0 100,43 75,86 25,86 0,43\"></polygon></svg>");
+	background-image: url("data:image/svg+xml,<svg id=\"tile0_0\" class=\"hex\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><polygon class=\"hex\"  stroke=\"black\" stroke-width=\"1\" fill=\"transparent\" points=\"25,0 75,0 100,43 75,86 25,86 0,43\"></polygon></svg>");*/
 }
 
 .full-map {
@@ -49,6 +51,10 @@ html,
 
 .gm-view .full-map {
 	display: block;
+}
+
+.positioning .hex .icon {
+	display: none;
 }
 
 .hex {
@@ -102,6 +108,7 @@ html,
 }
 
 .hex.add .party-icon {
+	color: #000;
 	opacity: 0.2;
 }
 

@@ -85,8 +85,6 @@ export class HexSettings {
 			let notes = Object.values(this.hex.notes || {});
 			let notesOutput = this.notesContainer.querySelector('.content');
 
-			console.log(notes);
-
 			notesOutput.innerHTML = '';
 
 			if (notes.length === 0) {
@@ -129,7 +127,13 @@ export class HexSettings {
 			if (hex !== self.hex) {
 				self.buttons.backgroundAdjust.classList.remove('on');
 				self.buttons.notes.classList.remove('on');
-				self.buttons.hide.classList.remove('on');
+				
+				if (hex.hidden) {
+					self.buttons.hide.classList.add('on');
+				} else {
+					self.buttons.hide.classList.remove('on');
+				}
+
 				hex.allowBackgroundAdjust = false;
 				self.map.panEnabled = true;
 				self.hex = hex;
@@ -186,7 +190,7 @@ export class HexSettings {
 					if (self.hex.hidden) {
 						self.buttons.hide.classList.remove('on');
 						self.hex.show();
-					} else {
+					} else if (!self.hex.party) {
 						self.hex.hide();
 						self.buttons.hide.classList.add('on');
 					}

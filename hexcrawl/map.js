@@ -133,6 +133,8 @@ export class Map {
 
 	addHex(data) {
 		let hex = null;
+		let event = 'hex.updated';
+
 		this.hexes = this.hexes || {};
 
 		if (data instanceof Hex) {
@@ -149,11 +151,13 @@ export class Map {
 
 		if (!hex.id) {
 			hex.id = Id.generate();
+			event = 'hex.created';
 		}
 		
 		hex.map = this;
-		
 		this.hexes[hex.id] = hex;
+
+		hexcrawl.events.pub(event, hex);
 
 		return hex;
 	}
@@ -185,20 +189,14 @@ export class Map {
 
 			let pan = function(e) {
 				if (self.panStartCoordinates) {
-					let scrollBox = self.container.parentNode.getBoundingClientRect();
 					let x = e.clientX;
 					let y = e.clientY;
 
-					if (x && y && Math.abs(x - self.panStartCoordinates.x) > 10 || Math.abs(y - self.panStartCoordinates.y) > 10) {
+					if (x && y && Math.abs(x - self.panStartCoordinates.x) > 5 || Math.abs(y - self.panStartCoordinates.y) > 5) {
 						self.panning = true;
 
-						self.transform.translate.x += (e.movementX / self.transform.scale);
-						self.transform.translate.y += (e.movementY / self.transform.scale);
-
-						self.transform.origin = {
-							x: (scrollBox.width / 2 - self.transform.translate.x),
-							y: (scrollBox.height / 2 - self.transform.translate.y)
-						};
+						self.transform.translate.x += (e.movementX);
+						self.transform.translate.y += (e.movementY);
 
 						self.applyTransform();
 					}
@@ -224,6 +222,8 @@ export class Map {
 						let currentScale = self.transform.scale || 1;
 						let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
 						self.transform.scale = newScale;
+
+						self.applyTransform();
 					}
 				}
 			};
@@ -253,7 +253,11 @@ export class Map {
 	
 			let adjustBackgroundPositionStart = function(e) {
 				if (self.allowBackgroundAdjust) {
-					self.adjustingBackgroundPosition = true;
+					self.adjustingBackgroundPosition = {
+						x: e.clientX,
+						y: e.clientY
+					};
+
 					e.stopPropagation();
 					e.preventDefault();
 					return false;
@@ -266,7 +270,7 @@ export class Map {
 						self.positioningConfirmButton.style.display = 'flex';
 					}
 
-					self.adjustingBackgroundPosition = false;
+					self.adjustingBackgroundPosition = null;
 					e.stopPropagation();
 					e.preventDefault();
 					return false;
@@ -275,24 +279,29 @@ export class Map {
 	
 			let adjustBackgroundPosition = function(e) {
 				if (self.adjustingBackgroundPosition) {
-					let hexes = Object.values(self.hexes);
-					let hex = hexes && hexes.length ? hexes[0] : null;
+					let xDiff = Math.abs(self.adjustingBackgroundPosition.x - e.clientX);
+					let yDiff = Math.abs(self.adjustingBackgroundPosition.y - e.clientY);
 
-					if (hex) {
-						hex.background.position.x += e.movementX;
-						hex.background.position.y += e.movementY;
-		
-						hex.adjustBackground();
+					if (xDiff > 0 || yDiff > 0) {
+						let hexes = Object.values(self.hexes);
+						let hex = hexes && hexes.length ? hexes[0] : null;
+
+						if (hex) {
+							hex.background.position.x += e.movementX;
+							hex.background.position.y += e.movementY;
+			
+							hex.adjustBackground();
+						}
+
+						if (self.positioningConfirmButton) {
+							self.positioningConfirmButton.style.display = 'none';
+						}
+
+						self.background.x += e.movementX;
+						self.background.y += e.movementY;
+
+						self.adjustBackground();
 					}
-
-					if (self.positioningConfirmButton) {
-						self.positioningConfirmButton.style.display = 'none';
-					}
-
-					self.background.x += e.movementX;
-					self.background.y += e.movementY;
-
-					self.adjustBackground();
 				}
 			};
 	
@@ -300,20 +309,6 @@ export class Map {
 			document.body.addEventListener('mousedown', adjustBackgroundPositionStart);
 			document.body.addEventListener('mousemove', adjustBackgroundPosition);
 			document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
-
-			let placeVisualizer = function(e) {
-				let box = self.container.getBoundingClientRect();
-				let visualizer = document.createElement('div');
-				visualizer.className = 'visualizer';
-				self.container.appendChild(visualizer);
-
-				visualizer.style.left = ((e.clientX - box.x) / self.transform.scale) + 'px';
-				visualizer.style.top = ((e.clientY - box.y) / self.transform.scale) + 'px';
-			};
-
-			setInterval(() => {
-				self.applyTransform();
-			}, 10)
 
 			this.container.parentNode.addEventListener('wheel', zoom);
 		}
@@ -348,17 +343,15 @@ export class Map {
 		this.fullMapElement.style.transformOrigin = `${width}px ${height}px`;
 		this.fullMapElement.style.backgroundSize = `${width}px ${height}px`;
 		this.fullMapElement.style.transform = `translate(${x}px, ${y}px)`;
+
+		hexcrawl.events.pub('map.updated', this);
 	}
 
 	alignBackgroundWithHex(hex) {
-		console.log(hex.x, hex.y);
-
 		this.background.x = hex.background.position.x + hex.x;
 		this.background.y = hex.background.position.y + hex.y;
 		this.background.width = hex.background.width;
 		this.background.height = hex.background.height;
-
-		// console.log(this.background);
 
 		this.adjustBackground();
 	}
@@ -399,24 +392,37 @@ export class Map {
 				}
 			})
 
-			
 			this.centerOnPoint(x, y);
 		}
 	}
 
 	// Positioning
-	centerOnPoint(x, y) {
+	centerOnHex(hex, animate) {
+		let center = hex.getCenterPoint();
+
+		if (center) {
+			this.transform.scale = 1;
+			this.centerOnPoint(center.x, center.y, animate);
+		}
+	}
+
+	centerOnPoint(x, y, animate) {
 		if (this.container) {
 			let box = this.container.parentNode.getBoundingClientRect();
-			let centerX = box.width / 2 - x;
-			let centerY = box.height / 2 - y;
+			let centerX = box.width / 2 - x * this.transform.scale;
+			let centerY = box.height / 2 - y * this.transform.scale;
+
+			this.transform.origin = {
+				x: 0,
+				y: 0
+			};
 
 			this.transform.translate = {
 				x: centerX,
 				y: centerY
 			}
 
-			this.applyTransform();
+			this.applyTransform(animate);
 		}
 	}
 

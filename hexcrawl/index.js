@@ -1,56 +1,27 @@
+import { Id } from './id.js';
 import { Events } from './events.js';
-import { Map } from './map.js';
+import { API } from './api.js';
 import { HexSettings } from './hexsettings.js';
 import { MapSettings } from './mapsettings.js';
 import { MapSetup } from './mapsetup.js';
+import { visualizer } from './visualizers.js';
 
 // Map setup
 let output = document.getElementById('display');
 let positioningConfirmButton = document.getElementById('positioningConfirm');
 
-// Temp saved data for dev purposes
-let mapData = {
-	container: output,
-	"background": {
-		"image": "barovia-map.jpg",
-		"width": 8300.25,
-		"height": 5851.25,
-		"x": -7591,
-		"y": -2401
-	},
-	"hexes": {
-		"6f8ea9ab-c7a6-4322-b3d4-caba5b64c758": {
-			"x": -50,
-			"y": -43,
-			"background": {
-				"position": {
-					"x": -7591,
-					"y": -2401
-				},
-				"image": "barovia-map.jpg",
-				"width": 8300.25,
-				"height": 5851.25
-			}
-		}
-	}
-};
-
-let map = new Map();
-
 // Global API
 window.hexcrawl = {
 	events: new Events(),
-	map: map,
-	removeVisualizers: function() {
-		document.querySelectorAll('.visualizer').forEach((div) => div.parentNode.removeChild(div));
-	}
+	visualizer: visualizer
 };
+
+new API();
 
 // Hex settings controller
 let hexSettingsContainer = document.getElementById('hexSettings');
 let hexNotesContainer = document.getElementById('hexNotes');
 let hexSettings = new HexSettings({
-	map: map,
 	container: hexSettingsContainer,
 	notesContainer: hexNotesContainer
 });
@@ -58,7 +29,6 @@ let hexSettings = new HexSettings({
 // Map settings controller
 let mapSettingsContainer = document.getElementById('mapSettings');
 let mapSettings = new MapSettings({
-	map: map,
 	container: mapSettingsContainer
 });
 
@@ -92,7 +62,7 @@ positioningConfirmButton.addEventListener('click', () => {
 	hexcrawl.map.applyTransform(true);
 
 	positioningConfirmButton.style.display = 'none';
-});
 
-// Render
-// map.render(output);
+	hexcrawl.map.id = Id.generate();
+	hexcrawl.events.pub('map.created', hexcrawl.map);
+});

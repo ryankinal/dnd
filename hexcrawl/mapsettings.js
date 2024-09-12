@@ -31,7 +31,8 @@ export class MapSettings {
 		this.buttons = {
 			gmView: this.container.querySelector('.gm-view-button'),
 			map: this.container.querySelector('.map-button'),
-			notes: this.container.querySelector('.notes-button')
+			notes: this.container.querySelector('.notes-button'),
+			party: this.container.querySelector('.party')
 		};
 
 		this.wireEvents();
@@ -75,6 +76,13 @@ export class MapSettings {
 		let self = this;
 		let selectionTimeout = null;
 
+		if (this.container) {
+			this.container.addEventListener('click', (e) => {
+				e.stopPropagation();
+				return false;
+			})
+		}
+
 		window.hexcrawl.events.sub('map.new', (map) => {
 			map.allowBackgroundAdjust = true;
 			this.map = map;
@@ -84,6 +92,17 @@ export class MapSettings {
 		if (this.buttons.gmView) {
 			this.buttons.gmView.addEventListener('click', () => {
 				self.toggleGMView();
+			});
+		}
+
+		if (this.buttons.party) {
+			this.buttons.party.addEventListener('click', () => {
+				let parties = Object.values(self.map.parties);
+				let firstParty = parties.length ? parties[0] : null;
+
+				if (firstParty && firstParty.hex) {
+					self.map.centerOnHex(firstParty.hex, true);
+				}
 			});
 		}
 		

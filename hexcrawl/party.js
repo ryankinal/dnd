@@ -32,6 +32,8 @@ export class Party {
 		this.hex = hex;
 		hex.party = this;
 		hex.renderIcons();
+
+		hexcrawl.events.pub('party.updated', this);
 	}
 
 	getData() {

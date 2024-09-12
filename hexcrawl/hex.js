@@ -273,17 +273,39 @@ export class Hex {
 		}
 	}
 
-	hide() {
-		this.hidden = true;
+	hideIcons() {
+		if (this.element) {
+			this.element.querySelectorAll('.icon').forEach((icon) => {
+				icon.classList.add('hidden');
+			})
+		}
+	}
 
+	showIcons() {
+		if (this.element) {
+			this.element.querySelectorAll('.icon').forEach((icon) => {
+				icon.classList.remove('hidden')
+			})
+		}
+	}
+
+	hide() {
+		if (!this.hidden) {
+			this.hidden = true;
+			hexcrawl.events.pub('hex.updated', this);
+		}
+		
 		if (this.element instanceof HTMLElement) {
 			this.element.classList.add('hidden');
 		}
 	}
 
 	show() {
-		this.hidden = false;
-
+		if (this.hidden) {
+			this.hidden = false;
+			hexcrawl.events.pub('hex.updated', this);
+		}
+		
 		if (this.element instanceof HTMLElement) {
 			this.element.classList.remove('hidden');
 		}
@@ -366,6 +388,8 @@ export class Hex {
 
 					self.backgroundAdjusted = true;
 					self.adjustBackground();
+
+					hexcrawl.events.pub('hex.updated', this);
 				}
 			}
 			
@@ -396,6 +420,8 @@ export class Hex {
 
 				self.backgroundAdjusted = true;
 				self.adjustBackground();
+
+				hexcrawl.events.pub('hex.updated', this);
 			}
 		};
 
@@ -421,6 +447,8 @@ export class Hex {
 		this.backgroundAdjustUndo = null;
 
 		this.map.alignBackgroundWithHex(this);
+
+		hexcrawl.events.pub('hex.updated', this);
 	}
 
 	cancelBackgroundAdjust() {
@@ -471,7 +499,7 @@ export class Hex {
 					div.appendChild(icon);
 					div.className = 'hex add';
 
-					if (hex) {
+					if (hex && !hex.hidden) {
 						div.classList.add('overlaid');
 					}
 
@@ -503,16 +531,18 @@ export class Hex {
 	getCenterPoint() {
 		return {
 			x: this.x + this.diameter / 2,
-			y: this.x + this.height / 2
+			y: this.y + this.height / 2
 		}
 	}
 
 	addNote(note) {
 		let id = Id.generate();
 		note.id = id;
+		note.hex = this;
 
 		this.notes[id] = note;
 		this.renderIcons();
+		hexcrawl.events.pub('hex.note.created', note);
 	}
 
 	getData() {
