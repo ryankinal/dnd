@@ -120,6 +120,11 @@ export class HexSettings {
 	wireEvents() {
 		let self = this;
 
+		self.container.addEventListener('click', (e) => {
+			e.stopPropagation();
+			return false;
+		});
+
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
 			if (hex !== self.hex) {
 				self.buttons.backgroundAdjust.classList.remove('on');
@@ -157,10 +162,6 @@ export class HexSettings {
 						
 						self.hex.confirmBackgroundAdjust();
 					}
-	
-					e.preventDefault();
-					e.stopPropagation();
-					return false;
 				}
 			});
 
@@ -202,10 +203,6 @@ export class HexSettings {
 					self.notesContainer.classList.add('hidden');
 					self.buttons.notes.classList.remove('on');
 				}
-
-				e.preventDefault();
-				e.stopPropagation();
-				return false;
 			});
 
 			self.notesContainer.addEventListener('click', (e) => {
@@ -227,6 +224,8 @@ export class HexSettings {
 
 					if (parties && parties[0] instanceof Party) {
 						parties[0].moveTo(self.hex);
+						self.hex.removeAddInterface();
+						self.hex.renderAddInterface();
 					}
 				}
 			});
