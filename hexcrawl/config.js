@@ -1,11 +1,7 @@
 let noteTypes = {
-	player: {
+	note: {
 		name: 'Note',
 		icon: 'fa-duotone fa-solid fa-file-lines'
-	},
-	gm: {
-		name: 'GM',
-		icon: 'fa-duotone fa-solid fa-user-crown'
 	},
 	combat: {
 		name: 'Combat Encounter',

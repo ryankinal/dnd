@@ -54,6 +54,37 @@ html,
 .hex {
 	position: absolute;
 	background-color: rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.hex .icons {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 3px;
+}
+
+.hex .icon {
+	padding: 3px;
+	font-size: 10px;
+	background-color: #FFF;
+	border-radius: 3px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: solid black 1px;
+}
+
+.hex .party-icon {
+	color: #00F;
+	background-color: transparent;
+	border: none;
+	font-size: 22px;
+	text-align: center;
 }
 
 .hex.add {
@@ -62,6 +93,7 @@ html,
 	justify-content: center;
 	font-size: 40px;
 	background-color: rgba(0, 0, 0, 0.1);
+	color: #000
 }
 
 .gm-view .hex.add {

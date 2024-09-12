@@ -77,6 +77,7 @@ export class Map {
 		// Default hex location
 		if (!this.hexes) {
 			this.addHex({
+				party: true,
 				background: {
 					image: this.background.image,
 					position: {
