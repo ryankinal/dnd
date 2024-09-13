@@ -1,6 +1,7 @@
 import { Id } from './id.js';
 import { Hex } from './hex.js';
 import { Party } from './party.js';
+import { visualizers } from './visualizers.js';
 
 export class Map {
 	constructor(data) {
@@ -11,6 +12,7 @@ export class Map {
 		this.positioningConfirmButton = null;
 
 		// Hex selection vars
+		this.addArbitraryHex = false;
 		this.allowHexSelection = false;
 		this.parties = {};
 
@@ -223,6 +225,10 @@ export class Map {
 						let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
 						self.transform.scale = newScale;
 
+						self.transform.origin = self.scalePoint(e.clientX, e.clientY, 'map');
+
+						console.log(self.transform.origin);
+
 						self.applyTransform();
 					}
 				}
@@ -311,6 +317,69 @@ export class Map {
 			document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
 
 			this.container.parentNode.addEventListener('wheel', zoom);
+
+			this.fullMapElement.addEventListener('click', (e) => {
+				if (self.addArbitraryHex) {
+					let x = e.clientX;
+					let y = e.clientY;
+					let box = self.container.getBoundingClientRect();
+					let hexes = Object.values(self.hexes);
+					let translatedX = (x - box.x) / self.transform.scale;
+					let translatedY = (y - box.y) / self.transform.scale;
+
+					if (hexes && hexes.length) {
+						let hex = hexes[0];
+						let newHex = new Hex({
+							x: hex.x,
+							y: hex.y,
+							background: Object.assign({}, hex.background)
+						});
+						
+						let xDirection = '';
+						let yDirection = '';
+
+						if (translatedY > newHex.y + newHex.height) {
+							yDirection = 's';
+						} else {
+							yDirection = 'n';
+						}
+						
+						if (translatedX > newHex.x + newHex.diameter) {
+							xDirection = 'e';
+						} else if (translatedX < newHex.x) {
+							xDirection = 'w';
+						}
+
+						while (!newHex.contains(translatedX, translatedY)) {
+							let x = newHex.x + newHex.positions[yDirection + xDirection].x;
+							let y = newHex.y + newHex.positions[yDirection + xDirection].y;
+							let background = hex.background();
+
+							newHex = self.addHex({
+								x: x,
+								y: y,
+								background: background
+							});
+
+							if (translatedY > newHex.y + newHex.height) {
+								yDirection = 's';
+							} else {
+								yDirection = 'n';
+							}
+							
+							if (translatedX > newHex.x + newHex.diameter) {
+								xDirection = 'e';
+							} else if (translatedX < newHex.x) {
+								xDirection = 'w';
+							} else {
+								xDirection = '';
+							}
+						}
+
+						newHex.render(hex.container);
+					}
+				}
+			});
 		}
 	}
 
@@ -424,6 +493,27 @@ export class Map {
 
 			this.applyTransform(animate);
 		}
+	}
+
+	scalePoint(x, y, target) {
+		target = target || 'map';
+
+		let box = this.container.parentNode.getBoundingClientRect();
+		let newX = x;
+		let newY = y;
+
+		if (target === 'viewport') {
+			newX = box.width / 2 - x / this.transform.scale;
+			newY = box.height / 2 - y / this.transform.scale;
+		} else if (target === 'map') {
+			newX = box.width / 2 - x * this.transform.scale;
+			newY = box.height / 2 - y * this.transform.scale;
+		}
+
+		return {
+			x: newX,
+			y: newY
+		};
 	}
 
 	// is there a hex at this point?

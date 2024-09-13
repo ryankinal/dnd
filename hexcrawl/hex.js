@@ -195,7 +195,7 @@ export class Hex {
 	}
 
 	render(container) {
-		if (this.element) {
+		if (this.element || !container) {
 			return;
 		}
 
@@ -533,6 +533,10 @@ export class Hex {
 			x: this.x + this.diameter / 2,
 			y: this.y + this.height / 2
 		}
+	}
+
+	contains(x, y) {
+		return x > this.x && x < this.x + this.diameter && y > this.y && y < this.y + this.height;
 	}
 
 	addNote(note) {

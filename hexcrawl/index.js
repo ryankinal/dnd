@@ -4,7 +4,7 @@ import { API } from './api.js';
 import { HexSettings } from './hexsettings.js';
 import { MapSettings } from './mapsettings.js';
 import { MapSetup } from './mapsetup.js';
-import { visualizer } from './visualizers.js';
+import { visualizers } from './visualizers.js';
 
 // Map setup
 let output = document.getElementById('display');
@@ -13,7 +13,7 @@ let positioningConfirmButton = document.getElementById('positioningConfirm');
 // Global API
 window.hexcrawl = {
 	events: new Events(),
-	visualizer: visualizer
+	visualizers: visualizers
 };
 
 new API();
