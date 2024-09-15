@@ -157,6 +157,7 @@ export class Hex {
 			if (this[position] instanceof Hex) {
 				hex = this[position];
 				hex.show();
+				hex.select();
 
 				setTimeout(() => {
 					this[position].select();
@@ -403,8 +404,6 @@ export class Hex {
 
 					self.backgroundAdjusted = true;
 					self.adjustBackground();
-
-					hexcrawl.events.pub('hex.updated', this);
 				}
 			}
 			
@@ -467,6 +466,8 @@ export class Hex {
 		if (this.selected) {
 			this.renderAddInterface();
 		}
+
+		hexcrawl.events.pub('hex.updated', this);
 	}
 
 	cancelBackgroundAdjust() {
@@ -546,7 +547,7 @@ export class Hex {
 			this.addInterface.forEach((div) => {
 				div.parentNode.removeChild(div);
 			})
-			this.addInterface = null
+			this.addInterface = []
 		}
 	}
 
