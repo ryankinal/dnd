@@ -3,6 +3,7 @@ export class API {
 		let self = this;
 		let events = window.hexcrawl.events;
 		this.events = events;
+		this.logging = true;
 
 		events.sub('map.created', (map) => {
 			let method = 'POST';
@@ -132,9 +133,13 @@ export class API {
 
 	makeRequest(method, url, data) {
 		if (data) {
-			console.log(`${method} ${url}`, data);
+			if (this.logging) {
+				console.log(`${method} ${url}`, data);
+			}
 		} else {
-			console.log(`${method} ${url}`);
+			if (this.logging) {
+				console.log(`${method} ${url}`);
+			}
 		}
 	}
 }

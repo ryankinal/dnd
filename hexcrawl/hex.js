@@ -339,6 +339,8 @@ export class Hex {
 	}
 
 	select() {
+		let self = this;
+
 		if (this.map.allowHexSelection && !this.selected) {
 			this.selected = true;
 			this.element.classList.add('selected');
@@ -348,6 +350,14 @@ export class Hex {
 			if (!this.hidden) {
 				this.renderAddInterface();
 			}
+
+			hexcrawl.hideStack.push({
+				f: () => {
+					if (self.selected && !self.map.panning && !self.allowBackgroundAdjust) {
+						self.unselect();
+					}
+				}
+			});
 		}
 	}
 
@@ -373,14 +383,7 @@ export class Hex {
 			return false;
 		};
 
-		let bodyClick = function(e) {
-			if (self.selected && !self.map.panning && !self.allowBackgroundAdjust) {
-				self.unselect();
-			}
-		};
-
 		this.element.addEventListener('click', hexClick);
-		document.body.addEventListener('click', bodyClick);
 
 		let adjustBackgroundSize = function(e) {
 			if (self.allowBackgroundAdjust) {

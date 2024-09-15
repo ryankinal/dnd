@@ -13,10 +13,12 @@ let positioningConfirmButton = document.getElementById('positioningConfirm');
 // Global API
 window.hexcrawl = {
 	events: new Events(),
-	visualizers: visualizers
+	visualizers: visualizers,
+	hideStack: [],
 };
 
-new API();
+let api = new API();
+api.logging = false;
 
 let toolBelt = document.getElementById('toolBelt');
 toolBelt.addEventListener('click', (e) => {
@@ -46,6 +48,24 @@ new MapSetup({
 	container: mapSetupContainer
 });
 
+document.body.addEventListener('click', (e) => {
+	if (hexcrawl.hideStack.length) {
+		let toHide = hexcrawl.hideStack.pop();
+		let element = toHide.element;
+		let func = toHide.f;
+
+		if (element instanceof HTMLElement) {
+			if (typeof func === 'function') {
+				func(element);
+			} else {
+				element.classList.add('hidden');
+			}
+		} else if (typeof func === 'function') {
+			func();
+		}
+	}
+});
+
 window.hexcrawl.events.sub('map.new', (map) => {
 	output.innerHTML = '';
 	map.positioningConfirmButton = positioningConfirmButton;
@@ -59,9 +79,6 @@ window.hexcrawl.events.sub('map.new', (map) => {
 
 positioningConfirmButton.addEventListener('click', () => {
 	mapSettings.toggleGMView();
-	mapSettings.show();
-
-	hexSettings.hide();
 
 	hexcrawl.map.panEnabled = true;
 	hexcrawl.map.allowBackgroundAdjust = false;

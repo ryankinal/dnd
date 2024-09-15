@@ -34,9 +34,9 @@ export class MapSettings {
 
 		this.buttons = {
 			menu: this.toolBelt.querySelector('.map-settings'),
-			gmView: this.container.querySelector('.gm-view'),
+			gmView: this.toolBelt.querySelector('.gm-view'),
 			map: this.container.querySelector('.map'),
-			notes: this.container.querySelector('.notes'),
+			notes: this.toolBelt.querySelector('.map-notes'),
 			party: this.toolBelt.querySelector('.center-party')
 		};
 
@@ -99,18 +99,22 @@ export class MapSettings {
 		if (this.buttons.menu) {
 			this.buttons.menu.addEventListener('click', (e) => {
 				self.show();
+				hexcrawl.hideStack.push({
+					f: (e) => {
+						self.hide();
+					}
+				})
 			});
 		}
-
-		document.body.addEventListener('click', (e) => {
-			self.hide();
-		});
 
 		window.hexcrawl.events.sub('map.new', (map) => {
 			map.allowBackgroundAdjust = true;
 			this.map = map;
 			self.container.classList.add('hidden');
-			self.buttons.menu.classList.remove('disabled');
+
+			if (self.buttons.menu) {
+				self.buttons.menu.classList.remove('disabled');
+			}
 		});
 
 		if (this.buttons.gmView) {

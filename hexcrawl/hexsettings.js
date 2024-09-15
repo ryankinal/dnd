@@ -159,10 +159,6 @@ export class HexSettings {
 		});
 
 		if (this.container) {
-			document.addEventListener('click', (e) => {
-				self.hide();
-			});
-
 			this.container.addEventListener('click', (e) => {
 				e.stopPropagation();
 				return false;
@@ -171,11 +167,20 @@ export class HexSettings {
 
 		if (this.buttons.menu) {
 			this.buttons.menu.addEventListener('click', (e) => {
-				self.show();
+				if (!self.buttons.menu.classList.contains('disabled')) {
+					self.show();
+
+					hexcrawl.hideStack.push({
+						f: () => {
+							self.hide();
+						}
+					});
+				}
 			});
 		}
 
 		if (this.buttons.backgroundAdjust) {
+
 			this.buttons.backgroundAdjust.addEventListener('click', (e) => {
 				if (self.hex) {
 					if (!self.hex.allowBackgroundAdjust) {
@@ -209,6 +214,7 @@ export class HexSettings {
 
 		if (this.buttons.hide) {
 			this.buttons.hide.addEventListener('click', () => {
+				console.log(self.hex);
 				if (self.hex) {
 					if (self.hex.hidden) {
 						self.buttons.hide.classList.remove('on');
@@ -226,9 +232,18 @@ export class HexSettings {
 				if (self.notesContainer.matches('.hidden')) {
 					self.notesContainer.classList.remove('hidden');
 					self.buttons.notes.classList.add('on');
+
+					hexcrawl.hideStack.push({ 
+						f: () => {
+							self.notesContainer.classList.add('hidden');
+							self.buttons.notes.classList.remove('on');
+						}
+					});
 				} else {
 					self.notesContainer.classList.add('hidden');
 					self.buttons.notes.classList.remove('on');
+
+					hexcrawl.hideStack.pop();
 				}
 			});
 
@@ -236,11 +251,6 @@ export class HexSettings {
 				e.preventDefault();
 				e.stopPropagation();
 				return false;
-			});
-
-			document.body.addEventListener('click', () => {
-				self.notesContainer.classList.add('hidden');
-				self.buttons.notes.classList.remove('on');
 			});
 		}
 
@@ -286,12 +296,12 @@ export class HexSettings {
 					typeOptions.style.display = 'block';
 				}
 				
+				hexcrawl.hideStack.push({
+					element: typeOptions
+				});
+
 				e.stopPropagation();
 				return false;
-			});
-
-			document.body.addEventListener('click', (e) => {
-				typeOptions.style.display = 'none';
 			});
 
 			typeOptions.querySelectorAll('.note-type-options > div').forEach((optionElem) => {
