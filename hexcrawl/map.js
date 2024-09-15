@@ -10,6 +10,7 @@ export class Map {
 		this.fullMapElement = document.createElement('div');
 		this.fullMapElement.className = "full-map";
 		this.positioningConfirmButton = null;
+		this.gmView = false;
 
 		// Hex selection vars
 		this.addArbitraryHex = false;

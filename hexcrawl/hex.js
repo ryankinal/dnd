@@ -324,7 +324,7 @@ export class Hex {
 	adjustBackground() {
 		if (this.background) {
 			if (this.background.image) {
-				let border = this.selected ? this.selectedBorder : this.border;
+				let border = this.selected && !this.allowBackgroundAdjust ? this.selectedBorder : this.border;
 				this.element.style.backgroundRepeat = 'no-repeat';
 				this.element.style.backgroundImage = `${border}, url(${this.background.image})`;
 
@@ -456,9 +456,11 @@ export class Hex {
 	}
 
 	startBackgroundAdjust() {
+		this.element.classList.remove('selected');
 		this.allowBackgroundAdjust = true;
 		this.backgroundAdjustUndo = JSON.parse(JSON.stringify(this.background));
 		this.removeAddInterface();
+		this.adjustBackground();
 	}
 
 	confirmBackgroundAdjust() {
@@ -470,6 +472,7 @@ export class Hex {
 		hexcrawl.events.pub('hex.updated', this);
 
 		if (this.selected) {
+			this.element.classList.add('selected');
 			this.renderAddInterface();
 		}
 
@@ -483,6 +486,7 @@ export class Hex {
 		this.adjustBackground();
 
 		if (this.selected) {
+			this.element.classList.add('selected');
 			this.renderAddInterface();
 		}
 	}
@@ -514,7 +518,7 @@ export class Hex {
 					self[position] = hex;
 				}
 				
-				if (!hex || hex.hidden || this.party) {
+				if (!hex || (!self.map.gmView && hex.hidden) || this.party) {
 					let div = document.createElement('div');
 					let icon = document.createElement('i');
 

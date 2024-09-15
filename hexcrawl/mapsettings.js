@@ -68,17 +68,21 @@ export class MapSettings {
 	toggleGMView(onOff) {
 		if (onOff === 1 || onOff === 0) {
 			if (onOff === 1) {
+				this.map.gmView = true;
 				this.map.container.classList.add('gm-view');
 				this.buttons.gmView.classList.add('on');
 			} else {
+				this.map.gmView = false;
 				this.map.container.classList.remove('gm-view');
 				this.buttons.gmView.classList.remove('on');
 			}
 		} else {
 			if (this.map.container.matches('.gm-view')) {
+				this.map.gmView = false;
 				this.map.container.classList.remove('gm-view');
 				this.buttons.gmView.classList.remove('on');
 			} else {
+				this.map.gmView = true;
 				this.map.container.classList.add('gm-view');
 				this.buttons.gmView.classList.add('on');
 			}

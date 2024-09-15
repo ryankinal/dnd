@@ -191,10 +191,19 @@ export class HexSettings {
 			this.buttons.backgroundAdjust.addEventListener('click', (e) => {
 				if (self.hex) {
 					if (!self.hex.allowBackgroundAdjust) {
+
 						self.buttons.backgroundAdjust.classList.add('on');
 						self.map.panEnabled = false;
 						
 						self.hex.startBackgroundAdjust();
+
+						hexcrawl.hideStack.push({
+							f: () => {
+								self.hex.confirmBackgroundAdjust();
+								self.buttons.backgroundAdjust.classList.remove('on');
+								self.map.panEnabled = true;
+							}
+						})
 					} else {
 						self.buttons.backgroundAdjust.classList.remove('on');
 						self.map.panEnabled = true;
