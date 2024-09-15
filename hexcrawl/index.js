@@ -18,10 +18,17 @@ window.hexcrawl = {
 
 new API();
 
+let toolBelt = document.getElementById('toolBelt');
+toolBelt.addEventListener('click', (e) => {
+	e.stopPropagation();
+	return false;
+});
+
 // Hex settings controller
 let hexSettingsContainer = document.getElementById('hexSettings');
 let hexNotesContainer = document.getElementById('hexNotes');
 let hexSettings = new HexSettings({
+	toolBelt: toolBelt,
 	container: hexSettingsContainer,
 	notesContainer: hexNotesContainer
 });
@@ -29,6 +36,7 @@ let hexSettings = new HexSettings({
 // Map settings controller
 let mapSettingsContainer = document.getElementById('mapSettings');
 let mapSettings = new MapSettings({
+	toolBelt: toolBelt,
 	container: mapSettingsContainer
 });
 
@@ -64,5 +72,6 @@ positioningConfirmButton.addEventListener('click', () => {
 	positioningConfirmButton.style.display = 'none';
 
 	hexcrawl.map.id = Id.generate();
+	toolBelt.classList.remove('hidden');
 	hexcrawl.events.pub('map.created', hexcrawl.map);
 });

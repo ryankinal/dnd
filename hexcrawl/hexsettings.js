@@ -18,6 +18,10 @@ export class HexSettings {
 				this.map = data.map;
 			}
 
+			if (data.toolBelt instanceof HTMLElement) {
+				this.toolBelt = data.toolBelt;
+			}
+
 			if (data.container instanceof HTMLElement) {
 				this.container = data.container;
 			}
@@ -36,6 +40,7 @@ export class HexSettings {
 		}
 
 		this.buttons = {
+			menu: this.toolBelt.querySelector('.hex-settings'),
 			notes: this.container.querySelector('.notes'),
 			backgroundAdjust: this.container.querySelector('.background-position'),
 			backgroundImage: this.container.querySelector('.background-image'),
@@ -138,7 +143,8 @@ export class HexSettings {
 				self.map.panEnabled = true;
 				self.hex = hex;
 				self.renderNotes();
-				self.show();
+				
+				self.buttons.menu.classList.remove('disabled');
 			}
 		});
 
@@ -148,9 +154,26 @@ export class HexSettings {
 				self.hex = null;
 				self.buttons.backgroundAdjust.classList.remove('on');
 				self.map.panEnabled = true;
-				self.hide();
+				self.buttons.menu.classList.add('disabled');
 			}
 		});
+
+		if (this.container) {
+			document.addEventListener('click', (e) => {
+				self.hide();
+			});
+
+			this.container.addEventListener('click', (e) => {
+				e.stopPropagation();
+				return false;
+			});
+		}
+
+		if (this.buttons.menu) {
+			this.buttons.menu.addEventListener('click', (e) => {
+				self.show();
+			});
+		}
 
 		if (this.buttons.backgroundAdjust) {
 			this.buttons.backgroundAdjust.addEventListener('click', (e) => {

@@ -298,6 +298,10 @@ export class Hex {
 		if (this.element instanceof HTMLElement) {
 			this.element.classList.add('hidden');
 		}
+
+		if (this.addInterface.length) {
+			this.removeAddInterface();
+		}
 	}
 
 	show() {
@@ -308,6 +312,10 @@ export class Hex {
 		
 		if (this.element instanceof HTMLElement) {
 			this.element.classList.remove('hidden');
+		}
+
+		if (!this.addInterface.length) {
+			this.renderAddInterface();
 		}
 	}
 
@@ -334,8 +342,12 @@ export class Hex {
 		if (this.map.allowHexSelection && !this.selected) {
 			this.selected = true;
 			this.element.classList.add('selected');
-			this.renderAddInterface();
+
 			hexcrawl.events.pub('hex.selected', this);
+
+			if (!this.hidden) {
+				this.renderAddInterface();
+			}
 		}
 	}
 
@@ -420,8 +432,6 @@ export class Hex {
 
 				self.backgroundAdjusted = true;
 				self.adjustBackground();
-
-				hexcrawl.events.pub('hex.updated', this);
 			}
 		};
 
@@ -440,6 +450,7 @@ export class Hex {
 	startBackgroundAdjust() {
 		this.allowBackgroundAdjust = true;
 		this.backgroundAdjustUndo = JSON.parse(JSON.stringify(this.background));
+		this.removeAddInterface();
 	}
 
 	confirmBackgroundAdjust() {
@@ -449,6 +460,10 @@ export class Hex {
 		this.map.alignBackgroundWithHex(this);
 
 		hexcrawl.events.pub('hex.updated', this);
+
+		if (this.selected) {
+			this.renderAddInterface();
+		}
 	}
 
 	cancelBackgroundAdjust() {
@@ -456,6 +471,10 @@ export class Hex {
 		this.allowBackgroundAdjust = false;
 		this.backgroundAdjusted = false;
 		this.adjustBackground();
+
+		if (this.selected) {
+			this.renderAddInterface();
+		}
 	}
 
 	// Click handler to add neighboring hexes

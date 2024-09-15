@@ -15,6 +15,10 @@ export class MapSettings {
 				this.map = data.map;
 			}
 
+			if (data.toolBelt instanceof HTMLElement) {
+				this.toolBelt = data.toolBelt;
+			}
+
 			if (data.container instanceof HTMLElement) {
 				this.container = data.container;
 			}
@@ -29,21 +33,26 @@ export class MapSettings {
 		}
 
 		this.buttons = {
-			gmView: this.container.querySelector('.gm-view-button'),
-			map: this.container.querySelector('.map-button'),
-			notes: this.container.querySelector('.notes-button'),
-			party: this.container.querySelector('.party')
+			menu: this.toolBelt.querySelector('.map-settings'),
+			gmView: this.container.querySelector('.gm-view'),
+			map: this.container.querySelector('.map'),
+			notes: this.container.querySelector('.notes'),
+			party: this.toolBelt.querySelector('.center-party')
 		};
 
 		this.wireEvents();
 	}
 
 	hide() {
-		this.container.classList.add('hidden');
+		if (this.container instanceof HTMLElement) {
+			this.container.classList.add('hidden');
+		}
 	}
 
 	show() {
-		this.container.classList.remove('hidden');
+		if (this.container instanceof HTMLElement) {
+			this.container.classList.remove('hidden');
+		}
 	}
 	
 	changeMap(map) {
@@ -60,14 +69,18 @@ export class MapSettings {
 		if (onOff === 1 || onOff === 0) {
 			if (onOff === 1) {
 				this.map.container.classList.add('gm-view');
+				this.buttons.gmView.classList.add('on');
 			} else {
 				this.map.container.classList.remove('gm-view');
+				this.buttons.gmView.classList.remove('on');
 			}
 		} else {
 			if (this.map.container.matches('.gm-view')) {
 				this.map.container.classList.remove('gm-view');
+				this.buttons.gmView.classList.remove('on');
 			} else {
 				this.map.container.classList.add('gm-view');
+				this.buttons.gmView.classList.add('on');
 			}
 		}
 	}
@@ -83,10 +96,21 @@ export class MapSettings {
 			})
 		}
 
+		if (this.buttons.menu) {
+			this.buttons.menu.addEventListener('click', (e) => {
+				self.show();
+			});
+		}
+
+		document.body.addEventListener('click', (e) => {
+			self.hide();
+		});
+
 		window.hexcrawl.events.sub('map.new', (map) => {
 			map.allowBackgroundAdjust = true;
 			this.map = map;
 			self.container.classList.add('hidden');
+			self.buttons.menu.classList.remove('disabled');
 		});
 
 		if (this.buttons.gmView) {
@@ -109,12 +133,6 @@ export class MapSettings {
 		window.hexcrawl.events.sub('hex.selected', () => {
 			clearTimeout(selectionTimeout);
 			self.container.classList.add('hidden');
-		});
-
-		window.hexcrawl.events.sub('hex.unselected', () => {
-			selectionTimeout = setTimeout(() => {
-				self.container.classList.remove('hidden');
-			}, 50);
 		});
 	}
 }

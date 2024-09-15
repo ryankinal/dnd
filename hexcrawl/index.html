@@ -62,26 +62,43 @@
 					<button id="setupCancelButton" class="cancel">Cancel</button>
 				</div>
 			</div>
+			<div class="tool-belt hidden" id="toolBelt">
+				<button class="map-settings disabled"><i class="fa-regular fa-map"></i></button>
+				<button class="hex-settings disabled"><i class="hex-icon"></i></button>
+				<button class="center-party"><i class="fa-solid fa-location"></i></button>
+			</div>
 			<div id="mapSettings" class="settings map-settings hidden">
-				<div class="button-container">
-					<button class="gm-view-button"><i class="fa-regular fa-eye"></i></button>
+				<div class="menu-item gm-view">
+					<div class="icon"><i class="fa-regular fa-eye"></i></div>
+					<div class="text">Toggle GM View</div>
 				</div>
-				<div class="button-container">
-					<button class="party"><i class="fa-solid fa-location"></i></button>
+				<div class="menu-item notes">
+					<div class="icon"><i class="fa-regular fa-file-lines"></i></div>
+					<div class="text">Notes</div>
 				</div>
 			</div>
 			<div id="hexSettings" class="settings hex-settings hidden">
-				<div class="button-container">
-					<button class="background-position"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+				<div class="menu-item notes">
+					<div class="icon"><i class="fa-regular fa-file-lines"></i></div>
+					<div class="text">Notes</div>
 				</div>
-				<div class="button-container">
-					<button class="notes"><i class="fa-solid fa-file-lines"></i></button>
+				<div class="menu-item background-position">
+					<div class="icon"><i class="fa-solid fa-arrows-up-down-left-right"></i></div>
+					<div class="text">Adjust Hex Position</div>
 				</div>
-				<div class="button-container">
-					<button class="hide"><i class="fa-regular fa-eye"></i></button>
+				<div class="menu-item hide">
+					<div class="icon">
+						<i class="off fa-regular fa-eye"></i>
+						<i class="on actual-rolled fa-eye-slash"></i>
+					</div>
+					<div class="text">
+						<span class="on">Show</span>
+						<span class="off">Hide</span>
+					</div>
 				</div>
-				<div class="button-container">
-					<button class="party"><i class="fa-solid fa-location-dot"></i></button>
+				<div class="menu-item background-position party">
+					<div class="icon"><i class="fa-solid fa-location-dot"></i></div>
+					<div class="text">Move Party Here</div>
 				</div>
 			</div>
 			<div id="positioningConfirm"><i class="fa-solid fa-check"></i></div>
