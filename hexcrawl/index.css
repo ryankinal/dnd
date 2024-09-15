@@ -66,6 +66,17 @@ html,
 	align-items: center;
 }
 
+.hex.selected::after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 255, 0.2);
+	top: 0;
+	left: 0;
+}
+
 .hex .icons {
 	display: flex;
 	flex-direction: row;
@@ -384,7 +395,6 @@ button.on .on {
 }
 
 .note-type-options {
-	display: none;
 	border: solid #444 1px;
 	width: fit-content;
 	box-shadow: 0 5px 5px #CCC;
@@ -393,35 +403,27 @@ button.on .on {
 	background-color: #FFF;
 }
 
-.note-type-select,
-.note-type-options > div {
+.note-type-options.hidden {
+	display: none;
+}
+
+.note-type-select {
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
 }
 
-.note-type-options > div {
-	border-bottom: solid #444 1px;
-	width: 100%;
-}
-
-.note-type-select div,
-.note-type-options > div div {
+.note-type-select div {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	padding: 0 10px 0 0;
 }
 
-.note-type-select div:first-child,
-.note-type-options > div div:first-child {
+.note-type-select div:first-child {
 	flex-shrink: 0;
 	flex-grow: 0;
 	padding: 10px 0 10px 10px;
-}
-
-.note-type-options > div:last-child {
-	border-bottom: none;	
 }
 
 .add-note .form-buttons {

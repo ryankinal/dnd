@@ -13,7 +13,7 @@ let noteTypes = {
 	},
 	treasure: {
 		name: 'Treasure',
-		icon: 'fa-duotone fa-regular fa-gem'
+		icon: 'fa-duotone fa-solid fa-gem'
 	},
 	secret: {
 		name: 'GM Secret',

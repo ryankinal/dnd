@@ -468,7 +468,7 @@ export class Map {
 		let center = hex.getCenterPoint();
 
 		if (center) {
-			this.transform.scale = 1;
+			this.transform.scale = 2;
 			this.centerOnPoint(center.x, center.y, animate);
 		}
 	}

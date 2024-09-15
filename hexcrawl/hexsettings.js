@@ -58,6 +58,10 @@ export class HexSettings {
 			let typeSelect = this.notesContainer.querySelector('.note-type-select');
 			let typeOptions = this.notesContainer.querySelector('.note-type-options');
 
+			if (typeOptions) {
+				typeOptions.classList.add('hidden');
+			}
+
 			typeInput.value = Object.keys(this.noteTypes)[0];
 
 			Object.keys(this.noteTypes).forEach((type) => {
@@ -68,6 +72,10 @@ export class HexSettings {
 				let iconElem = document.createElement('div');
 				let nameElem = document.createElement('div');
 				
+				optionElem.className = 'menu-item';
+				iconElem.className = 'icon';
+				nameElem.className = 'text';
+
 				optionElem.dataset.type = type;
 				iconElem.innerHTML = `<i class="${icon}"></i>`;
 				nameElem.innerHTML = name;
@@ -180,7 +188,6 @@ export class HexSettings {
 		}
 
 		if (this.buttons.backgroundAdjust) {
-
 			this.buttons.backgroundAdjust.addEventListener('click', (e) => {
 				if (self.hex) {
 					if (!self.hex.allowBackgroundAdjust) {
@@ -290,16 +297,17 @@ export class HexSettings {
 			});
 
 			typeSelect.addEventListener('click', (e) => {
-				if (typeOptions.style.display === 'block') {
-					typeOptions.style.display = 'none';
+				if (typeOptions.classList.contains('hidden')) {
+					typeOptions.classList.remove('hidden');
+
+					hexcrawl.hideStack.push({
+						element: typeOptions
+					});
 				} else {
-					typeOptions.style.display = 'block';
+					typeOptions.classList.add('hidden');
+					hexcrawl.hideStack.pop();
 				}
 				
-				hexcrawl.hideStack.push({
-					element: typeOptions
-				});
-
 				e.stopPropagation();
 				return false;
 			});

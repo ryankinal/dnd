@@ -93,6 +93,7 @@ export class Hex {
 
 		this.mask = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="rgba(0, 0, 0, 0)" stroke-width="3" points="${hexCoords}"></polygon></svg>')`;
 		this.border = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="black" stroke-width="1" fill="transparent" points="${hexCoords}"></polygon></svg>')`;
+		this.selectedBorder = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="blue" stroke-width="2" fill="transparent" points="${hexCoords}"></polygon></svg>')`;
 
 		if (data) {
 			if (data.map instanceof Map) {
@@ -323,8 +324,9 @@ export class Hex {
 	adjustBackground() {
 		if (this.background) {
 			if (this.background.image) {
+				let border = this.selected ? this.selectedBorder : this.border;
 				this.element.style.backgroundRepeat = 'no-repeat';
-				this.element.style.backgroundImage = `${this.border}, url(${this.background.image})`;
+				this.element.style.backgroundImage = `${border}, url(${this.background.image})`;
 
 				if (this.background.width && this.background.height) {
 					this.element.style.backgroundSize = `contain, ${this.background.width}px ${this.background.height}px`;
@@ -350,6 +352,7 @@ export class Hex {
 
 			if (!this.hidden) {
 				this.renderAddInterface();
+				this.adjustBackground();
 			}
 
 			hexcrawl.hideStack.push({
@@ -366,11 +369,14 @@ export class Hex {
 		if (this.selected) {
 			this.removeAddInterface();
 			hexcrawl.events.pub('hex.unselected', this);
+			this.element.classList.remove('selected');
 			this.selected = false;
 
 			if (this.backgroundAdjusted) {
 				this.confirmBackgroundAdjust();
 			}
+
+			this.adjustBackground();
 		}
 	}
 
@@ -491,7 +497,6 @@ export class Hex {
 		}
 	}
 
-	// Remove
 	renderAddInterface() {
 		let self = this;
 
