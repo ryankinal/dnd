@@ -407,8 +407,12 @@ export class Hex {
 					backgroundWidth = Math.min(self.maxBackgroundWidth, backgroundWidth + (e.deltaY * 4));
 					backgroundHeight = heightRatio * backgroundWidth;
 
-					self.background.position.x = backgroundWidth * (self.background.position.x / self.background.width);
-					self.background.position.y = backgroundHeight * (self.background.position.y / self.background.height);
+					let x = self.background.position.x - self.diameter / 2;
+					let y = self.background.position.y - self.height / 2;
+					let scale = backgroundWidth / self.background.width;
+
+					self.background.position.x = x * scale + self.diameter / 2;
+					self.background.position.y = y * scale + self.height / 2;
 					
 					self.background.width = backgroundWidth;
 					self.background.height = backgroundHeight;
