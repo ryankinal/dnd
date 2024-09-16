@@ -310,7 +310,9 @@ export class HexSettings {
 					typeOptions.classList.remove('hidden');
 
 					hexcrawl.hideStack.push({
-						element: typeOptions
+						f: () => {
+							typeOptions.classList.add('hidden');
+						}
 					});
 				} else {
 					typeOptions.classList.add('hidden');
@@ -325,7 +327,8 @@ export class HexSettings {
 				optionElem.addEventListener('click', (e) => {
 					let type = optionElem.dataset.type;
 					typeInput.value = type;
-					typeOptions.style.display = 'none';
+					typeOptions.classList.add('hidden');
+					hexcrawl.hideStack.pop();
 					typeSelect.innerHTML = optionElem.innerHTML;
 	
 					e.stopPropagation();

@@ -257,8 +257,12 @@ export class Map {
 					backgroundHeight = heightRatio * backgroundWidth;
 					
 					if (hex) {
-						hex.background.position.x = backgroundWidth * (hex.background.position.x / hex.background.width);
-						hex.background.position.y = backgroundHeight * (hex.background.position.y / hex.background.height);
+						let x = hex.background.position.x - hex.diameter / 2;
+						let y = hex.background.position.y - hex.height / 2;
+						let scale = backgroundWidth / hex.background.width;
+
+						hex.background.position.x = x * scale + hex.diameter / 2;
+						hex.background.position.y = y * scale + hex.height / 2;
 						hex.background.width = backgroundWidth;
 						hex.background.height = backgroundHeight;
 	

@@ -236,23 +236,28 @@ export class Hex {
 				notes: config.noteTypes.note.icon,
 				combat: config.noteTypes.combat.icon,
 				social: config.noteTypes.social.icon,
-				gm: config.noteTypes.secret.icon
+				gm: config.noteTypes.secret.icon,
+				target: 'fa-solid fa-expand'
 			};
 			
 			let showIcons = {};
 			let notesContainer = document.createElement('div');
 			notesContainer.className = 'icons';
 
-			if (this.party) {
-				showIcons.party = true;
-			}
-
-			if (this.notes) {
-				let notes = Object.values(this.notes);
-				showIcons.combat = notes.filter(n => n.type === 'combat').length;
-				showIcons.social = notes.filter(n => n.type === 'social').length;
-				showIcons.gm = notes.filter(n => n.type === 'secret').length;
-				showIcons.notes = !showIcons.combat && !showIcons.social && notes.filter(n => n.type === 'note').length;
+			if (this.map.allowBackgroundAdjust) {
+				showIcons.target = true;
+			} else {
+				if (this.party) {
+					showIcons.party = true;
+				}
+	
+				if (this.notes) {
+					let notes = Object.values(this.notes);
+					showIcons.combat = notes.filter(n => n.type === 'combat').length;
+					showIcons.social = notes.filter(n => n.type === 'social').length;
+					showIcons.gm = notes.filter(n => n.type === 'secret').length;
+					showIcons.notes = !showIcons.combat && !showIcons.social && notes.filter(n => n.type === 'note').length;
+				}	
 			}
 
 			Object.keys(showIcons).forEach((key) => {
@@ -264,7 +269,7 @@ export class Hex {
 					i.className = propertyIcons[key];
 					div.appendChild(i);
 
-					if (key === 'party') {
+					if (key === 'party' || key === 'target') {
 						self.element.appendChild(div);
 					} else {
 						notesContainer.append(div);

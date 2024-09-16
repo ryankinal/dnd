@@ -70,17 +70,17 @@ export class MapSetup {
 				}
 			});
 
-			window.hexcrawl.events.pub('map.new', map);
-
-			this.container.classList.add('hiding');
-			
-			setTimeout(() => { 
-				self.container.classList.add('hidden');
-			}, 200);
-
 			map.panEnabled = false;
 			map.transform.scale = map.maxScale;
 			map.applyTransform();
+			
+			window.hexcrawl.events.pub('map.new', map);
+
+			this.container.classList.add('hiding');
+
+			setTimeout(() => { 
+				self.container.classList.add('hidden');
+			}, 200);
 		});
 	}
 

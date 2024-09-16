@@ -79,16 +79,21 @@ window.hexcrawl.events.sub('map.new', (map) => {
 
 positioningConfirmButton.addEventListener('click', () => {
 	mapSettings.toggleGMView();
-
+	
 	hexcrawl.map.panEnabled = true;
 	hexcrawl.map.allowBackgroundAdjust = false;
 	hexcrawl.map.allowHexSelection = true;
 	hexcrawl.map.transform.scale = 1;
+
+	Object.values(hexcrawl.map.hexes).forEach((hex) => {
+		hex.renderIcons();
+	});
+
 	hexcrawl.map.applyTransform(true);
 
-	positioningConfirmButton.style.display = 'none';
-
 	hexcrawl.map.id = Id.generate();
-	toolBelt.classList.remove('hidden');
 	hexcrawl.events.pub('map.created', hexcrawl.map);
+
+	positioningConfirmButton.style.display = 'none';
+	toolBelt.classList.remove('hidden');
 });
