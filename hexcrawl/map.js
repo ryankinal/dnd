@@ -45,8 +45,8 @@ export class Map {
 		
 		this.transform = {
 			origin: {
-				x: 0,
-				y: 0
+				x: this.background.width / -2,
+				y: this.background.height / -2
 			},
 			translate: {
 				x: 0,
@@ -218,15 +218,27 @@ export class Map {
 			document.addEventListener('mousemove', pan);
 			document.addEventListener('touchmove', pan);
 
+			document.body.addEventListener('click', (e) => {
+					console.log(self.viewPortToMap(e.clientX, e.clientY));
+			});
+
 			let zoom = function(e) {
 				if (self.panEnabled) {
 					if (e.deltaY > 0 && self.transform.scale < self.maxScale || e.deltaY < 0 && self.transform.scale > self.minScale) {
 						let box = self.container.parentNode.getBoundingClientRect();
+						let point = self.viewPortToMap(e.clientX, e.clientY);
+						let center = self.transform.origin;
+
+						let xDiff = center.x - point.x;
+						let yDiff = center.y - point.y;
 
 						// Scale calculations
 						let currentScale = self.transform.scale || 1;
 						let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
 						self.transform.scale = newScale;
+
+						self.transform.translate.x += xDiff * e.deltaY / 100;
+						self.transform.translate.y += yDiff * e.deltaY / 100;
 
 						self.applyTransform();
 					}
@@ -465,6 +477,17 @@ export class Map {
 	}
 
 	// Positioning
+	centerScreen() {
+		if (this.container) {
+			let box = this.container.parentNode.getBoundingClientRect();
+			
+			return {
+				x: box.width / 2,
+				y: box.height / 2
+			};
+		}
+	}
+
 	centerOnHex(hex, animate) {
 		let center = hex.getCenterPoint();
 
@@ -494,24 +517,15 @@ export class Map {
 		}
 	}
 
-	scalePoint(x, y, target) {
-		target = target || 'map';
-
-		let box = this.container.parentNode.getBoundingClientRect();
-		let newX = x;
-		let newY = y;
-
-		if (target === 'viewport') {
-			newX = box.width / 2 - x / this.transform.scale;
-			newY = box.height / 2 - y / this.transform.scale;
-		} else if (target === 'map') {
-			newX = box.width / 2 - x * this.transform.scale;
-			newY = box.height / 2 - y * this.transform.scale;
+	viewPortToMap(x, y) {
+		if (typeof x === 'object') {
+			y = x.y;
+			x = x;
 		}
 
 		return {
-			x: newX,
-			y: newY
+			x: (x - this.transform.translate.x) /  this.transform.scale,
+			y: (y - this.transform.translate.y) / this.transform.scale
 		};
 	}
 
