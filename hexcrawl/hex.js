@@ -452,6 +452,14 @@ export class Hex {
 			}
 		};
 
+		let touchStart = function(e) {
+			if (e.touches.length === 1) {
+				console.log(e.touches[0]);
+			} else if (e.touches.length === 2) {
+				console.log(e.touches[0], e.touches[1]);
+			}
+		}
+
 		this.element.addEventListener('wheel', adjustBackgroundSize);
 		this.element.addEventListener('mousedown', adjustBackgroundPositionStart);
 		document.body.addEventListener('mousemove', adjustBackgroundPosition);

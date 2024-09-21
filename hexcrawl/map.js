@@ -23,6 +23,10 @@ export class Map {
 		this.minBackgroundWidth = 400;
 		this.maxBackgroundWidth = 60000;
 		
+		// Touch vent vars
+		this.touches = [];
+		this.touchDistance = null;
+
 		// Pan vars
 		this.panEnabled = true;
 		this.panStartCoordinates = null;
@@ -165,6 +169,17 @@ export class Map {
 		return hex;
 	}
 
+	getTouchDistance(touches) {
+		if (touches.length >= 2) {
+			let xDistance = touches[1].clientX - touches[0].clientX;
+			let yDistance = touches[1].clientY - touches[0].clientY;
+
+			return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+		}
+
+		return 0;
+	}
+
 	wireEvents() {
 		if (this.container) {
 			let self = this;
@@ -205,7 +220,6 @@ export class Map {
 					}
 				}
 
-				e.preventDefault();
 				return false;
 			};
 
@@ -218,15 +232,10 @@ export class Map {
 			document.addEventListener('mousemove', pan);
 			document.addEventListener('touchmove', pan);
 
-			document.body.addEventListener('click', (e) => {
-					console.log(self.viewPortToMap(e.clientX, e.clientY));
-			});
-
-			let zoom = function(e) {
+			let zoom = function(delta, toPoint) {
 				if (self.panEnabled) {
-					if (e.deltaY > 0 && self.transform.scale < self.maxScale || e.deltaY < 0 && self.transform.scale > self.minScale) {
-						let box = self.container.parentNode.getBoundingClientRect();
-						let point = self.viewPortToMap(e.clientX, e.clientY);
+					if (delta > 0 && self.transform.scale < self.maxScale || delta < 0 && self.transform.scale > self.minScale) {
+						let point = self.viewPortToMap(toPoint.x, toPoint.y);
 						let center = self.transform.origin;
 
 						let xDiff = center.x - point.x;
@@ -234,26 +243,37 @@ export class Map {
 
 						// Scale calculations
 						let currentScale = self.transform.scale || 1;
-						let newScale = Math.max(currentScale + e.deltaY / 100, self.minScale);
+						let newScale = Math.max(currentScale + delta, self.minScale);
 						self.transform.scale = newScale;
 
-						self.transform.translate.x += xDiff * e.deltaY / 100;
-						self.transform.translate.y += yDiff * e.deltaY / 100;
+						self.transform.translate.x += xDiff * delta;
+						self.transform.translate.y += yDiff * delta;
 
 						self.applyTransform();
 					}
 				}
 			};
 
-			let adjustBackgroundSize = function(e) {
+			let wheelWithPan = function(e) {
+				zoom(e.deltaY / 100, {
+					x: e.clientX,
+					y :e.clientY
+				});
+			};
+
+			this.container.parentNode.addEventListener('wheel', wheelWithPan);
+
+			let adjustBackgroundSize = function(delta) {
 				if (self.allowBackgroundAdjust) {
+					console.log(delta);
+
 					let backgroundWidth = self.background.width;
 					let backgroundHeight = self.background.height;
 					let heightRatio = backgroundHeight / backgroundWidth;
 					let hexes = Object.values(self.hexes);
 					let hex = hexes && hexes.length ? hexes[0] : null;
 
-					backgroundWidth = Math.max(self.minBackgroundWidth, Math.min(self.maxBackgroundWidth, backgroundWidth + (e.deltaY * 4)));
+					backgroundWidth = Math.max(self.minBackgroundWidth, Math.min(self.maxBackgroundWidth, backgroundWidth + delta));
 					backgroundHeight = heightRatio * backgroundWidth;
 					
 					if (hex) {
@@ -272,16 +292,12 @@ export class Map {
 				}
 			};
 	
-			let adjustBackgroundPositionStart = function(e) {
+			let adjustBackgroundPositionStart = function(position) {
 				if (self.allowBackgroundAdjust) {
 					self.adjustingBackgroundPosition = {
-						x: e.clientX,
-						y: e.clientY
+						x: position.x,
+						y: position.y
 					};
-
-					e.stopPropagation();
-					e.preventDefault();
-					return false;
 				}
 			};
 	
@@ -298,18 +314,18 @@ export class Map {
 				}
 			};
 	
-			let adjustBackgroundPosition = function(e) {
+			let adjustBackgroundPosition = function(position, movement) {
 				if (self.adjustingBackgroundPosition) {
-					let xDiff = Math.abs(self.adjustingBackgroundPosition.x - e.clientX);
-					let yDiff = Math.abs(self.adjustingBackgroundPosition.y - e.clientY);
+					let xDiff = Math.abs(self.adjustingBackgroundPosition.x - position.x);
+					let yDiff = Math.abs(self.adjustingBackgroundPosition.y - position.y);
 
 					if (xDiff > 0 || yDiff > 0) {
 						let hexes = Object.values(self.hexes);
 						let hex = hexes && hexes.length ? hexes[0] : null;
 
 						if (hex) {
-							hex.background.position.x += e.movementX;
-							hex.background.position.y += e.movementY;
+							hex.background.position.x += movement.x;
+							hex.background.position.y += movement.y;
 			
 							hex.adjustBackground();
 						}
@@ -318,20 +334,136 @@ export class Map {
 							self.positioningConfirmButton.style.display = 'none';
 						}
 
-						self.background.x += e.movementX;
-						self.background.y += e.movementY;
+						self.background.x += movement.x;
+						self.background.y += movement.y;
 
 						self.adjustBackground();
 					}
 				}
 			};
+
+			let mouseDown = function(e) {
+				adjustBackgroundPositionStart({
+					x: e.clientX,
+					y: e.clientY
+				});
+
+				e.stopPropagation();
+				e.preventDefault();
+				return false;
+			};
+
+			let mouseMove = function(e) {
+				let position = {
+					x: e.clientX,
+					y: e.clientY
+				};
+
+				let movement = {
+					x: e.movementX,
+					y: e.movementY
+				};
+
+				adjustBackgroundPosition(position, movement);
+			};
+
+			let touchStart = function(e) {
+				if (e.touches.length === 1) {
+					adjustBackgroundPositionStart({
+						x: e.touches[0].clientX,
+						y: e.touches[0].clientY
+					});
+				} else if (e.touches.length === 2) {
+					self.touchDistance = self.getTouchDistance(e.touches);
+					adjustBackgroundPositionEnd(e);
+				}
+
+				self.touches = e.touches;
+			}
+
+			let secondTouchVisualizer = document.createElement('div');
+			document.body.appendChild(secondTouchVisualizer);
+			let touchMove = function(e) {
+				let touches = e.touches;
+
+				if (e.touches.length === 1 && e.shiftKey) {
+					let box = self.container.parentNode.getBoundingClientRect();
+					let centerX = box.width / 2 + box.x;
+					let centerY = box.height / 2  + box.y;
+					let xDistance = e.touches[0].clientX - centerX;
+					let yDistance = e.touches[0].clientY - centerY;
+
+					touches = [
+						e.touches[0],
+						{
+							clientX: centerX - xDistance,
+							clientY: centerY - yDistance
+						}
+					];
+
+					secondTouchVisualizer.style.position = 'absolute';
+					secondTouchVisualizer.style.left = centerX - xDistance + 'px';
+					secondTouchVisualizer.style.top = centerY - yDistance + 'px';
+					secondTouchVisualizer.style.width = '10px';
+					secondTouchVisualizer.style.height = '10px';
+					secondTouchVisualizer.style.backgroundColor = '#F00';
+				}
+
+				if (touches.length === 1) {
+					let position = {
+						x: touches[0].clientX,
+						y: touches[0].clientY
+					};
+
+					let movement = {
+						x: position.x - self.touches[0].clientX,
+						y: position.y - self.touches[0].clientY
+					};
+
+					adjustBackgroundPosition(position, movement);
+				} else if (touches.length === 2) {
+					let currentTouchDistance = self.getTouchDistance(touches);
+
+					if (!self.touchDistance) {
+						self.touchDistance = currentTouchDistance;
+					} else {
+						let delta = currentTouchDistance - self.touchDistance;
+						adjustBackgroundSize(delta / 2);
+					}
+				}
+
+				self.touches = e.touches;
+				return false;
+			};
+
+			let touchEnd = function(e) {
+				if (e.touches.length === 0) {
+					adjustBackgroundPositionEnd(e);
+					self.touches = null;
+					self.touchDistance = NaN;
+				} else if (e.touches.length === 1) {
+					adjustBackgroundPositionStart({
+						x: e.touches[0].clientX,
+						y: e.touches[0].clientY
+					});
+					self.touchDistance = NaN;
+				} else if (e.touches.length === 2) {
+					adjustBackgroundPositionEnd(e);
+				}
+			};
+
+			let wheelNoPan = function(e) {
+				adjustBackgroundSize(e.deltaY * 4);
+			};
 	
-			document.body.addEventListener('wheel', adjustBackgroundSize);
-			document.body.addEventListener('mousedown', adjustBackgroundPositionStart);
-			document.body.addEventListener('mousemove', adjustBackgroundPosition);
+			document.body.addEventListener('wheel', wheelNoPan);
+			document.body.addEventListener('mousedown', mouseDown);
+			document.body.addEventListener('mousemove', mouseMove);
 			document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
 
-			this.container.parentNode.addEventListener('wheel', zoom);
+			document.body.addEventListener('touchstart', touchStart);
+			document.body.addEventListener('touchmove', touchMove);
+			document.body.addEventListener('touchend', touchEnd);
 
 			this.fullMapElement.addEventListener('click', (e) => {
 				if (self.addArbitraryHex) {
