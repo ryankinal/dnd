@@ -2,12 +2,15 @@ import { Map } from './map.js';
 import { Party } from './party.js';
 import { config } from './config.js';
 import { Id } from './id.js';
+import { TouchHandler } from './touch.js';
 
 export class Hex {
 	constructor(data) {
 		let self = this;
 
 		this.noteTypes = config.noteTypes;
+		this.touchHandler = new TouchHandler();
+		this.touched = false;
 
 		// The map
 		this.map = null;
@@ -397,14 +400,14 @@ export class Hex {
 
 		this.element.addEventListener('click', hexClick);
 
-		let adjustBackgroundSize = function(e) {
+		let adjustBackgroundSize = function(delta) {
 			if (self.allowBackgroundAdjust) {
 				let backgroundWidth = self.background.width;
 				let backgroundHeight = self.background.height;
 
-				if (backgroundWidth < self.maxBackgroundWidth && e.deltaY > 0 || backgroundWidth > self.minBackgroundWidth && e.deltaY < 0) {
+				if (backgroundWidth < self.maxBackgroundWidth && delta > 0 || backgroundWidth > self.minBackgroundWidth && delta < 0) {
 					let heightRatio = backgroundHeight / backgroundWidth;
-					backgroundWidth = Math.min(self.maxBackgroundWidth, backgroundWidth + (e.deltaY * 4));
+					backgroundWidth = Math.min(self.maxBackgroundWidth, backgroundWidth + delta);
 					backgroundHeight = heightRatio * backgroundWidth;
 
 					let x = self.background.position.x - self.diameter / 2;
@@ -421,14 +424,11 @@ export class Hex {
 					self.adjustBackground();
 				}
 			}
-			
 		};
 
 		let adjustBackgroundPositionStart = function(e) {
 			if (self.allowBackgroundAdjust) {
 				self.adjustingBackgroundPosition = true;
-				e.stopPropagation();
-				e.preventDefault();
 				return false;
 			}
 		};
@@ -436,8 +436,6 @@ export class Hex {
 		let adjustBackgroundPositionEnd = function(e) {
 			if (self.adjustingBackgroundPosition) {
 				self.adjustingBackgroundPosition = false;
-				e.stopPropagation();
-				e.preventDefault();
 				return false;
 			}
 		};
@@ -452,18 +450,22 @@ export class Hex {
 			}
 		};
 
-		let touchStart = function(e) {
-			if (e.touches.length === 1) {
-				console.log(e.touches[0]);
-			} else if (e.touches.length === 2) {
-				console.log(e.touches[0], e.touches[1]);
-			}
-		}
+		let wheel = function(e) {
+			self.adjustBackgroundSize(e.deltaY * 4);
+		};
 
 		this.element.addEventListener('wheel', adjustBackgroundSize);
 		this.element.addEventListener('mousedown', adjustBackgroundPositionStart);
 		document.body.addEventListener('mousemove', adjustBackgroundPosition);
 		document.body.addEventListener('mouseup', adjustBackgroundPositionEnd);
+
+		let pinch = function(e) {
+			adjustBackgroundSize(e.delta * 8);
+		};
+
+		this.touchHandler.pinch(document.body, pinch);
+
+		this.touchHandler.touchMove(this.element, adjustBackgroundPosition, adjustBackgroundPositionStart, adjustBackgroundPositionEnd);
 
 		window.hexcrawl.events.sub('hex.selected', (hex) => {
 			if (hex !== self) {
@@ -562,7 +564,9 @@ export class Hex {
 					self.container.appendChild(div);
 					self.addInterface.push(div);
 
-					div.addEventListener('click', self.makeAddHandler(position));
+					let addHandler = self.makeAddHandler(position);
+
+					div.addEventListener('click', addHandler);
 				}
 			});
 		}

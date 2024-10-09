@@ -5,6 +5,7 @@ import { HexSettings } from './hexsettings.js';
 import { MapSettings } from './mapsettings.js';
 import { MapSetup } from './mapsetup.js';
 import { visualizers } from './visualizers.js';
+import { TouchHandler } from './touch.js';
 
 // Map setup
 let output = document.getElementById('display');
@@ -77,7 +78,7 @@ window.hexcrawl.events.sub('map.new', (map) => {
 	positioningConfirmButton.style.display = 'flex';
 });
 
-positioningConfirmButton.addEventListener('click', () => {
+let confirmPositioning = function() {
 	mapSettings.toggleGMView();
 	
 	hexcrawl.map.panEnabled = true;
@@ -96,4 +97,16 @@ positioningConfirmButton.addEventListener('click', () => {
 
 	positioningConfirmButton.style.display = 'none';
 	toolBelt.classList.remove('hidden');
+};
+
+positioningConfirmButton.addEventListener('click', confirmPositioning);
+positioningConfirmButton.addEventListener('touchstart', confirmPositioning);
+
+let touchHandler = new TouchHandler(60);
+/*touchHandler.touchMove(document, (touch) => {
+	console.log(touch);
+});*/
+
+touchHandler.pinch(document, (touchData) => {
+	console.log(touchData);
 });
