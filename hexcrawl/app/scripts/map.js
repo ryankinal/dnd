@@ -1,7 +1,6 @@
 import { Id } from './id.js';
 import { Hex } from './hex.js';
 import { Party } from './party.js';
-import { visualizers } from './visualizers.js';
 import { TouchHandler } from './touch.js';
 
 export class Map {
