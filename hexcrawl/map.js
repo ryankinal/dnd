@@ -363,7 +363,7 @@ export class Map {
 			};
 
 			let wheelNoPan = function(e) {
-				adjustBackgroundSize(e.deltaY * 4);
+				adjustBackgroundSize(e.deltaY * 4 * self.transform.scale);
 			};
 	
 			document.body.addEventListener('wheel', wheelNoPan);
@@ -373,7 +373,7 @@ export class Map {
 
 			this.touchHandler.touchMove(this.container.parentNode, mouseMove, mouseDown, adjustBackgroundPositionEnd);
 			this.touchHandler.pinch(this.container.parentNode, (e) => {
-				adjustBackgroundSize(e.delta * 8);
+				adjustBackgroundSize(e.delta * 8 * self.transform.scale);
 			});
 
 			this.fullMapElement.addEventListener('click', (e) => {
