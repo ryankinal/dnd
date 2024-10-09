@@ -12,12 +12,16 @@ export class Map {
 		this.fullMapElement.className = "full-map";
 		this.positioningConfirmButton = null;
 		this.gmView = false;
+		
+		// Players and people and stuff
+		this.gms = {};
+		this.parties = {};
+		this.owner = null;
 
 		// Hex selection vars
 		this.addArbitraryHex = false;
 		this.allowHexSelection = false;
-		this.parties = {};
-
+		
 		// Background vars
 		this.allowBackgroundAdjust = false;
 		this.adjustingBackgroundPosition = false;
