@@ -101,12 +101,3 @@ let confirmPositioning = function() {
 
 positioningConfirmButton.addEventListener('click', confirmPositioning);
 positioningConfirmButton.addEventListener('touchstart', confirmPositioning);
-
-let touchHandler = new TouchHandler(60);
-/*touchHandler.touchMove(document, (touch) => {
-	console.log(touch);
-});*/
-
-touchHandler.pinch(document, (touchData) => {
-	console.log(touchData);
-});

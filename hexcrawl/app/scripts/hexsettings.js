@@ -230,7 +230,6 @@ export class HexSettings {
 
 		if (this.buttons.hide) {
 			this.buttons.hide.addEventListener('click', () => {
-				console.log(self.hex);
 				if (self.hex) {
 					if (self.hex.hidden) {
 						self.buttons.hide.classList.remove('on');
