@@ -1,0 +1,25 @@
+{
+  "name": "api",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "./node_modules/nodemon/bin/nodemon.js index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "imports": {
+	"#utils/*": "./utils/*"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.675.0",
+    "@aws-sdk/client-ssm": "^3.675.0",
+    "@aws-sdk/credential-providers": "^3.675.0",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
