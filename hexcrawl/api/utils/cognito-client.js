@@ -11,10 +11,6 @@ import {
 	
 } from "@aws-sdk/client-cognito-identity-provider";
 
-import {
-	GetOpenIdTokenCommand
-} from '@aws-sdk/client-cognito-identity'
-
 let clientId = process.env.AWS_COGNITO_CLIENT_ID;
 let clientSecret = process.env.AWS_COGNITO_CLIENT_SECRET;
 
