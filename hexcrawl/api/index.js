@@ -5,6 +5,7 @@ const app = express();
 app.listen(3000, () => {
  	console.log("Server running on port 3000");
 });
+app.use(express.json());
 
 routes.forEach((definition) => {
 	let { path, methods } = definition;
@@ -12,8 +13,15 @@ routes.forEach((definition) => {
 	Object.keys(methods).forEach(async (method) => {
 		if (typeof app[method] === 'function') {
 			let file = methods[method];
+			let controller = {};
 
-			let controller = await import(file);
+			try {
+				controller = await import(file) || {};
+			} catch (e) {
+				console.log('Could not import ' + file);
+				controller = {};
+			}
+			
 			let { handler } = controller;
 
 			if (typeof handler === 'function') {
@@ -21,11 +29,13 @@ routes.forEach((definition) => {
 					let action = {
 						body: req.body,
 						query: req.query,
-						params: req.params
+						params: req.params,
+						headers: req.headers
 					};
 
 					let response = await handler(action);
-					res.json(response || {});
+					res.statusCode = response && response.statusCode || 500;
+					res.json(response && response.body || {});
 				});
 			} else {
 				// console.log('Not implemented: ' + method.toUpperCase() + ' ' + path);

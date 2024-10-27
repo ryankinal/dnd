@@ -1,5 +1,31 @@
 export let routes = [
 	{
+		path: '/users',
+		methods: {
+			get: './functions/users/list.js',
+			post: './functions/users/create.js'
+		}
+	}, {
+		path: '/users/auth',
+		methods: {
+			post: './functions/users/login.js',
+			put: './functions/users/refresh.js',
+			delete: './functions/users/logout.js'
+		}
+	}, {
+		path: '/users/auth/verification',
+		methods: {
+			post: './functions/users/verify.js',
+			put: './functions/users/resend-code.js'
+		}
+	}, {
+		path: '/users/:user_id',
+		methods: {
+			get: './functions/users/read.js',
+			put: './functions/users/update.js',
+			delete: './functions/users/delete.js'
+		}
+	}, {
 		path: '/maps',
 		methods: {
 			get: './functions/maps/list.js',

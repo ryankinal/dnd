@@ -7,7 +7,6 @@ export const getParameter = async function(name) {
 	};
 
 	let credentials = await getCredentials();
-	console.log(credentials);
 
 	if (credentials) {
 		ssmConfig.credentials = credentials;

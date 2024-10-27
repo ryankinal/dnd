@@ -4,7 +4,7 @@ import { getParameter } from "#utils/stored-parameters.js";
 const environment = process.env.ENVIRONMENT || 'prod';
 let serverParameterName = '/hexcrawl/' + environment + '/db/server';
 
-export const getClient = async function() {
+export const getDDBClient = async function() {
 	let server = await getParameter(serverParameterName);
 	let config = {
 		region: 'us-west-2',

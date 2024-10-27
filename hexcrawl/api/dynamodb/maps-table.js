@@ -9,14 +9,14 @@ const tableName = 'maps';
 
 const keySchema = [
 	{
-		AttributeName: 'map_id',
+		AttributeName: 'id',
 		KeyType: "HASH"
 	}
 ];
 
 const attributeSchema = [
 	{
-		AttributeName: "map_id",
+		AttributeName: "id",
 		AttributeType: "S"
 	}
 ];
