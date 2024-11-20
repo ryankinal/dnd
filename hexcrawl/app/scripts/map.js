@@ -15,6 +15,7 @@ export class Map {
 		// Players and people and stuff
 		this.gms = {};
 		this.parties = {};
+		this.players = {};
 		this.owner = null;
 
 		// Hex selection vars
@@ -474,7 +475,9 @@ export class Map {
 		this.fullMapElement.style.backgroundSize = `${width}px ${height}px`;
 		this.fullMapElement.style.transform = `translate(${x}px, ${y}px)`;
 
-		hexcrawl.events.pub('map.updated', this);
+		hexcrawl.events.pub('map.updated', {
+			background: this.background
+		});
 	}
 
 	alignBackgroundWithHex(hex) {

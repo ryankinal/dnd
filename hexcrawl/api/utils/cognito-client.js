@@ -7,14 +7,24 @@ import {
 	InitiateAuthCommand,
 	RevokeTokenCommand,
 	ResendConfirmationCodeCommand,
-	SignUpCommand,
-	
+	SignUpCommand
 } from "@aws-sdk/client-cognito-identity-provider";
 
 let clientId = process.env.AWS_COGNITO_CLIENT_ID;
 let clientSecret = process.env.AWS_COGNITO_CLIENT_SECRET;
 
 export class CognitoClient {
+	constructor(event) {
+		if (typeof event === 'object') {
+			let { headers } = event;
+			let { authorization } = headers || {};
+
+			if (authorization) {
+				this.accessToken = authorization.replace(/^Bearer /, '');
+			}
+		}
+	}
+
 	async getClient() {
 		if (!this.client) {
 			this.client = new CognitoIdentityProviderClient({
@@ -159,10 +169,15 @@ export class CognitoClient {
 		}
 	}
 
+	async authorizedUser() {
+		let response = await this.getUser();
+		return response.statusCode === 200 ? response.body : null;
+	}
+
 	async getUser(token) {
 		let cognito = await this.getClient();
 		let command = new GetUserCommand({
-			AccessToken: token
+			AccessToken: token || this.accessToken
 		});
 
 		try {

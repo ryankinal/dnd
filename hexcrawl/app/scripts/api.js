@@ -1,3 +1,5 @@
+import { config } from './config.js';
+
 export class API {
 	constructor() {
 		let self = this;
@@ -131,15 +133,25 @@ export class API {
 		});
 	}
 
-	makeRequest(method, url, data) {
-		if (data) {
-			if (this.logging) {
-				console.log(`${method} ${url}`, data);
-			}
-		} else {
-			if (this.logging) {
-				console.log(`${method} ${url}`);
-			}
+	makeRequest(method, url, data) {	
+		if (this.logging) {
+			console.log(`${method} ${url}`, data);
 		}
+
+		let dataIsQuery = method === 'GET' || method === 'DELETE';
+
+		if (data && dataIsQuery) {
+			let params = new URLSearchParams(data);
+			url += '?' + params.toString();
+		}
+
+		let xhr = new XMLHttpRequest();
+		xhr.onload = () => {
+			if (this.logging) {
+				console.log(`${method} ${url} - ${xhr.status}`, data);
+			}
+		};
+		xhr.open(method, window.location.protocol + '//' + config.apiBase + url);
+		xhr.send(data && !dataIsQuery ? JSON.stringify(data) : null);
 	}
 }

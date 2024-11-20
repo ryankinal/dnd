@@ -50,5 +50,6 @@ let maps = {
 
 export let config = {
 	noteTypes: noteTypes,
-	maps: maps
+	maps: maps,
+	apiBase: window.location.host.match(/^local\./) ? 'localhost:3000' : 'api.hexcrawl.it'
 };

@@ -1,14 +1,15 @@
 {
-  "name": "api",
+  "name": "hexcrawl-api",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "Data management for Hexcrawl.it",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/nodemon/bin/nodemon.js index.js"
+    "dev": "./node_modules/nodemon/bin/nodemon.js index.js",
+	"build": "node ./build_files/build.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ryan Kinal",
   "license": "ISC",
   "imports": {
     "#utils/*": "./utils/*"
