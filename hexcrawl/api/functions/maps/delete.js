@@ -35,11 +35,9 @@ async function deleteHexes(mapId) {
 		let commandConfig = {
 			TableName: 'maps',
 			KeyConditionExpression: '#m = :id',
-			ExpressionAttributeValues: {
-				':id': {
-					S: mapId
-				}
-			},
+			ExpressionAttributeValues: marshall({
+				':id': mapId
+			}),
 			Limit: 100,
 			ExpressionAttributeNames: {
 				'#m': 'id'

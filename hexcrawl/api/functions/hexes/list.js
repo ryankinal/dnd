@@ -35,11 +35,9 @@ export const handler = async function(event, context) {
 			let commandConfig = {
 				TableName: 'maps',
 				KeyConditionExpression: '#m = :id',
-				ExpressionAttributeValues: {
-					':id': {
-						S: id
-					}
-				},
+				ExpressionAttributeValues: marshall({
+					':id': id
+				}),
 				Limit: limit || 100,
 				ExpressionAttributeNames: {
 					'#m': 'id'

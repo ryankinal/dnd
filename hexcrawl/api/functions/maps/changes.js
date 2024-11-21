@@ -37,14 +37,10 @@ export const handler = async function(event, context) {
 			let changesCommand = new QueryCommand({
 				TableName: 'map_changes',
 				KeyConditionExpression: '#m = :map AND #t >= :t',
-				ExpressionAttributeValues: {
-					':map': {
-						S: id
-					},
-					':t': {
-						N: start
-					}
-				},
+				ExpressionAttributeValues: marshall({
+					':map': id,
+					':t': start
+				}),
 				Limit: 1000,
 				ExpressionAttributeNames: {
 					'#m': 'map_id',

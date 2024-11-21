@@ -16,14 +16,10 @@ export const handler = async function(event, context) {
 
 		let command = new GetItemCommand({
 			TableName: 'maps',
-			Key: {
-				id: {
-					S: id
-				},
-				subdocument_id: {
-					S: 'map'
-				}
-			}
+			Key: marshall({
+				id: id,
+				subdocument_id: 'map'
+			})
 		});
 
 		try {
