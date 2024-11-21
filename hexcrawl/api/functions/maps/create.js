@@ -69,7 +69,8 @@ export const handler = async function(event, context) {
 				Item: marshall({
 					user_id: user.id,
 					map_id: mapRecord.id,
-					map_name: mapRecord.name
+					map_name: mapRecord.name,
+					created: Date.now()
 				})
 			}
 		})

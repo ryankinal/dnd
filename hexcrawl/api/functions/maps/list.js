@@ -7,13 +7,6 @@ export const handler = async function(event, context) {
 	let cognito = new CognitoClient(event);
 	let user = await cognito.authorizedUser();
 
-	if (!user) {
-		return {
-			statusCode: 401,
-			body: {}
-		};
-	}
-
 	if (user.id) {
 		let ddb = await getDDBClient();
 

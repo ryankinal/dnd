@@ -1,6 +1,7 @@
 import { getDDBClient } from "#utils/ddb-client.js";
 import { CognitoClient } from "#utils/cognito-client.js";
-import { QueryCommand } from '@aws-sdk/client-dynamodb';
+import { mapPermissions } from "#utils/map-permissions.js";
+import { QueryCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 
 export const handler = async function(event, context) {
@@ -22,6 +23,15 @@ export const handler = async function(event, context) {
 
 		if (id) {
 			let ddb = await getDDBClient();
+			let mapPermissions = await mapPermissions(id, user.id)
+			
+			if (!mapPermissions) {
+				return {
+					statusCode: 404,
+					body: {}
+				};
+			}
+			
 			let commandConfig = {
 				TableName: 'maps',
 				KeyConditionExpression: '#m = :id',

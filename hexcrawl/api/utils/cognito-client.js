@@ -246,7 +246,7 @@ export class CognitoClient {
 	async signOut(token) {
 		let cognito = await this.getClient();
 		let command = new RevokeTokenCommand({
-			AccessToken: token
+			IdToken: token
 		});
 
 		try {

@@ -99,6 +99,10 @@ export class Hex {
 		this.selectedBorder = `url('data:image/svg+xml,<svg id="tile0_0" class="hex" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><polygon class="hex"  stroke="blue" stroke-width="2" fill="transparent" points="${hexCoords}"></polygon></svg>')`;
 
 		if (data) {
+			if (typeof data.id === 'string') {
+				this.id = data.id;
+			}
+
 			if (data.map instanceof Map) {
 				this.map = data.map;
 			}
@@ -302,7 +306,10 @@ export class Hex {
 	hide() {
 		if (!this.hidden) {
 			this.hidden = true;
-			hexcrawl.events.pub('hex.updated', this);
+
+			if (this.map.triggerEvents) {
+				hexcrawl.events.pub('hex.updated', this);
+			}
 		}
 		
 		if (this.element instanceof HTMLElement) {
@@ -317,7 +324,10 @@ export class Hex {
 	show() {
 		if (this.hidden) {
 			this.hidden = false;
-			hexcrawl.events.pub('hex.updated', this);
+
+			if (this.map.triggerEvents) {
+				hexcrawl.events.pub('hex.updated', this);
+			}
 		}
 		
 		if (this.element instanceof HTMLElement) {
@@ -356,7 +366,9 @@ export class Hex {
 			this.selected = true;
 			this.element.classList.add('selected');
 
-			hexcrawl.events.pub('hex.selected', this);
+			if (this.map.triggerEvents) {
+				hexcrawl.events.pub('hex.selected', this);
+			}
 
 			if (!this.hidden) {
 				this.renderAddInterface();
@@ -376,7 +388,11 @@ export class Hex {
 	unselect() {
 		if (this.selected) {
 			this.removeAddInterface();
-			hexcrawl.events.pub('hex.unselected', this);
+
+			if (this.map.triggerEvents) {
+				hexcrawl.events.pub('hex.unselected', this);
+			}
+			
 			this.element.classList.remove('selected');
 			this.selected = false;
 
@@ -488,14 +504,14 @@ export class Hex {
 
 		this.map.alignBackgroundWithHex(this);
 
-		hexcrawl.events.pub('hex.updated', this);
-
+		if (this.map.triggerEvents) {
+			hexcrawl.events.pub('hex.updated', this);
+		}
+		
 		if (this.selected) {
 			this.element.classList.add('selected');
 			this.renderAddInterface();
 		}
-
-		hexcrawl.events.pub('hex.updated', this);
 	}
 
 	cancelBackgroundAdjust() {
@@ -599,15 +615,20 @@ export class Hex {
 
 		this.notes[id] = note;
 		this.renderIcons();
-		hexcrawl.events.pub('hex.note.created', note);
+
+		if (this.map.triggerEvents) {
+			hexcrawl.events.pub('hex.note.created', note);
+		}
 	}
 
 	getData() {
 		let data = {
+			id: this.id,
 			x: this.x,
 			y: this.y,
 			background: this.background,
-			notes: this.notes
+			notes: this.notes,
+			party: this.party ? this.party.getData() : null
 		};
 
 		return data;

@@ -5,6 +5,7 @@
 		<meta name="viewport" content="user-scalable=no">
  		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1692.0/aws-sdk.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="index.css" />
 	</head>
 	<body>
@@ -46,18 +47,8 @@
 				</div>
 				<div class="form-field">
 					<label>Map Image</label>
-					<input id="mapImageInput" type="text" placeholder="Temporary text input" value="/hexcrawl/app/images/barovia-map.jpg">
+					<input id="mapImageInput" type="text" placeholder="Temporary text input" value="/app/images/barovia-map.jpg">
 				</div>
-				<!-- <div class="form-field">
-					<label>GM Password</label>
-					<input id="gmPasswordInput" type="password" value="asdf"><br />
-					<input id="gmPasswordConfirm" type="password" placeholder="confirm" value="asdf">
-				</div>
-				<div class="form-field">
-					<label>Player Password</label>
-					<input id="playerPasswordInput" type="password" value="asdf"><br />
-					<input id="playerPasswordConfirm" type="password" placeholder="confirm" value="asdf">
-				</div> -->
 				<div class="form-buttons">
 					<button id="setupSubmitButton" class="submit">Create</button>
 					<button id="setupCancelButton" class="cancel">Cancel</button>

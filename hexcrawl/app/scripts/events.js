@@ -4,11 +4,17 @@ export class Events {
 	}
 
 	pub(event, data) {
+		let results = [];
+
 		if (typeof event === 'string' && Array.isArray(this.listeners[event])) {
 			this.listeners[event].forEach((listener) => {
-				listener(data);
+				if (typeof listener === 'function') {
+					results.push(listener(data));
+				}
 			});
 		}
+
+		return Promise.all(results);
 	}
 
 	sub(event, listener) {

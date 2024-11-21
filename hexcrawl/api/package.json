@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "./node_modules/nodemon/bin/nodemon.js index.js",
-	"build": "node ./build_files/build.js"
+    "build": "node ./build_files/build.js"
   },
   "keywords": [],
   "author": "Ryan Kinal",
@@ -21,6 +21,7 @@
     "@aws-sdk/client-ssm": "^3.675.0",
     "@aws-sdk/credential-providers": "^3.675.0",
     "@aws-sdk/util-dynamodb": "^3.675.0",
+    "cors": "^2.8.5",
     "express": "^4.21.1"
   },
   "devDependencies": {

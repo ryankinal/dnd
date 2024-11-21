@@ -16,7 +16,7 @@ window.hexcrawl = {
 };
 
 let api = new API();
-api.logging = false;
+api.logging = true;
 
 let toolBelt = document.getElementById('toolBelt');
 toolBelt.addEventListener('click', (e) => {

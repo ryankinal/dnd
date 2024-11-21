@@ -1,6 +1,7 @@
 import { getDDBClient } from "#utils/ddb-client.js";
 import { CognitoClient } from "#utils/cognito-client.js";
-import { GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
+import { mapPermissions } from "#utils/map-permissions.js";
+import { QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export const handler = async function(event, context) {
@@ -22,45 +23,16 @@ export const handler = async function(event, context) {
 
 	if (id && start) {
 		if (true || start >= now - 11000) {
-			let permission = false;
-			let ddb = await getDDBClient();
-
-			let mapCommand = new GetItemCommand({
-				TableName: 'maps',
-				Key: {
-					id: {
-						S: id
-					},
-					subdocument_id: {
-						S: 'map'
-					}
-				}
-			});
-
-			try {
-				let response = await ddb.send(mapCommand);
-
-				if (response.Item) {
-					let map = unmarshall(response.Item);
-					let gms = map.gms || {};
-					let players = map.players || {};
-					permission = gms[user.id] || players[user.id];
-				}
-			} catch (e) {
-				console.log(e);
-
-				return {
-					statusCode: 401,
-					body: {}
-				};
-			}
+			let permission = await mapPermissions(id, user.id);
 
 			if (!permission) {
 				return {
-					statusCode: 401,
+					statusCode: 404,
 					body: {}
 				};
 			}
+
+			let ddb = await getDDBClient();
 
 			let changesCommand = new QueryCommand({
 				TableName: 'map_changes',
@@ -73,7 +45,7 @@ export const handler = async function(event, context) {
 						N: start
 					}
 				},
-				Limit: 3,
+				Limit: 1000,
 				ExpressionAttributeNames: {
 					'#m': 'map_id',
 					'#t': 'change_time'

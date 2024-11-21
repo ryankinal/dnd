@@ -7,6 +7,8 @@ export class Map {
 	constructor(data) {
 		let self = this;
 		
+		this.triggerEvents = true;
+
 		this.fullMapElement = document.createElement('div');
 		this.fullMapElement.className = "full-map";
 		this.positioningConfirmButton = null;
@@ -16,7 +18,6 @@ export class Map {
 		this.gms = {};
 		this.parties = {};
 		this.players = {};
-		this.owner = null;
 
 		// Hex selection vars
 		this.addArbitraryHex = false;
@@ -170,8 +171,10 @@ export class Map {
 		hex.map = this;
 		this.hexes[hex.id] = hex;
 
-		hexcrawl.events.pub(event, hex);
-
+		if (this.triggerEvents) {
+			hexcrawl.events.pub(event, hex);
+		}
+		
 		return hex;
 	}
 
@@ -475,9 +478,11 @@ export class Map {
 		this.fullMapElement.style.backgroundSize = `${width}px ${height}px`;
 		this.fullMapElement.style.transform = `translate(${x}px, ${y}px)`;
 
-		hexcrawl.events.pub('map.updated', {
-			background: this.background
-		});
+		if (this.triggerEvents) {
+			hexcrawl.events.pub('map.updated', {
+				background: this.background
+			});
+		}
 	}
 
 	alignBackgroundWithHex(hex) {
@@ -609,19 +614,45 @@ export class Map {
 		let self = this;
 		let hexData = {};
 		let partyData = {};
-		
+
 		Object.keys(this.hexes).forEach((key) => {
 			hexData[key] = self.hexes[key].getData();
 		});
 
 		Object.keys(this.parties).forEach((key) => {
 			partyData[key] = self.parties[key].getData();
-		})
+		});
 
 		return {
+			name: this.name,
 			background: this.background,
 			hexes: hexData,
 			parties: partyData
 		};
+	}
+
+	handleChanges(changes) {
+		changes = Array.isArray(changes) ? changes : [];
+
+		this.triggerEvents = false;
+
+		changes.forEach((change) => {
+			let self = this;
+			let data = change.data;
+
+			if (data) {
+				switch (change.type) {
+					case 'map.changed':
+						Object.keys(data).forEach((key) => {
+							if (typeof data[key] === 'object') {
+
+							}
+						});
+						break;
+				}
+			}
+		});
+
+		this.triggerEvents = true;
 	}
 }

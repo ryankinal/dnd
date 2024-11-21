@@ -1,7 +1,8 @@
 import { getDDBClient } from "#utils/ddb-client.js";
-import { CognitoClient } from "#utils/cognito-client.js";
+import { mapPermissions } from "#utils/map-permissions.js";
 import { BatchWriteItemCommand, DeleteItemCommand, GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { CognitoClient } from "#utils/cognito-client.js";
 
 async function removeMapFromUsers(mapId, users) {
 	let ddb = await getDDBClient();
@@ -104,40 +105,33 @@ export const handler = async function(event, context) {
 	if (id) {
 		let ddb = await getDDBClient();
 
-		let getCommand = new GetItemCommand({
-			TableName: 'maps',
-			Key: marshall({
-				id: id,
-				subdocument_id: 'map'
-			})
-		});
-
-		let deleteCommand = new DeleteItemCommand({
-			TableName: 'maps',
-			Key: marshall({
-				id: id,
-				subdocument_id: 'map'
-			})
-		});
-
 		try {
-			let getResponse = await ddb.send(getCommand);
+			let permission = await mapPermissions(id, user.id);
 
-			if (getResponse.Item) {
-				let map = unmarshall(getResponse.Item);
+			if (permission === 'gm') {
 				let users = Object.keys(map.gms);
 
 				if (map.players) {
 					users.splice(0, 0, Object.keys(maps.players));
 				}
-				
-				// Don't bother waiting for these async functions
-				removeMapFromUsers(map.id, users)
-				deleteHexes(id);
+
+				let deleteCommand = new DeleteItemCommand({
+					TableName: 'maps',
+					Key: marshall({
+						id: id,
+						subdocument_id: 'map'
+					})
+				});
 			
 				let deleteResponse = await ddb.send(deleteCommand);
 				let meta = deleteResponse.$metadata || {};
 				let statusCode = meta.httpStatusCode;
+
+				if (statusCode === 200) {
+					// Don't bother waiting for these async functions
+					removeMapFromUsers(map.id, users)
+					deleteHexes(id);
+				}
 				
 				return {
 					statusCode: statusCode,

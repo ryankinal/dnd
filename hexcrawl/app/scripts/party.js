@@ -33,7 +33,10 @@ export class Party {
 		hex.party = this;
 		hex.renderIcons();
 
-		hexcrawl.events.pub('party.updated', this);
+		if (this.hex.map.triggerEvents) {
+			hexcrawl.events.pub('party.updated', this);
+			hexcrawl.events.pub('hex.updated', hex);
+		}
 	}
 
 	getData() {
@@ -44,7 +47,9 @@ export class Party {
 		};
 
 		if (this.hex instanceof Hex) {
-			data.hex = this.hex.getData();
+			data.hex = {
+				id: this.hex.id
+			};
 		}
 
 		return data;
