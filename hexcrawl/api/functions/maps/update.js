@@ -15,7 +15,7 @@ export const handler = async function(event, context) {
 			let cognito = new CognitoClient(event);
 			let user = await cognito.authorizedUser();	
 			let mapRecord = Object.assign({}, body);
-			let permission = user ? mapPermissions(map_id, user.id) : false;
+			let permission = user ? await mapPermissions(map_id, user.id) : false;
 
 			if (permission !== 'gm') {
 				return {
@@ -115,7 +115,7 @@ export const handler = async function(event, context) {
 			}
 			
 			return {
-				statusCode: 201,
+				statusCode: 200,
 				body: {
 					data: body
 				}

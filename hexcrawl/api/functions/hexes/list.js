@@ -23,9 +23,9 @@ export const handler = async function(event, context) {
 
 		if (id) {
 			let ddb = await getDDBClient();
-			let mapPermissions = await mapPermissions(id, user.id)
+			let permission = await mapPermissions(id, user.id)
 			
-			if (!mapPermissions) {
+			if (!permission) {
 				return {
 					statusCode: 404,
 					body: {}
@@ -62,6 +62,7 @@ export const handler = async function(event, context) {
 					hexData = hexData.map(unmarshall)
 						.filter((i) => i.subdocument_id !== 'map')
 						.map((i) => {
+							i.id = i.subdocument_id;
 							delete i.subdocument_id;
 							return i;
 						});
@@ -75,7 +76,10 @@ export const handler = async function(event, context) {
 				};
 
 				if (lastKey && lastKey.subdocument_id) {
-					result.body.next = '/maps/' + id + '/hexes?from=' + lastKey.subdocument_id;
+					result.body.next = {
+						url: '/maps/' + id + '/hexes?from=' + lastKey.subdocument_id,
+						from: lastKey.subdocument_id
+					};
 				}
 
 				return result;

@@ -169,6 +169,35 @@ export let routes = [
 			}
 		}
 	},
+
+	// Parties
+	{
+		functionSuffix: 'Parties',
+		path: '/maps/:map_id/parties',
+		methods: {
+			get: {
+				file: './functions/parties/list.js',
+				authenticate: true
+			}
+		}
+	}, {
+		functionSuffix: 'Party',
+		path: '/maps/:map_id/parties/:party_id',
+		methods: {
+			post: {
+				file: './functions/parties/create.js',
+				authenticate: true
+			},
+			put: {
+				file: './functions/parties/update.js',
+				authenticate: true
+			},
+			delete: {
+				file: './functions/players/delete.js',
+				authenticate: true
+			}
+		}
+	},
 	
 	// Hexes
 	{

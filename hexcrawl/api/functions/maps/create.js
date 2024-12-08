@@ -46,7 +46,7 @@ export const handler = async function(event, context) {
 		});
 
 		// Create any hexes included
-		Object.keys(hexes).forEach(async (key) => {
+		Object.keys(hexes || {}).forEach(async (key) => {
 			let hex = hexes[key];
 			hex.created = Date.now();
 			hex.updated = Date.now();

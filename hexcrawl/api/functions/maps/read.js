@@ -1,7 +1,7 @@
 import { getDDBClient } from "#utils/ddb-client.js";
 import { CognitoClient } from "#utils/cognito-client.js";
 import { GetItemCommand } from '@aws-sdk/client-dynamodb';
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { mapPermissions } from "#utils/map-permissions.js";
 
 export const handler = async function(event, context) {
@@ -41,7 +41,9 @@ export const handler = async function(event, context) {
 
 			return {
 				statusCode: 404,
-				body: {}
+				body: {
+					'error': 'Not found'
+				}
 			};
 		} catch (e) {
 			console.log(e);

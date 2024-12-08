@@ -2,7 +2,7 @@ import { getDDBClient } from "#utils/ddb-client.js";
 import { CognitoClient } from "#utils/cognito-client.js";
 import { mapPermissions } from "#utils/map-permissions.js";
 import { QueryCommand } from '@aws-sdk/client-dynamodb';
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
 export const handler = async function(event, context) {
 	let cognito = new CognitoClient(event);
@@ -39,7 +39,7 @@ export const handler = async function(event, context) {
 				KeyConditionExpression: '#m = :map AND #t >= :t',
 				ExpressionAttributeValues: marshall({
 					':map': id,
-					':t': start
+					':t': parseInt(start)
 				}),
 				Limit: 1000,
 				ExpressionAttributeNames: {

@@ -7,7 +7,7 @@ export class Map {
 	constructor(data) {
 		let self = this;
 		
-		this.triggerEvents = true;
+		this.triggerEvents = false;
 
 		this.fullMapElement = document.createElement('div');
 		this.fullMapElement.className = "full-map";
@@ -68,6 +68,10 @@ export class Map {
 		
 		// Arguments
 		if (data) {
+			if (typeof data.id === 'string') {
+				this.id = data.id;
+			}
+
 			if (typeof data.name === 'string') {
 				this.name = data.name;
 			}
@@ -98,7 +102,7 @@ export class Map {
 					self.parties[party.id] = party;
 
 					if (data.parties[key].hex && data.parties[key].hex.id) {
-						party.moveTo()
+						party.moveTo(self.hexes[data.parties[key].hex.id]);
 					}
 				});
 			}
@@ -143,6 +147,7 @@ export class Map {
 		}
 
 		this.wireEvents();
+		this.triggerEvents = true;
 	}
 
 	addHex(data) {

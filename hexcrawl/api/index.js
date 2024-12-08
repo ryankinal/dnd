@@ -25,6 +25,7 @@ routes.forEach((definition) => {
 				controller = await import(file) || {};
 			} catch (e) {
 				console.log('Could not import ' + file);
+				// console.log(e);
 				controller = {};
 			}
 			
@@ -58,7 +59,7 @@ routes.forEach((definition) => {
 					res.json(response && response.body || {});
 				});
 			} else {
-				console.log('Not implemented: ' + method.toUpperCase() + ' ' + path);
+				// console.log('Not implemented: ' + method.toUpperCase() + ' ' + path);
 			}
 		} else {
 			console.log('Invalid method: ' + method.toUpperCase() + ' ' + path);

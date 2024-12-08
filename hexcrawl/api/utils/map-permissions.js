@@ -1,4 +1,4 @@
-import { getDDBClient } from "./ddb-client";
+import { getDDBClient } from "#utils/ddb-client.js";
 import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
@@ -9,7 +9,7 @@ export async function mapPermissions(map, userId) {
 		let command = new GetItemCommand({
 			TableName: 'maps',
 			Key: marshall({
-				id: id,
+				id: map,
 				subdocument_id: 'map'
 			})
 		});

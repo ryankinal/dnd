@@ -20,6 +20,7 @@ export class API {
 					.then((response) => {
 						if (response.statusCode === 201) {
 							map.id = response.body.data.id;
+							history.replaceState(null, null, '/app/' + map.id);
 							self.pollChanges(map);
 
 							if (Array.isArray(map.hexes)) {
@@ -153,6 +154,15 @@ export class API {
 		}
 	}
 
+	async getMap(mapId) {
+		return await this.makeRequest('GET', `/maps/${mapId}`);
+	}
+
+	async getHexes(mapId, from) {
+		let data = from ? { from: from } : null;
+		return await this.makeRequest('GET', `/maps/${mapId}/hexes`, data);
+	}
+
 	async pollChanges(map) {
 		let self = this;
 		let lastChangeTime = this.lastChangeTime || Date.now() - 2000;
@@ -218,8 +228,6 @@ export class API {
 
 		return new Promise((resolve, reject) => {
 			xhr.onload = () => {
-				
-
 				let parsed = {};
 
 				try {

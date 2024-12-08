@@ -24,9 +24,13 @@ export class Party {
 	}
 
 	moveTo(hex) {
-		// Clear old hex
-		this.hex.party = null;
-		this.hex.renderIcons();
+		let oldHex = this.hex;
+
+		if (oldHex) {
+			// Clear old hex
+			oldHex.party = null;
+			oldHex.renderIcons();
+		}
 
 		// Move to new hex
 		this.hex = hex;
@@ -34,7 +38,12 @@ export class Party {
 		hex.renderIcons();
 
 		if (this.hex.map.triggerEvents) {
-			hexcrawl.events.pub('party.updated', this);
+			// hexcrawl.events.pub('party.updated', this);
+
+			if (oldHex) {
+				hexcrawl.events.pub('hex.updated', oldHex);
+			}
+			
 			hexcrawl.events.pub('hex.updated', hex);
 		}
 	}
