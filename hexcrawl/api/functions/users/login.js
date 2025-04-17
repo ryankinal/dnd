@@ -12,12 +12,22 @@ export const handler = async function(event, context) {
 	let refreshToken = authResult.RefreshToken;
 	let expiresIn = authResult.ExpiresIn;
 
-	return {
-		statusCode: 200,
-		body: {
-			accessToken: accessToken,
-			refreshToken: refreshToken,
-			expiresIn: expiresIn
-		}
-	};
+	console.log(response);
+
+	if (accessToken && refreshToken && expiresIn)
+	{
+		return {
+			statusCode: 200,
+			body: {
+				accessToken: accessToken,
+				refreshToken: refreshToken,
+				expiresIn: expiresIn
+			}
+		};
+	}
+	else
+	{
+		return response;
+	}
+	
 };

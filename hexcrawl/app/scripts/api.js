@@ -186,6 +186,34 @@ export class API {
 		}, this.pollInterval);
 	}
 
+	async auth(email, password) {
+		let data = {
+				email: email,
+				password: password
+			};
+
+		try {
+			let auth = await this.send('POST', '/users/auth', data, false)
+		
+			if (auth.statusCode === 200) {
+				localStorage.setItem('access_token', auth.body.accessToken);
+				localStorage.setItem('access_expires', Date.now() + (auth.body.expiresIn * 1000));
+
+				let user = await this.makeRequest('GET', '/users/me');
+
+				if (user && user.body && user.body.id) {
+					localStorage.setItem('user_id', user.body.id);
+
+					return true;
+				}
+			} else {
+				return false;
+			}
+		} catch (e) {
+			return false;
+		}
+	}
+
 	async refreshAccess() {
 		let userId = localStorage.getItem('user_id');
 		let refreshToken = localStorage.getItem('refresh_token');
@@ -194,13 +222,19 @@ export class API {
 				token: refreshToken
 			};
 
-		let response = await this.send('PUT', '/users/auth', data, false)
+		try {
+			let response = await this.send('PUT', '/users/auth', data, false)
 		
-		if (response.statusCode === 200) {
-			localStorage.setItem('access_token', response.body.accessToken);
-			localStorage.setItem('access_expires', Date.now() + (response.body.expiresIn * 1000));
-		} else {
-			throw('Refresh failed');
+			if (response.statusCode === 200) {
+				localStorage.setItem('access_token', response.body.accessToken);
+				localStorage.setItem('access_expires', Date.now() + (response.body.expiresIn * 1000));
+
+				return true;
+			} else {
+				return false;
+			}	
+		} catch (e) {
+			return false;
 		}
 	}
 
@@ -230,6 +264,8 @@ export class API {
 			xhr.onload = () => {
 				let parsed = {};
 
+				console.log(xhr.responseText);
+
 				try {
 					parsed = xhr.responseText ? JSON.parse(xhr.responseText) : {};
 				} catch (e) {
@@ -247,7 +283,7 @@ export class API {
 
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(response);
-				} else if (xhr.status === 401) {
+				} else if (xhr.status === 401 && authorized) {
 					self.refreshAccess()
 						.then(() => {
 							return self.send(method, url, data, authorized);

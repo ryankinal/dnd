@@ -15,7 +15,6 @@ export class Map {
 		this.gmView = false;
 		
 		// Players and people and stuff
-		this.gms = {};
 		this.parties = {};
 		this.players = {};
 

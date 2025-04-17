@@ -22,14 +22,12 @@ export async function mapPermissions(map, userId) {
 		}
 	}
 
-	let { gms, players } = map;
+	let { players } = map;
 
-	if (gms && gms[userId]) {
-		return 'gm';
-	}
-	
+	console.log(map, players);
+
 	if (players && players[userId]) {
-		return 'player';
+		return players[userId];
 	}
 
 	return false;

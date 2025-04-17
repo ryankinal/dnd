@@ -2,24 +2,81 @@
 <html lang="en">
 	<head>
 		<title>Hexcrawl</title>
-		<link rel="stylesheet" type="text/css" href="index.css" />
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="main.css" />
 	</head>
 	<body>
-		<div class="contain">
-			<div class="login">
-				<div class="form-field">
-					<label>Email</label>
-					<input type="text" id="loginEmail" />
+		<header>
+			<div class="contain">
+				<h1>Hexcrawl</h1>
+				<button class="button menu-button desktop-hide"><i class="fa fa-hamburger"></i></button>
+			</div>
+			<div class="menu top-menu hide">
+				<a class="authorized" href="profile.html">Profile</a>
+				<a class="authorized" href="maps.html">Maps</a>
+				<a class="unauthorized" href="#login">Login</a>
+				<a class="unauthorized" href="#register">Register</a>
+			</div>
+		</header>
+		<section>
+			<div class="contain columns columns-divine">
+				<div class="column is-8">
+					<article>
+						<div class="article-image article-image-left"></div>
+						<div class="article-content">
+							<h2>Join Our Patreon</h2>
+							<p>Of course we have a Patreon. Or we will. Hosting this shit costs money.</p>
+						</div>
+						<div class="article-link">
+							<a href="https://patreon.com">Check it Out</a>
+						</div>
+					</article>
 				</div>
-				<div class="form-field">
-					<label>Password</label>
-					<input type="password" id="loginPassword" />
-				</div>
-				<div class="form-field buttons-field">
-					<button id="loginButton">Log In</button>
+				<div class="column is-4" id="loginOrRegiste">
+					
+					<div id="login" class="login hide desktop-show">
+						<h3>Login</h3>
+						<div class="form-field">
+							<input type="text" id="loginEmail" placeholder="Email" />
+						</div>
+						<div class="form-field">
+							<input type="password" id="loginPassword" placeholder="Password" />
+						</div>
+						<div class="form-field buttons-field">
+							<button id="loginButton">Log In</button>
+						</div>
+					</div>
+					<div class="or hide desktop-show">OR</div>
+					<div id="register" class="register hide desktop-show">
+						<h3>Register</h3>
+						<div class="form-field">
+							<input type="text" id="registerEmail" placeholder="Email" />
+						</div>
+						<div class="form-field">
+							<input type="password" id="registerPassword" placeholder="Password" />
+						</div>
+						<div class="form-field">
+							<input type="password" id="registerConfirmPassword" placeholder="Confirm Password" />
+						</div>
+						<div class="form-field buttons-field">
+							<button id="registerButton">Register</button>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+		</section>
+		<section>
+			<div class="contain columns columns-divine-reverse">
+				<article>
+					<h2>Latest Release</h2>
+					<p>Here are some new features!</p>
+					<ul>
+						<li>They're all new</li>
+					</ul>
+				</article>
+			</div>
+		</section>
 	</body>
-	<script type="module" src="index.js"></script>
 </html>

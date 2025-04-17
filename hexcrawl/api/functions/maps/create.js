@@ -23,10 +23,8 @@ export const handler = async function(event, context) {
 	body.created = Date.now();
 	body.updated = Date.now();
 
-	body.gms = {};
-	body.gms[user.id] = {
-		created: Date.now()
-	};
+	body.players = {};
+	body.players[user.id] = 'gm';
 	
 	let created = false;
 	
