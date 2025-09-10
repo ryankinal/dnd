@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Trinkets | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="trinkets.css?bust=8" rel="stylesheet">
+</head>
+<body class="dark-mode">
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>Trinkets</h1>
+		<div class="form roll-form">
+			<header>Sources</header>
+			<div class="multiselect">
+				<div class="multiselect-selected"></div>
+				<div class="multiselect-show-options"><i class="fa fa-bars"></i></div>
+				<div class="multiselect-options hidden"></div>
+			</div>
+			<div class="buttons">
+				<button id="doIt" class="button"><span class="roll">Roll</span><span class="rolling"><span class="fas fa-compass fa-spin"></span></span></button>
+				<a id="display" class="button link-button"><span class="roll">see the table(s) &raquo;</span><span class="rolling"><span class="fas fa-compass fa-spin"></span></span></a>
+			</div>
+			
+		</div>
+		<div class="results">
+			<div class="output"></div>
+		</div>
+	</div>
+	<div id="blanket" class="hidden"></div>
+	<script type="text/javascript" src="trinkets.js?bust=8"></script>
+</body>
+</html>

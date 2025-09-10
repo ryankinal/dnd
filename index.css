@@ -73,6 +73,11 @@
 	background-color: #6677BB;
 }
 
+.trinkets-post .image {
+	background-image: url(../images/trinkets.png);
+	background-color: #333;
+}
+
 .content {
 	padding: 15px;
 	display: grid;
