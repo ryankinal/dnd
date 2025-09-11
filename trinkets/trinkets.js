@@ -277,6 +277,7 @@ const icons = {
 	skull: 'fa-solid fa-skull',
 	orb: 'fa-solid fa-circle-notch',
 	cube: 'fa-solid fa-cube',
+	block: 'fa-solid fa-cube',
 	map: 'fa-solid fa-map',
 	vest: 'fa-solid fa-vest',
 	hand: 'fa-solid fa-hand',
