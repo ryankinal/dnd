@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Talvinoch | CertifiedRandom</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/58e5c80e40.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap" rel="stylesheet">
+	<link href="../style.css" rel="stylesheet">
+	<link href="talvinoch.css" rel="stylesheet">
+</head>
+<body class="dark-mode">
+	<div class="restrict">
+		<div><a class="back-link" href="..">&laquo; CR.net</a></div>
+		<h1>Mr. T's Damage Dice</h1>
+		<div class="form roll-form">
+			<form>
+				<h2>Weapon</h2>
+				<div class="field">
+					<select name="weapon">
+						<option value="prince">The Prince's Dagger</option>
+						<option value="rat">Rat Skull Dagger</option>
+						<option value="bow">Bow</option>
+					</select>
+				</div>
+
+				<h2>Abilities</h2>
+				<div class="field">
+					<label><input type="checkbox" checked="checked" name="sneakAttack"> Sneak Attack</label>
+					<label><input type="checkbox" checked="checked" name="screamingSpirits"> Screaming Spirits</label>
+					<label><input type="checkbox" name="crit"> Critical Hit</label>
+				</div>
+				<div class="field">
+					<input type="submit" value="Roll!">
+				</div>
+			</form>
+		</div>
+		<div class="results">
+			<div class="output"></div>
+		</div>
+	</div>
+	<div id="blanket" class="hidden"></div>
+	<script type="text/javascript" src="talvinoch.js"></script>
+</body>
+</html>

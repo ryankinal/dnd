@@ -580,8 +580,9 @@ let ignoreTokens = [
 
 ignoreTokens = ignoreTokens.concat(Object.keys(icons));
 
-const savedSelected = localStorage.getItem('trinket-sources-selected');
 let selected = ['dmg14'];
+const savedSelected = localStorage.getItem('trinket-sources-selected');
+
 if (savedSelected) {
 	const parsed = JSON.parse(savedSelected);
 
