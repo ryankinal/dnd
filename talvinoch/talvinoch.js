@@ -77,13 +77,9 @@ form.addEventListener('submit', (e) => {
 				value = key;
 			}
 
-			console.log(key, value)
-
 			const roll = rolls[value];
-			console.log(roll);
 
 			if (roll) {
-				console.log(roll);
 				const rollResult = {
 					name: key,
 					label: roll.name,
@@ -151,7 +147,6 @@ form.addEventListener('submit', (e) => {
 		out.innerHTML = '';
 
 		const totalDetailsOutput = Object.keys(output.totals).map((key) => {
-				console.log(key, output.totals[key], labels[key]);
 				return key !== 'total' && key !== 'max' && output.totals[key] ? `<div>${labels[key]}: ${output.totals[key]}</div>` : null;
 			});
 
@@ -165,8 +160,6 @@ form.addEventListener('submit', (e) => {
 										</div>
 									</div>
 									<div class="result-details">${totalDetailsOutput.join('')}</div>`
-
-		console.log(output);
 
 		out.appendChild(totalsContainer);
 
