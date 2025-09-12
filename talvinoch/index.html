@@ -18,18 +18,21 @@
 			<form>
 				<h2>Weapon</h2>
 				<div class="field">
-					<select name="weapon">
-						<option value="prince">The Prince's Dagger</option>
-						<option value="rat">Rat Skull Dagger</option>
-						<option value="bow">Bow</option>
-					</select>
+					<select name="weapon"></select>
+					<div class="weapon-roll"></div>
 				</div>
 
 				<h2>Abilities</h2>
-				<div class="field">
-					<label><input type="checkbox" checked="checked" name="sneakAttack"> Sneak Attack</label>
-					<label><input type="checkbox" checked="checked" name="screamingSpirits"> Screaming Spirits</label>
-					<label><input type="checkbox" name="crit"> Critical Hit</label>
+				<div class="field abilities-field"></div>
+				<div class="field data-field">
+					<div>
+						<div class="label">Max Damage</div>
+						<div class="value" id="maxDamage"></div>
+					</div>
+					<div>
+						<div class="label">Avg Damage</div>
+						<div class="value" id="avgDamage"></div>
+					</div>
 				</div>
 				<div class="field">
 					<input type="submit" value="Roll!">

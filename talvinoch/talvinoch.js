@@ -1,15 +1,16 @@
 const form = document.querySelector('form');
 const out = document.querySelector('.output');
+const maxOutput = document.querySelector('#maxDamage')
+const averageOutput = document.querySelector('#avgDamage');
+const weaponInput = document.querySelector('[name=weapon]');
+const weaponRollOutput = document.querySelector('.weapon-roll');
+const abilitiesOutput = document.querySelector('.abilities-field');
+
 const labels = {
-	total: 'Total (with bonuses)',
 	rolled: 'Rolled',
-	weapon: 'Weapon',
 	bonuses: 'Bonuses',
 	piercing: 'Piercing',
-	thunder: 'Thunder',
-	sneakAttack: 'Sneak Attack',
-	screamingSpirits: 'Screaming Spirits',
-	max: 'Max Damage'
+	thunder: 'Thunder'
 };
 
 const rolls = {
@@ -19,35 +20,66 @@ const rolls = {
 		dice: 1,
 		bonus: 5,
 		crit: 7,
-		type: 'piercing'
+		type: 'piercing',
+		category: 'weapon',
+		selected: true
 	},
 	rat: {
-		name: "Rat Skull Dagger",
+		name: "Rat Skull Dagger (off hand)",
 		die: 4,
 		dice: 1,
 		bonus: 0,
-		type: 'piercing'
+		type: 'piercing',
+		category: 'weapon'
 	},
 	bow: {
 		name: "Shortbow",
 		die: 6,
 		dice: 1,
 		bonus: 4,
-		type: 'piercing'
+		type: 'piercing',
+		category: 'weapon'
 	},
 	sneakAttack: {
 		name: "Sneak Attack",
 		die: 6,
 		dice: 4,
-		type: 'piercing'
+		type: 'piercing',
+		selected: true
 	},
 	screamingSpirits: {
 		name: "Screaming Spirits",
 		die: 8,
 		dice: 1,
-		type: 'thunder'
+		type: 'thunder',
+		selected: true
 	}
 };
+
+Object.keys(rolls).forEach((key) => {
+	let rollText = rolls[key].dice + 'd' + rolls[key].die + (rolls[key].bonus ? ' + ' + rolls[key].bonus : '');
+
+	if (rolls[key].crit) {
+		rollText += ' (+ ' + rolls[key].crit + ' on crit)';
+	}
+
+	if (rolls[key].category === 'weapon') {
+		const option = document.createElement('option');
+		option.innerHTML = rolls[key].name + ' - ' + rollText;
+		option.value = key;
+		option.selected = rolls[key].selected;
+		weaponInput.appendChild(option);
+	} else {
+		const label = document.createElement('label');
+		label.innerHTML = `<input type="checkbox" checked="${rolls[key].selected ? 'checked' : ''}" name="${key}"> ${rolls[key].name} <div class="ability-roll">${rollText}</div>`;
+
+		abilitiesOutput.appendChild(label);
+	}
+});
+
+const critLabel = document.createElement('label');
+critLabel.innerHTML = '<input type="checkbox" name="crit"> Critical Hit <div class="ability-roll">2x Dice</div>';
+abilitiesOutput.appendChild(critLabel);
 
 document.querySelectorAll('input[type=checkbox]').forEach((input) => {
 	input.addEventListener('input', () => {
@@ -63,11 +95,9 @@ document.querySelectorAll('input[type=checkbox]').forEach((input) => {
 	}
 });
 
-form.addEventListener('submit', (e) => {
+function calculateDamage() {
 	const data = new FormData(form);
 	const crit = data.get('crit') ? true : false;
-
-	out.innerHTML = '<div class="rolling"><span class="fas fa-droplet fa-beat-fade"></span></div>';
 
 	const output = data.keys()
 		.reduce((output, key) => {
@@ -85,10 +115,14 @@ form.addEventListener('submit', (e) => {
 					label: roll.name,
 					total: 0,
 					bonuses: 0,
+					average: 0,
 					type: roll.type,
-					dice: []
+					dice: [],
+					die: roll.die
 				};
 
+				rollResult.average = (roll.dice + roll.dice * roll.die * (crit ? 2 : 1)) / 2;
+				output.totals.average += rollResult.average;
 				output.totals[roll.type] = output.totals[roll.type] || 0;
 
 				for (let i = 0; i < roll.dice * (crit ? 2 : 1); i++) {
@@ -138,16 +172,37 @@ form.addEventListener('submit', (e) => {
 				total: 0,
 				rolled: 0,
 				max: 0,
-				bonuses: 0
+				bonuses: 0,
+				average: 0
 			},
 			rolls: []
 		});
+
+	output.totals.average += output.totals.bonuses;
+
+	console.log(output.totals);
+
+	return output;
+}
+
+function onChange() {
+	const output = calculateDamage();
+	maxOutput.innerHTML = output.totals.max;
+	averageOutput.innerHTML = output.totals.average;
+}
+
+form.addEventListener('change', onChange);
+
+form.addEventListener('submit', (e) => {
+	out.innerHTML = '<div class="rolling"><span class="fas fa-droplet fa-beat" style="--fa-animation-duration: 0.5s"></span></div>';
+
+	const output = calculateDamage();
 
 	setTimeout(() => {
 		out.innerHTML = '';
 
 		const totalDetailsOutput = Object.keys(output.totals).map((key) => {
-				return key !== 'total' && key !== 'max' && output.totals[key] ? `<div>${labels[key]}: ${output.totals[key]}</div>` : null;
+				return key !== 'total' && key !== 'max' && key !== 'average' && output.totals[key] ? `<div>${labels[key]}: ${output.totals[key]}</div>` : null;
 			});
 
 		const totalsContainer = document.createElement('div');
@@ -156,7 +211,7 @@ form.addEventListener('submit', (e) => {
 										<div class="result-label">Total Damage</div>
 										<div class="result-value">
 											${output.totals.total}
-											<div class="sub-value">Max: ${output.totals.max}</div>
+											<!-- <div class="sub-value">Max: ${output.totals.max}</div> -->
 										</div>
 									</div>
 									<div class="result-details">${totalDetailsOutput.join('')}</div>`
@@ -180,15 +235,17 @@ form.addEventListener('submit', (e) => {
 								</div>
 							</div>
 							<div class="result-details">
-								<div>Rolled: ${roll.dice.join(' + ')}</div>
+								<div>Rolled ${roll.dice.length}d${roll.die}: ${roll.dice.join(' + ')}</div>
 								<div>${roll.bonuses ? 'Bonuses: ' + roll.bonuses : ''}</div>
 							</div>`;
 
 			out.appendChild(elem);
 		});
-	}, 500);
+	}, 1000);
 	
 
 	e.preventDefault();
 	return false;
 });
+
+onChange();
