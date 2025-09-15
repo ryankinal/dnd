@@ -591,6 +591,23 @@ if (savedSelected) {
 	}
 }
 
+let search = window.location.search;
+let queryString = search && search.replace(/^\?/, '').split('&').map((item) => {
+		if (typeof item !== 'string') {
+			return true;
+		}
+
+		const parts = item.split('=');
+
+		return {
+			name: parts[0],
+			value: parts.length > 1 ? parts[1] : null
+		}
+	}).reduce((output, input) => {
+		output[input.name] = input.value;
+		return output;
+	}, {});
+
 const displayButton = document.getElementById('display');
 const rollButton = document.getElementById('doIt');
 const showOptions = document.querySelector('.multiselect-show-options');
@@ -675,6 +692,10 @@ blanket.addEventListener('click', () => {
 	optionsOutput.classList.add('hidden');
 })
 
+function getRandomCollection() {
+	return selected.length && selected[Math.floor(Math.random() * selected.length)];
+}
+
 function getCurrentOptions() {
 	return selected.reduce((out, key) => {
 			if (trinkets[key] && Array.isArray(trinkets[key].options)) {
@@ -691,31 +712,43 @@ function getCurrentOptions() {
 		}, []);
 }
 
-rollButton.addEventListener('click', () => {
-	let options = getCurrentOptions();
+function renderTrinket(collection, trinket) {
+	let options = trinkets[collection].options;
 
+	if (typeof trinket !== 'number') {
+		trinket = Math.floor(Math.random() * options.length);
+	}
+
+	history.replaceState({ collection: collection, trinket: trinket }, '', '/trinkets/?collection=' + collection + '&trinket=' + trinket)
+
+	const option = options[trinket];
+	let regex = new RegExp('(' + Object.keys(icons).map((key) => '\\b' + key + '\\b').join('|') + ')', 'g');
+	let match = option.match(regex);
+	let icon = defaultIcon;
+
+	if (match) {
+		icon = icons[match[0]];
+	}
+
+	resultOutput.classList.add('result');
+	resultOutput.innerHTML = `<div class="icon"><i class="${icon}"></i></div>
+								<p>${option}</p>`;
+	rollButton.classList.remove('rolling');
+}
+
+rollButton.addEventListener('click', () => {
+	const collection = getRandomCollection();
+	
 	resultOutput.innerHTML = '';
 	resultOutput.classList.remove('result');
 	resultOutput.classList.remove('table');
 
-	if (options.length) {
+	if (collection) {
 		rollButton.classList.add('rolling');
 		resultOutput.innerHTML = '<span class="fas fa-compass fa-spin"></span>';
 
 		setTimeout(() => {
-			const option = options[Math.floor(Math.random() * options.length)];
-			let regex = new RegExp('(' + Object.keys(icons).map((key) => '\\b' + key + '\\b').join('|') + ')', 'g');
-			let match = option.match(regex);
-			let icon = defaultIcon;
-
-			if (match) {
-				icon = icons[match[0]];
-			}
-
-			resultOutput.classList.add('result');
-			resultOutput.innerHTML = `<div class="icon"><i class="${icon}"></i></div>
-										<p>${option}</p>`;
-			rollButton.classList.remove('rolling');
+			renderTrinket(collection);
 		}, 400);
 	}
 });
@@ -804,6 +837,10 @@ if (selected.length === Object.keys(trinkets).length) {
 
 if (selected.length === 0) {
 	selectedOutput.innerHTML = '<span class="empty">Nothing selected &raquo; select a source</span>'
+}
+
+if (queryString.collection && typeof queryString.trinket === 'string') {
+	renderTrinket(queryString.collection, parseInt(queryString.trinket));
 }
 
 /*resultOutput.innerText = JSON.stringify(tokens, null, 4);
