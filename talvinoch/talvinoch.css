@@ -52,6 +52,10 @@ label {
 	cursor: pointer;
 }
 
+option span {
+	font-size: 14px;
+}
+
 label {
 	position: relative;
 	margin-bottom: 5px;

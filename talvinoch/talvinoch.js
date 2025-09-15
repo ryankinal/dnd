@@ -65,7 +65,7 @@ Object.keys(rolls).forEach((key) => {
 
 	if (rolls[key].category === 'weapon') {
 		const option = document.createElement('option');
-		option.innerHTML = rolls[key].name + ' - ' + rollText;
+		option.innerHTML = rolls[key].name + ' - <span class="weapon-roll">' + rollText + '</span>';
 		option.value = key;
 		option.selected = rolls[key].selected;
 		weaponInput.appendChild(option);
